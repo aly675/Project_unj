@@ -11,10 +11,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get("/login", [AuthController::class, "masuk"])->name("login");
-Route::get("/register", [AuthController::class, "daftar"])->name("register");
-Route::post("/login/submit", [AuthController::class, "login"])->name("login.submit");
-Route::post("/register/submit", [AuthController::class, "register"])->name("register.submit");
+
+Route::middleware(['guest'])->group(function(){
+
+    Route::get("/login", [AuthController::class, "masuk"])->name("login");
+    Route::get("/register", [AuthController::class, "daftar"])->name("register");
+    Route::post("/login/submit", [AuthController::class, "login"])->name("login.submit");
+    Route::post("/register/submit", [AuthController::class, "register"])->name("register.submit");
+});
 
 
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
