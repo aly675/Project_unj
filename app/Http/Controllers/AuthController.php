@@ -17,20 +17,6 @@ class AuthController extends Controller
     public function masuk(){
         return view("auth.login");
     }
-    public function register(Request $request){
-        $validate = $request->validate([
-            "name" =>"required|unique:users,name",
-            "password" => "required|confirmed|min:6",
-            "role" => "required"
-        ]);
-
-        $user = new User();
-        $user->name = $request->name;
-        $user->password = bcrypt($request->password);
-        $user->role = $request->role;
-
-        return redirect()->back()->with("succes", "Data Berhasil Ditambahkan");
-    }
 public function login(Request $request)
 {
     $validate = $request->validate([
