@@ -36,3 +36,7 @@ Route::prefix('kepalaupt')->middleware( ['auth', 'role:kepalaupt'])->group(funct
 Route::prefix( 'supkorla')->middleware(['auth', 'role:supkorla'])->group(function () {
     Route::get("/", [SupkorlaController::class, "dashboard"])->name("supkorla.dashboard");
 });
+
+Route::get('/get-csrf-token', function() {
+    return csrf_token();
+});
