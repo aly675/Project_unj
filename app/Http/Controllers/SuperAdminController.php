@@ -33,6 +33,11 @@ class SuperAdminController extends Controller
         return redirect()->back()->with("success", "Data Berhasil Ditambahkan");
     }
 
+    public function show($id){
+        $data = User::findOrFail($id);
+
+        return response()->json($data);
+    }
     public function edit($id)
     {
         $user = User::findOrFail($id);
@@ -41,15 +46,15 @@ class SuperAdminController extends Controller
 
     public function update(Request $request, $id)
     {
+        $user = User::findOrFail($id);
         $validate = $request->validate([
             "name" => "required",
-            "email" => "required|email|unique:users,email",
+            "email" => "required|email|unique:users,email," .$user->id,
             "password" => "nullable|confirmed|min:6",
             "role" => "required",
             "status" => "required"
         ]);
 
-        $user = User::findOrFail($id);
         $user->name = $request->name;
         $user->email = $request->email;
         if ($request->filled('password')) {
@@ -57,7 +62,7 @@ class SuperAdminController extends Controller
         }
         $user->role = $request->role;
         $user->status = $request->status;
-        $user->save();
+        $user->update();
 
         return redirect()->route('superadmin.dashboard')->with("success", "Data berhasil diupdate");
     }

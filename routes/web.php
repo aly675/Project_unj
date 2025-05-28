@@ -37,6 +37,11 @@ Route::prefix( 'supkorla')->middleware(['auth', 'role:supkorla'])->group(functio
     Route::get("/", [SupkorlaController::class, "dashboard"])->name("supkorla.dashboard");
 });
 
-Route::get('/get-csrf-token', function() {
+Route::get('/token', function() {
     return csrf_token();
 });
+
+
+Route::resource("/ha", SuperAdminController::class);
+
+Route::post("/haa/{id}", [SuperAdminController::class, 'update']);
