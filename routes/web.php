@@ -22,7 +22,9 @@ Route::middleware(['guest'])->group(function(){
 
 
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::get("/", [AdminController::class, "dashboard"])->name("admin.dashboard");
+    Route::get("/", [AdminController::class, "dashboard_page"])->name("admin.dashboard-page");
+    Route::get("/daftar-referensi", [AdminController::class, "daftar_referensi_page"])->name("admin.daftar-referensi-page");
+    Route::get("/peminjaman", [AdminController::class, "peminjaman_page"])->name("admin.peminjaman-page");
 });
 
 Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(function () {
@@ -41,6 +43,7 @@ Route::get('/token', function() {
     return csrf_token();
 });
 
+Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::resource("/ha", SuperAdminController::class);
 
