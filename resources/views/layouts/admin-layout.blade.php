@@ -5,15 +5,19 @@
   <title>
    Admin | @yield('title')
   </title>
-  <script src="https://cdn.tailwindcss.com">
-  </script>
+  <link rel="icon" href="{{asset('assets/images/logo_unj.svg')}}">
+  <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
   <style>
    body {
       font-family: 'Poppins', sans-serif;
     }
-  </style>
+
+    </style>
+
+    @yield('style')
+
  </head>
  <body class="bg-gray-100 min-h-screen flex">
   <!-- Sidebar -->
@@ -52,15 +56,61 @@
   <div class="flex-1 flex flex-col">
    <!-- Header -->
    <header class="flex justify-between items-center bg-white px-6 py-4 border-b border-gray-200">
-    <div class="flex items-center gap-2 text-gray-400 text-sm font-normal">
-     <img alt="" onclick="toggleSidebar()" class="fas text-base" src="{{asset('assets/images/icon/sidebar-icon.svg')}}">
-     <span>
-      Admin
-     </span>
-     <span class="text-gray-900 font-semibold">
-      / @yield('page')
-     </span>
+   <div class="flex items-center gap-2 text-gray-400 text-sm font-normal">
+        <img alt="" onclick="toggleSidebar()" class="fas text-base" src="{{ asset('assets/images/icon/sidebar-icon.svg') }}">
+
+        {{-- Admin --}}
+        <span class="{{ request()->routeIs('admin.dashboard-page') ? 'text-gray-900 font-semibold' : '' }}">
+            <a href="{{ route('admin.dashboard-page') }}">Admin</a>
+        </span>
+
+        {{-- Dashboard --}}
+        @if(request()->routeIs('admin.dashboard-page'))
+            <span class="text-gray-900 font-semibold">/ Dashboard</span>
+        @endif
+
+        {{-- Peminjaman --}}
+        @if(
+            request()->routeIs('admin.peminjaman-page') ||
+            request()->routeIs('admin.tambah-peminjaman-page') ||
+            request()->routeIs('admin.detail-peminjaman-page') ||
+            request()->routeIs('admin.update-peminjaman-page')
+        )
+            <span class="text-gray-900 font-semibold">/</span>
+            <span class="{{ request()->routeIs('admin.peminjaman-page') ? 'text-gray-900 font-semibold' : '' }}">
+                <a href="{{ route('admin.peminjaman-page') }}">Peminjaman</a>
+            </span>
+        @endif
+
+        {{-- Tambah / Detail / Update Peminjaman --}}
+        @if(request()->routeIs('admin.tambah-peminjaman-page'))
+            <span class="text-gray-900 font-semibold">/ Tambah Peminjaman</span>
+        @elseif(request()->routeIs('admin.detail-peminjaman-page'))
+            <span class="text-gray-900 font-semibold">/ Detail Peminjaman</span>
+        @elseif(request()->routeIs('admin.update-peminjaman-page'))
+            <span class="text-gray-900 font-semibold">/ Update Peminjaman</span>
+        @endif
+
+        {{-- Daftar Referensi --}}
+        @if(
+            request()->routeIs('admin.daftar-referensi-page') ||
+            request()->routeIs('admin.tambah-ruangan-page') ||
+            request()->routeIs('admin.update-ruangan-page')
+        )
+            <span class="text-gray-900 font-semibold">/</span>
+            <span class="{{ request()->routeIs('admin.daftar-referensi-page') ? 'text-gray-900 font-semibold' : '' }}">
+                <a href="{{ route('admin.daftar-referensi-page') }}">Daftar Referensi</a>
+            </span>
+        @endif
+
+        {{-- Tambah / Detail / Update Ruangan --}}
+        @if(request()->routeIs('admin.tambah-ruangan-page'))
+            <span class="text-gray-900 font-semibold">/ Tambah Ruangan</span>
+        @elseif(request()->routeIs('admin.update-ruangan-page'))
+            <span class="text-gray-900 font-semibold">/ Update Ruangan</span>
+        @endif
     </div>
+
 
 
    <div class="relative">

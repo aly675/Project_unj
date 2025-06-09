@@ -34,7 +34,7 @@ class AuthController extends Controller
             }
 
             if (Auth::user()->role === 'superadmin') {
-                return redirect()->route('superadmin.dashboard')->with('success', "Selamat Datang $name");
+                return redirect()->route('superadmin.dashboard-page')->with('success', "Selamat Datang $name");
             }
 
             if (Auth::user()->role === 'kepalaupt') {

@@ -2,8 +2,6 @@
 
 @section('title', 'Daftar Referensi')
 
-@section('page', 'Daftar Referensi')
-
 @section('main')
 
  <section class="flex-1">
@@ -35,10 +33,11 @@
         </select>
       </div>
       <div class="ml-auto">
-       <button
+       <a
+        href="{{route('admin.tambah-ruangan-page')}}"
         class="bg-teal-800 text-white rounded-full px-6 py-2 text-sm font-semibold hover:bg-teal-900 transition-colors whitespace-nowrap">
         Tambah Data
-      </button>
+      </a>
       </div>
      </div>
 
@@ -111,10 +110,10 @@
             <div class="flex flex-col items-center gap-4">
                 <img alt="Office room with desks and chairs, modern interior with computers on desks and office chairs" class="rounded-lg object-cover w-[300px] h-[220px]" height="120" src="https://storage.googleapis.com/a1aa/image/489c915a-6fbd-433d-9bc5-2956ded13a39.jpg" width="200"/>
                 <div class="flex gap-2">
-                <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs rounded px-4 py-2 flex items-center gap-1" type="button">
+                <a href="{{route('admin.update-ruangan-page')}}" class="bg-blue-600 hover:bg-blue-700 text-white text-xs rounded px-4 py-2 flex items-center gap-1" >
                     <i class="fas fa-edit"></i>
                     Edit
-                </button>
+                </a>
                 <button class="bg-red-600 hover:bg-red-700 text-white text-xs rounded px-4 py-2 flex items-center gap-1" type="button">
                     <i class="fas fa-trash-alt"></i>
                     Hapus

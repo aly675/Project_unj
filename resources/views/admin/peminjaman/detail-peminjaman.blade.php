@@ -109,12 +109,12 @@
               class="px-6 py-4 whitespace-nowrap text-xs text-blue-600 font-normal cursor-pointer hover:underline"
             >
               <div class="flex items-center gap-x-2">
-                <a href="{{route('admin.detail-peminjaman-page')}}"
+                <a href="../"
                   ><img
                     src="{{asset('assets/images/icon/action-view-icon.svg')}}"
                     alt="View action icon"
                 /></a>
-                <a href="{{route('admin.update-peminjaman-page')}}"
+                <a href="../"
                   ><img
                     src="{{asset('assets/images/icon/action-edit-icon.svg')}}"
                     alt="Edit action icon"

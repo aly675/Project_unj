@@ -1,12 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <p>superadmin</p>
-</body>
-</html>
+@extends('layouts.super-admin-layout')
+
+@section('title' ,'Menejemen User')
+
+@section('page', 'Menejemen User')
+
+@section('main')
+
+
+
+@endsection

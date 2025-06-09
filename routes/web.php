@@ -23,15 +23,26 @@ Route::middleware(['guest'])->group(function(){
 
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get("/", [AdminController::class, "dashboard_page"])->name("admin.dashboard-page");
-    Route::get("/daftar-referensi", [AdminController::class, "daftar_referensi_page"])->name("admin.daftar-referensi-page");
-    Route::get("/peminjaman", [AdminController::class, "peminjaman_page"])->name("admin.peminjaman-page");
+
+    Route::prefix('/peminjaman')->group( function(){
+        Route::get("", [AdminController::class, "peminjaman_page"])->name("admin.peminjaman-page");
+        Route::get("/tambah-peminjaman", [AdminController::class, "tambah_peminjaman_page"])->name("admin.tambah-peminjaman-page");
+        Route::get("/detail-peminjaman", [AdminController::class, "detail_peminjaman_page"])->name("admin.detail-peminjaman-page");
+        Route::get("/update-peminjaman", [AdminController::class, "update_peminjaman_page"])->name("admin.update-peminjaman-page");
+    });
+
+    Route::prefix('daftar-referensi')->group( function(){
+        Route::get("", [AdminController::class, "daftar_referensi_page"])->name("admin.daftar-referensi-page");
+        Route::get("/tambah-ruangan", [AdminController::class, "tambah_ruangan_page"])->name("admin.tambah-ruangan-page");
+        Route::get("/update-ruangan", [AdminController::class, "update_ruangan_page"])->name("admin.update-ruangan-page");
+    });
 });
 
 Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(function () {
-    Route::get("/", [SuperAdminController::class, "dashboard"])->name("superadmin.dashboard");
+    Route::get("/", [SuperAdminController::class, "dashboard"])->name("superadmin.dashboard-page");
 });
 
-Route::prefix('kepalaupt')->middleware( ['auth', 'role:kepalaupt'])->group(function () {
+Route::prefix('kepala-upt')->middleware( ['auth', 'role:kepalaupt'])->group(function () {
     Route::get("/", [KepalaUptController::class, "dashboard"])->name("kepalaupt.dashboard");
 });
 
