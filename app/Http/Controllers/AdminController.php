@@ -10,7 +10,8 @@ class AdminController extends Controller
 {
     public function dashboard_page()
     {
-        return view('admin.dashboard');
+        $ruangan = Ruangan::count();
+        return view('admin.dashboard', compact("ruangan"));
     }
 
      public function daftar_referensi_page()

@@ -18,7 +18,7 @@
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-sm">
                     <h3 class="text-sm font-medium text-gray-500 mb-2">Total Ruangan</h3>
-                    <p class="text-3xl font-bold text-gray-900">15</p>
+                    <p class="text-3xl font-bold text-gray-900">{{$ruangan}}</p>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-sm">
                     <h3 class="text-sm font-medium text-gray-500 mb-2">Total Pengguna</h3>
