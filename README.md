@@ -131,6 +131,3 @@ Baca [CONTRIBUTING.md](CONTRIBUTING.md) jika tersedia.
 **Happy coding & selamat berkarya di Project UNJ! 🚀**
 
 ---
-
-> Copy-paste saja README ini ke repo-mu!
-> Kalau mau tambah bagian lain (fitur, demo, atau lain-lain), tinggal bilang saja!
