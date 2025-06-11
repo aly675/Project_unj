@@ -6,136 +6,131 @@
   </a>
 </p>
 
-<h2 align="center">Laravel App - Project UNJ</h2>
+<h2 align="center">Project UNJ - Laravel Web Application</h2>
 
 ---
 
-## ✨ Tentang Project
+## 🚀 Tentang Project
 
-Project ini dibuat menggunakan [Laravel](https://laravel.com/), framework PHP yang modern, mudah dikembangkan, dan powerful untuk membangun aplikasi web.
-Struktur kode sudah menggunakan fitur-fitur seperti migration, Eloquent ORM, Blade, dan sistem autentikasi bawaan.
+**Project UNJ** adalah aplikasi berbasis web menggunakan [Laravel](https://laravel.com/).
+Dikembangkan untuk memenuhi kebutuhan manajemen ruangan, fasilitas, dan aktivitas kampus secara efisien dan terstruktur.
 
 ---
 
-## 🚀 **Mulai Cepat**
+## 🛠️ Cara Setup Project
 
-1. **Clone repository**
+1. **Clone Repository**
 
    ```bash
-   git clone https://github.com/username/namaproject.git
-   cd namaproject
+   git clone https://github.com/aly675/Project_unj.git
+   cd Project_unj
    ```
 
-2. **Install dependency**
+2. **Install Dependency**
 
    ```bash
    composer install
    ```
 
-3. **Copy environment**
+3. **Copy dan Edit .env**
 
    ```bash
    cp .env.example .env
+   # Edit file .env, sesuaikan database, dll
    ```
 
-4. **Generate app key**
+4. **Generate App Key**
 
    ```bash
    php artisan key:generate
    ```
 
-5. **Setup database**
-
-   * Buat database di MySQL/MariaDB, edit file `.env` bagian DB sesuai setting lokalmu.
-
-6. **Jalankan migration dan (jika ada) seeder**
+5. **Migrasi Database & Seeder (jika ada)**
 
    ```bash
    php artisan migrate
    php artisan db:seed
    ```
 
-7. **Storage symlink (agar upload gambar bisa diakses)**
+6. **Buat Storage Link**
 
    ```bash
    php artisan storage:link
    ```
 
-8. **Jalankan project**
+7. **Jalankan Server**
 
    ```bash
    php artisan serve
    ```
 
-   Akses di [http://localhost:8000](http://localhost:8000)
+   Akses: [http://localhost:8000](http://localhost:8000)
 
 ---
 
-## 🛠️ **Panduan Git untuk Developer**
+## 🔄 Panduan Git (Wajib Developer Baca!)
 
-### **Tarik Perubahan (Pull)**
-
-Selalu lakukan pull sebelum memulai kerja:
+### **1. Selalu Pull Sebelum Mulai**
 
 ```bash
 git pull origin main
 ```
 
----
+### **2. Format Commit Saat Push**
 
-### **Push Kode - Standar Commit**
+* **Feat:** untuk penambahan/fitur baru
+* **Fix:** untuk perbaikan bug
 
-**WAJIB:**
-
-* Gunakan prefix **Feat:** jika commit untuk *menambah fitur baru*
-* Gunakan prefix **Fix:** jika commit untuk *perbaikan bug*
-
-#### **Contoh:**
+**Contoh:**
 
 ```bash
-# Untuk menambah fitur baru:
+# Fitur baru:
 git add .
-git commit -m "Feat: Tambah fitur booking ruangan"
+git commit -m "Feat: Tambah fitur export PDF laporan ruangan"
 git push origin main
 
-# Untuk memperbaiki bug:
+# Fix bug:
 git add .
-git commit -m "Fix: Perbaiki validasi upload gambar ruangan"
+git commit -m "Fix: Perbaiki validasi login"
 git push origin main
 ```
 
 ---
 
-### **Langkah Standar Workflow**
+### **Workflow Ringkas**
 
-1. **Tarik kode terbaru:**
-   `git pull origin main`
-2. **Lakukan perubahan, tes di lokal**
-3. **Add & commit dengan pesan sesuai format**
-4. **Push ke remote:**
-   `git push origin main`
+1. `git pull origin main`
+2. Lakukan perubahan & tes lokal
+3. `git add .`
+4. Commit dengan pesan sesuai format di atas
+5. `git push origin main`
 
 ---
 
-## 📚 **Referensi & Dokumentasi**
+## 📚 Referensi
 
-* [Laravel Docs](https://laravel.com/docs)
-* [Laracasts (Video Belajar)](https://laracasts.com)
+* [Laravel Official Documentation](https://laravel.com/docs)
+* [Laracasts (Tutorial Video)](https://laracasts.com)
 * [Laravel Bootcamp](https://bootcamp.laravel.com)
 
 ---
 
-## ❤️ **Kontribusi**
+## ❤️ Kontribusi
 
-Kontribusi sangat terbuka!
-Baca pedoman di [CONTRIBUTING.md](CONTRIBUTING.md) sebelum pull request.
-
----
-
-## ⚖️ **Lisensi**
-
-Project ini berlisensi [MIT License](https://opensource.org/licenses/MIT).
+Kontribusi sangat terbuka! Silakan pull request, saran, atau issue.
+Baca [CONTRIBUTING.md](CONTRIBUTING.md) jika tersedia.
 
 ---
 
-**Happy coding! 🚀**
+## ⚖️ Lisensi
+
+[MIT License](https://opensource.org/licenses/MIT)
+
+---
+
+**Happy coding & selamat berkarya di Project UNJ! 🚀**
+
+---
+
+> Copy-paste saja README ini ke repo-mu!
+> Kalau mau tambah bagian lain (fitur, demo, atau lain-lain), tinggal bilang saja!
