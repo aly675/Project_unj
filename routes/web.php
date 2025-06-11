@@ -25,16 +25,20 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get("/", [AdminController::class, "dashboard_page"])->name("admin.dashboard-page");
 
     Route::prefix('/peminjaman')->group( function(){
-        Route::get("", [AdminController::class, "peminjaman_page"])->name("admin.peminjaman-page");
-        Route::get("/tambah-peminjaman", [AdminController::class, "tambah_peminjaman_page"])->name("admin.tambah-peminjaman-page");
+        Route::get("", [AdminController::class, "peminjaman_page"])->name(name: "admin.peminjaman-page");
+        Route::get("/tambah-peminjaman", [AdminController::class, "tambah_peminjaman_page"])->name(name: "admin.tambah-peminjaman-page");
         Route::get("/detail-peminjaman", [AdminController::class, "detail_peminjaman_page"])->name("admin.detail-peminjaman-page");
         Route::get("/update-peminjaman", [AdminController::class, "update_peminjaman_page"])->name("admin.update-peminjaman-page");
+
+
     });
 
     Route::prefix('daftar-referensi')->group( function(){
         Route::get("", [AdminController::class, "daftar_referensi_page"])->name("admin.daftar-referensi-page");
         Route::get("/tambah-ruangan", [AdminController::class, "tambah_ruangan_page"])->name("admin.tambah-ruangan-page");
         Route::get("/update-ruangan", [AdminController::class, "update_ruangan_page"])->name("admin.update-ruangan-page");
+        Route::post("/tambah-peminjaman/submit", [AdminController::class, "tambahRuangan"])->name("tambah.ruangan");
+        Route::delete('/admin/ruangan/{id}', [AdminController::class, 'destroy'])->name('admin.delete-ruangan');
     });
 });
 
