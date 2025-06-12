@@ -17,18 +17,6 @@
     }
   </style>
   @yield('style')
-  <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'teal-custom': '#1a9b8e',
-                        'teal-dark': '#0f766e'
-                    }
-                }
-            }
-        }
-    </script>
  </head>
  <body class="bg-gray-100 min-h-screen flex">
   <!-- Sidebar -->
@@ -43,16 +31,10 @@
 
       <nav class="flex flex-col mt-6 text-teal-300 text-sm font-medium">
         <a class="flex items-center gap-3 px-7 py-3 hover:text-white transition-colors
-         {{ request()->routeIs('superadmin.dashboard-page') ? 'bg-teal-700 text-white font-semibold' : '' }}"
-          href="{{route('superadmin.dashboard-page')}}">
+         {{ request()->routeIs('kepalaupt.dashboard-page') ? 'bg-teal-700 text-white font-semibold' : '' }}"
+          href="{{route('kepalaupt.dashboard-page')}}">
           <img alt="" src="{{asset('assets/images/icon/home-icon.svg')}}" class="w-5 h-5"/>
           <span class="sidebar-text">Dashboard</span>
-        </a>
-        <a class="flex items-center gap-3 px-7 py-3 hover:text-white transition-colors
-         {{ request()->routeIs('superadmin.manejemen-users-page') ? 'bg-teal-700 text-white font-semibold' : '' }}"
-          href="{{route('superadmin.manejemen-users-page')}}">
-          <img alt="" src="{{asset('assets/images/icon/menejemen-icon.svg')}}" class="w-5 h-5"/>
-          <span class="sidebar-text">Manejemen User</span>
         </a>
       </nav>
     </aside>
@@ -63,10 +45,10 @@
    <header class="flex justify-between items-center bg-white px-6 py-4 border-b border-gray-200">
     <div class="flex items-center gap-2 text-gray-400 text-sm font-normal">
      <img alt="" onclick="toggleSidebar()" class="fas text-base" src="{{asset('assets/images/icon/sidebar-icon.svg')}}">
-     <a href="{{route('superadmin.dashboard-page')}}">
-      Super Admin
+     <a href="{{route('kepalaupt.dashboard-page')}}">
+      Kepala UPT
      </a>
-     <span class=" {{ request()->routeIs('superadmin.manejemen-users-page') ? 'text-gray-900 font-semibold' : '' }}">
+     <span class=" {{ request()->routeIs('kepalaupt.dashboard-page') ? 'text-gray-900 font-semibold' : '' }}">
       / @yield('page')
      </span>
     </div>

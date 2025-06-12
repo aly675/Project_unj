@@ -2,16 +2,67 @@
 
 @section('title', 'Daftar Referensi')
 
+@section('style')
+    <style>
+    /* resources/css/app.css */
+   /* Modern scrollbar */
+.scrollbar-modern {
+  scrollbar-width: thin;              /* Firefox */
+  scrollbar-color: #94a3b8 #f1f5f9;   /* thumb color & track color */
+}
+
+/* Chrome, Edge, Safari */
+.scrollbar-modern::-webkit-scrollbar {
+  width: 6px;                         /* scroll bar width */
+}
+
+.scrollbar-modern::-webkit-scrollbar-track {
+  background: #f1f5f9;                /* light gray */
+  border-radius: 100px;
+}
+
+.scrollbar-modern::-webkit-scrollbar-thumb {
+  background-color: #94a3b8;          /* slate-400 */
+  border-radius: 100px;
+  border: 2px solid transparent;      /* spacing */
+  background-clip: content-box;
+}
+
+    </style>
+@endsection
+
 @section('main')
 <section class="flex-1">
     <h1 class="text-gray-900 font-extrabold text-2xl mb-4">Daftar Referensi</h1>
     <div class="flex flex-wrap items-center gap-3 mb-6 text-xl text-gray-400">
         <!-- ... Search & Filter ... -->
-        <div class="ml-auto">
-            <a href="{{ route('admin.tambah-ruangan-page') }}" class="bg-teal-800 text-white rounded-full px-6 py-2 text-sm font-semibold hover:bg-teal-900 transition-colors whitespace-nowrap">
-                Tambah Data
-            </a>
+            <div class="flex items-center justify-between gap-4 w-full">
+                <!-- Input Search -->
+                <div class="relative w-full max-w-sm">
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Cari ruangan..."
+                        class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm text-gray-700"
+                    >
+                    <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Tombol Tambah Data -->
+                <div class="ml-auto">
+                    <a href="{{ route('admin.tambah-ruangan-page') }}"
+                    class="bg-teal-800 text-white rounded-full px-6 py-2 text-[15px] font-semibold hover:bg-teal-900 transition-colors whitespace-nowrap">
+                        Tambah Data
+                    </a>
+                </div>
         </div>
+
     </div>
 
     @foreach($ruangans as $ruangan)
@@ -42,7 +93,7 @@
                                 @if($ruangan->fasilitas->count())
                                     {{ $ruangan->fasilitas[0]->nama }}
                                     @if($ruangan->fasilitas[0]->pivot->jumlah > 1)
-                                        x{{ $ruangan->fasilitas[0]->pivot->jumlah }}
+                                        (Jumlah Fasilitas : {{ $ruangan->fasilitas[0]->pivot->jumlah }})
                                     @endif
                                 @else
                                     <em>Tidak ada fasilitas</em>
@@ -54,7 +105,7 @@
                                 <td class="text-left">
                                     {{ $fasilitas->nama }}
                                     @if($fasilitas->pivot->jumlah > 1)
-                                        x{{ $fasilitas->pivot->jumlah }}
+                                        (Jumlah Fasilitas : {{ $fasilitas->pivot->jumlah }})
                                     @endif
                                 </td>
                             </tr>
@@ -67,10 +118,13 @@
                 <img alt="Gambar Ruangan" class="rounded-lg object-cover w-[300px] h-[220px]"
                      src="{{ $ruangan->gambar ? asset('storage/'.$ruangan->gambar) : asset('/placeholder.svg') }}" width="200" height="120"/>
                 <div class="flex gap-2">
-                    <a href="{{ route('admin.update-ruangan-page', ['id' => $ruangan->id]) }}" class="bg-blue-600 hover:bg-blue-700 text-white text-xs rounded px-4 py-2 flex items-center gap-1">
+                    {{-- <a href="{{ route('admin.update-ruangan-page', ['id' => $ruangan->id]) }}" class="bg-blue-600 hover:bg-blue-700 text-white text-xs rounded mb-[15px] px-5 py-2 flex items-center gap-1">
                         <i class="fas fa-edit"></i> Edit
-                    </a>
-                    <form method="POST" action="{{ route('admin.delete-ruangan', $ruangan->id) }}" onsubmit="return confirm('Yakin ingin hapus ruangan ini?')">
+                    </a> --}}
+                    <button onclick="bukaModalRuangan()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs rounded mb-[15px] px-5 py-2 flex items-center gap-1">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <form method="POST" class="" action="{{ route('admin.delete-ruangan', $ruangan->id) }}" onsubmit="return confirm('Yakin ingin hapus ruangan ini?')">
                         @csrf
                         @method('DELETE')
                         <button class="bg-red-600 hover:bg-red-700 text-white text-xs rounded px-4 py-2 flex items-center gap-1" type="submit">
@@ -86,4 +140,46 @@
         <div class="text-center text-gray-500 py-10">Belum ada data ruangan.</div>
     @endif
 </section>
+
+<!-- Modal Tambah Ruangan -->
+<div id="modalTambahRuangan" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
+  <div class="relative w-full max-w-xl bg-white rounded-lg shadow-xl">
+
+    <!-- Header (tetap) -->
+    <div class="bg-teal-800 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
+      <h1 class="text-xl font-semibold">Form edit Ruangan</h1>
+      <button onclick="tutupModalRuangan()" class="text-white text-2xl hover:text-gray-300">&times;</button>
+    </div>
+
+    <!-- Konten Scrollable Saja -->
+    <div class="max-h-[80vh] overflow-y-auto scrollbar-modern p-2">
+      <div class="bg-white rounded-lg border p-6">
+        @include('admin.daftar-referensi.update-ruangan')
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+@endsection
+
+
+@section('js')
+<script>
+  function bukaModalRuangan() {
+    const modal = document.getElementById('modalTambahRuangan');
+    modal.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden'); // Kunci scroll halaman utama
+  }
+
+  function tutupModalRuangan() {
+    const modal = document.getElementById('modalTambahRuangan');
+    modal.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden'); // Kembalikan scroll utama
+  }
+</script>
+
 @endsection

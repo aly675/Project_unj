@@ -7,6 +7,6 @@ use Illuminate\Http\Request;
 class KepalaUptController extends Controller
 {
         public function dashboard(){
-        return view('kepala-upt.dashboard');
+        return view('kepalaUpt.dashboard');
     }
 }

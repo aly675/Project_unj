@@ -44,10 +44,14 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 
 Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(function () {
     Route::get("/", [SuperAdminController::class, "dashboard"])->name("superadmin.dashboard-page");
+    Route::prefix('/manajemen-users')->group( function() {
+        Route::get('', [SuperAdminController::class, 'manejemen_users_page'])->name('superadmin.manejemen-users-page');
+        Route::get('/tambah-user', [SuperAdminController::class, 'tambah_user_page'])->name('superadmin.tambah-user-page');
+    });
 });
 
 Route::prefix('kepala-upt')->middleware( ['auth', 'role:kepalaupt'])->group(function () {
-    Route::get("/", [KepalaUptController::class, "dashboard"])->name("kepalaupt.dashboard");
+    Route::get("/", [KepalaUptController::class, "dashboard"])->name("kepalaupt.dashboard-page");
 });
 
 Route::prefix( 'supkorla')->middleware(['auth', 'role:supkorla'])->group(function () {

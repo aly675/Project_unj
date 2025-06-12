@@ -2,6 +2,8 @@
 
 @section('title', 'Dashboard')
 
+@section('page', 'Dashboard')
+
 @section('main')
 
 @endsection

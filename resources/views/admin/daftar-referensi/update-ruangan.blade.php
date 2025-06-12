@@ -1,12 +1,4 @@
-@extends('layouts.admin-layout')
 
-@section('title', 'Tambah Ruangan')
-
-@section('main')
-  <div class="max-w-4xl">
-                    <h1 class="text-2xl font-semibold text-gray-900 mb-6">Form Input Ruangan</h1>
-
-                    <div class="bg-white rounded-lg shadow-sm border p-6">
                         <form class="space-y-6" id="roomForm">
                             <!-- Nomor Ruangan -->
                             <div>
@@ -142,18 +134,14 @@
                                 <button
                                     type="button"
                                     onclick="simpanForm()"
-                                    class="px-6 py-2 bg-pustikom-teal text-white rounded-md hover:bg-pustikom-dark-teal transition-colors"
+                                    class="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-md transition-colors"
                                 >
                                     Simpan
                                 </button>
                             </div>
                         </form>
-                    </div>
-                </div>
 
-@endsection
 
-@section('js')
         <script>
         // Preview gambar ketika file dipilih
         function previewImage(input) {
@@ -329,8 +317,10 @@
                 firstFasilitas.querySelector('select').selectedIndex = 0;
                 firstFasilitas.querySelector('input[type="number"]').value = 1;
 
-                alert('Form telah direset!');
+                alert('Form telah dihapus!');
+                const modal = document.getElementById('modalTambahRuangan');
+                modal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
             }
         }
     </script>
-@endsection

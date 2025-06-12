@@ -27,7 +27,7 @@
       <div class="flex items-center gap-3 px-6 py-8 border-b border-teal-700">
         <img alt="logo unj" class="w-8 h-8" src="{{asset('assets/images/icon/logo-unj.svg')}}">
         <div id="sidebar-labels">
-          <h1 class="text-white font-extrabold text-sm uppercase leading-none">PUSTIKOM</h1>
+          <h1 class="textap-white font-extrabold text-sm uppercase leading-none">PUSTIKOM</h1>
           <p class="text-teal-300 text-[10px] mt-1 leading-tight">UNIVERSITAS NEGERI JAKARTA</p>
         </div>
       </div>

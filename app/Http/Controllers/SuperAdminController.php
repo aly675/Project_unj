@@ -74,4 +74,14 @@ class SuperAdminController extends Controller
 
         return redirect()->back()->with("success", "Data berhasil dihapus");
     }
+
+    public function manejemen_users_page()
+    {
+        return view('superadmin.manajemen-users.manejemen-users');
+    }
+
+    public function tambah_user_page()
+    {
+        return view('superadmin.manajemen-users.tambah-user');
+    }
 }
