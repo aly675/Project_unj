@@ -3,7 +3,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1" name="viewport"/>
   <title>
-   SuperAdmin | @yield('title')
+   Sup-Korla | @yield('title')
   </title>
   <link rel="icon" href="{{asset('assets/images/logo_unj.svg')}}">
   <script src="https://cdn.tailwindcss.com">
@@ -15,22 +15,8 @@
    body {
       font-family: 'Poppins', sans-serif;
     }
-
-    
   </style>
   @yield('style')
-  <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'teal-custom': '#1a9b8e',
-                        'teal-dark': '#0f766e'
-                    }
-                }
-            }
-        }
-    </script>
  </head>
  <body class="bg-gray-100 min-h-screen flex">
   <!-- Sidebar -->
@@ -45,16 +31,10 @@
 
       <nav class="flex flex-col mt-6 text-teal-300 text-sm font-medium">
         <a class="flex items-center gap-3 px-7 py-3 hover:text-white transition-colors
-         {{ request()->routeIs('superadmin.dashboard-page') ? 'bg-teal-700 text-white font-semibold' : '' }}"
-          href="{{route('superadmin.dashboard-page')}}">
+         {{ request()->routeIs('supkorla.dashboard-page') ? 'bg-teal-700 text-white font-semibold' : '' }}"
+          href="{{route('supkorla.dashboard-page')}}">
           <img alt="" src="{{asset('assets/images/icon/home-icon.svg')}}" class="w-5 h-5"/>
           <span class="sidebar-text">Dashboard</span>
-        </a>
-        <a class="flex items-center gap-3 px-7 py-3 hover:text-white transition-colors
-         {{ request()->routeIs('superadmin.manejemen-users-page') ? 'bg-teal-700 text-white font-semibold' : '' }}"
-          href="{{route('superadmin.manejemen-users-page')}}">
-          <img alt="" src="{{asset('assets/images/icon/menejemen-icon.svg')}}" class="w-5 h-5"/>
-          <span class="sidebar-text">Manejemen User</span>
         </a>
       </nav>
     </aside>
@@ -65,32 +45,12 @@
    <header class="flex justify-between items-center bg-white px-6 py-4 border-b border-gray-200">
     <div class="flex items-center gap-2 text-gray-400 text-sm font-normal">
      <img alt="" onclick="toggleSidebar()" class="fas text-base" src="{{asset('assets/images/icon/sidebar-icon.svg')}}">
-           {{-- Super Admin --}}
-        <span class="{{ request()->routeIs('superadmin.dashboard-page') ? 'text-gray-900 font-semibold' : '' }}">
-            <a href="{{ route('superadmin.dashboard-page') }}">Super Admin</a>
-        </span>
-
-        {{-- Dashboard --}}
-        @if(request()->routeIs('superadmin.dashboard-page'))
-            <span class="text-gray-900 font-semibold">/ Dashboard</span>
-        @endif
-
-        {{-- Manejemen Users --}}
-        @if(
-            request()->routeIs('superadmin.manejemen-users-page') ||
-            request()->routeIs('superadmin.tambah-user-page')
-        )
-            <span class="text-gray-900 font-semibold">/</span>
-            <span class="{{ request()->routeIs('superadmin.manejemen-users-page') ? 'text-gray-900 font-semibold' : '' }}">
-                <a href="{{ route('superadmin.manejemen-users-page') }}">Manejemen Users</a>
-            </span>
-        @endif
-
-        {{-- Tambah / Update User --}}
-        @if(request()->routeIs('superadmin.tambah-user-page'))
-            <span class="text-gray-900 font-semibold">/ Tambah Peminjaman</span>
-        @endif
-
+     <a href="{{route('supkorla.dashboard-page')}}">
+      Sup-Korla
+     </a>
+     <span class=" {{ request()->routeIs('supkorla.dashboard-page') ? 'text-gray-900 font-semibold' : '' }}">
+      / @yield('page')
+     </span>
     </div>
 
 
@@ -103,7 +63,6 @@
     <p class="text-gray-400 text-xs leading-tight">Admin PUSTIKOM</p>
   </div>
 </button>
-
 
   <!-- Dropdown Menu -->
 <div id="profile-dropdown"
@@ -121,7 +80,6 @@
   </form>
 </div>
 
-
 </div>
 
 
@@ -131,9 +89,9 @@
         @yield('main')
    </main>
   </div>
+
   <script src="{{asset('assets/js/layout/script.js')}}"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   @yield('js')
- </body>
+</body>
 </html>

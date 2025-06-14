@@ -2,14 +2,41 @@
 
 @section('title', 'Manejemen Users')
 
-@section('page', 'Manejemen Users')
+@section('style')
+    <style>
+               /* Modern scrollbar */
+        .scrollbar-modern {
+        scrollbar-width: thin;              /* Firefox */
+        scrollbar-color: #94a3b8 #f1f5f9;   /* thumb color & track color */
+        }
+
+        /* Chrome, Edge, Safari */
+        .scrollbar-modern::-webkit-scrollbar {
+        width: 6px;                         /* scroll bar width */
+        }
+
+        .scrollbar-modern::-webkit-scrollbar-track {
+        background: #f1f5f9;                /* light gray */
+        border-radius: 100px;
+        }
+
+        .scrollbar-modern::-webkit-scrollbar-thumb {
+        background-color: #94a3b8;          /* slate-400 */
+        border-radius: 100px;
+        border: 2px solid transparent;      /* spacing */
+        background-clip: content-box;
+        }
+
+    </style>
+@endsection
 
 @section('main')
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
                     <h1 class="text-2xl font-bold text-gray-900 mb-4 sm:mb-0">Manajemen Pengguna</h1>
-                    <button class="bg-teal-custom hover:bg-teal-dark text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                    <a href="{{route('superadmin.tambah-user-page')}}" class="bg-teal-custom hover:bg-teal-800 bg-teal-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
                         Tambah Data
-                    </button>
+                    </a>
                 </div>
 
                 <!-- Table Container -->
@@ -27,122 +54,51 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
-                                <tr class="hover:bg-gray-50">
+                                @foreach ($users as $data)
+                                <tr class="hover:bg-gray-50" id="user-row-{{ $data->id }}">
                                     <td class="py-4 px-6">
                                         <div class="flex items-center space-x-3">
                                             <div class="w-10 h-10 bg-cyan-400 rounded-full flex items-center justify-center">
                                                 <span class="text-white font-semibold text-sm">RF</span>
                                             </div>
-                                            <span class="font-medium text-gray-900">Robert Fox</span>
+                                            <span class="font-medium text-gray-900">{{$data->name}}</span>
                                         </div>
                                     </td>
-                                    <td class="py-4 px-6 text-gray-600">robert@gmail.com</td>
-                                    <td class="py-4 px-6 text-gray-600">Admin</td>
+                                    <td class="py-4 px-6 text-gray-600">{{$data->email}}</td>
+                                    <td class="py-4 px-6 text-gray-600">{{$data->role}}</td>
                                     <td class="py-4 px-6">
                                         <label class="relative inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" checked class="sr-only peer">
-                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-custom"></div>
-                                            <span class="ml-3 text-sm font-medium text-teal-custom">ON</span>
-                                        </label>
-                                    </td>
-                                    <td class="py-4 px-6">
-                                        <div class="flex items-center space-x-2">
-                                            <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                                <i data-lucide="edit" class="w-4 h-4"></i>
-                                            </button>
-                                            <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="py-4 px-6">
-                                        <div class="flex items-center space-x-3">
-                                            <div class="w-10 h-10 bg-cyan-400 rounded-full flex items-center justify-center">
-                                                <span class="text-white font-semibold text-sm">RF</span>
+                                           <input
+                                            type="checkbox"
+                                            class="sr-only toggle-status peer"
+                                            data-id="{{ $data->id }}"
+                                            {{ $data->status === 'aktif' ? 'checked' : '' }}
+                                        >
+                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full
+                                                peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px]
+                                                after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-custom">
                                             </div>
-                                            <span class="font-medium text-gray-900">Robert Fox</span>
-                                        </div>
-                                    </td>
-                                    <td class="py-4 px-6 text-gray-600">asep@gmail.com</td>
-                                    <td class="py-4 px-6 text-gray-600">Kepala PUSTIKOM</td>
-                                    <td class="py-4 px-6">
-                                        <label class="relative inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" checked class="sr-only peer">
-                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-custom"></div>
-                                            <span class="ml-3 text-sm font-medium text-teal-custom">ON</span>
+                                        <span class="status-text ml-3 text-sm font-medium {{ $data->status === 'aktif' ? 'text-teal-custom' : 'text-red-500' }}">
+                                            {{ $data->status === 'aktif' ? 'ON' : 'OFF' }}
+                                        </span>
                                         </label>
                                     </td>
                                     <td class="py-4 px-6">
-                                        <div class="flex items-center space-x-2">
-                                            <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                                <i data-lucide="edit" class="w-4 h-4"></i>
-                                            </button>
-                                            <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                            </button>
-                                        </div>
+                                        <button onclick="bukaModalRuangan()" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                                            <i data-lucide="edit" class="w-4 h-4"></i>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn-delete-user p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                            data-id="{{ $data->id }}"
+                                            data-url="{{ route('superadmin.delete-user', $data->id) }}"
+                                        >
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
                                     </td>
                                 </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="py-4 px-6">
-                                        <div class="flex items-center space-x-3">
-                                            <div class="w-10 h-10 bg-cyan-400 rounded-full flex items-center justify-center">
-                                                <span class="text-white font-semibold text-sm">RF</span>
-                                            </div>
-                                            <span class="font-medium text-gray-900">Robert Fox</span>
-                                        </div>
-                                    </td>
-                                    <td class="py-4 px-6 text-gray-600">agus@gmail.com</td>
-                                    <td class="py-4 px-6 text-gray-600">Super Admin</td>
-                                    <td class="py-4 px-6">
-                                        <label class="relative inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" class="sr-only peer">
-                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-custom"></div>
-                                            <span class="ml-3 text-sm font-medium text-red-500">OFF</span>
-                                        </label>
-                                    </td>
-                                    <td class="py-4 px-6">
-                                        <div class="flex items-center space-x-2">
-                                            <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                                <i data-lucide="edit" class="w-4 h-4"></i>
-                                            </button>
-                                            <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="py-4 px-6">
-                                        <div class="flex items-center space-x-3">
-                                            <div class="w-10 h-10 bg-cyan-400 rounded-full flex items-center justify-center">
-                                                <span class="text-white font-semibold text-sm">RF</span>
-                                            </div>
-                                            <span class="font-medium text-gray-900">Robert Fox</span>
-                                        </div>
-                                    </td>
-                                    <td class="py-4 px-6 text-gray-600">fadlan@gmail.com</td>
-                                    <td class="py-4 px-6 text-gray-600">Koordinator</td>
-                                    <td class="py-4 px-6">
-                                        <label class="relative inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" class="sr-only peer">
-                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-custom"></div>
-                                            <span class="ml-3 text-sm font-medium text-red-500">OFF</span>
-                                        </label>
-                                    </td>
-                                    <td class="py-4 px-6">
-                                        <div class="flex items-center space-x-2">
-                                            <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                                <i data-lucide="edit" class="w-4 h-4"></i>
-                                            </button>
-                                            <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                @endforeach
+
                                 <tr class="hover:bg-gray-50">
                                     <td class="py-4 px-6">
                                         <div class="flex items-center space-x-3">
@@ -158,12 +114,12 @@
                                         <label class="relative inline-flex items-center cursor-pointer">
                                             <input type="checkbox" checked class="sr-only peer">
                                             <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-custom"></div>
-                                            <span class="ml-3 text-sm font-medium text-teal-custom">ON</span>
+                                            <span class="status-text ml-3 text-sm font-medium text-teal-custom">ON</span>
                                         </label>
                                     </td>
                                     <td class="py-4 px-6">
                                         <div class="flex items-center space-x-2">
-                                            <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                                            <button onclick="bukaModalRuangan()" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                                                 <i data-lucide="edit" class="w-4 h-4"></i>
                                             </button>
                                             <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
@@ -174,107 +130,6 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
-
-                    <!-- Mobile Cards -->
-                    <div class="lg:hidden">
-                        <div class="p-4 space-y-4">
-                            <div class="bg-white border rounded-lg p-4 shadow-sm">
-                                <div class="flex items-center justify-between mb-3">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-cyan-400 rounded-full flex items-center justify-center">
-                                            <span class="text-white font-semibold text-sm">RF</span>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-medium text-gray-900">Robert Fox</h3>
-                                            <p class="text-sm text-gray-600">robert@gmail.com</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center space-x-2">
-                                        <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
-                                            <i data-lucide="edit" class="w-4 h-4"></i>
-                                        </button>
-                                        <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg">
-                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-sm text-gray-600">Role: <span class="font-medium">Admin</span></p>
-                                    </div>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" checked class="sr-only peer">
-                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-custom"></div>
-                                        <span class="ml-3 text-sm font-medium text-teal-custom">ON</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="bg-white border rounded-lg p-4 shadow-sm">
-                                <div class="flex items-center justify-between mb-3">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-cyan-400 rounded-full flex items-center justify-center">
-                                            <span class="text-white font-semibold text-sm">RF</span>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-medium text-gray-900">Robert Fox</h3>
-                                            <p class="text-sm text-gray-600">asep@gmail.com</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center space-x-2">
-                                        <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
-                                            <i data-lucide="edit" class="w-4 h-4"></i>
-                                        </button>
-                                        <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg">
-                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-sm text-gray-600">Role: <span class="font-medium">Kepala PUSTIKOM</span></p>
-                                    </div>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" checked class="sr-only peer">
-                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-custom"></div>
-                                        <span class="ml-3 text-sm font-medium text-teal-custom">ON</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="bg-white border rounded-lg p-4 shadow-sm">
-                                <div class="flex items-center justify-between mb-3">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-cyan-400 rounded-full flex items-center justify-center">
-                                            <span class="text-white font-semibold text-sm">RF</span>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-medium text-gray-900">Robert Fox</h3>
-                                            <p class="text-sm text-gray-600">agus@gmail.com</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center space-x-2">
-                                        <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
-                                            <i data-lucide="edit" class="w-4 h-4"></i>
-                                        </button>
-                                        <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg">
-                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-sm text-gray-600">Role: <span class="font-medium">Super Admin</span></p>
-                                    </div>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" class="sr-only peer">
-                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-custom"></div>
-                                        <span class="ml-3 text-sm font-medium text-red-500">OFF</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Pagination -->
@@ -304,38 +159,161 @@
                         </div>
                     </div>
                 </div>
+
+
+    <!-- Modal Tambah Ruangan -->
+    <div id="modalTambahRuangan"
+        class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black bg-opacity-0 opacity-0 scale-95
+                transition-all duration-300 ease-out">
+        <div class="relative w-full max-w-xl bg-white rounded-lg shadow-xl scale-95 transition-transform duration-300">
+            <!-- Header -->
+            <div class="bg-teal-800 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
+                <h1 class="text-xl font-semibold">Form Edit Ruangan</h1>
+                <button onclick="tutupModalRuangan()" class="text-white text-2xl hover:text-gray-300">&times;</button>
+            </div>
+
+            <!-- Konten -->
+            <div class="max-h-[100vh] overflow-y-auto scrollbar-modern p-2">
+                <div class="bg-white rounded-lg border p-6">
+                    @include('superadmin.manajemen-users.update-user')
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 @endsection
 
 @section('js')
    <script>
-        // Initialize Lucide icons
+      // Initialize Lucide icons
         lucide.createIcons();
 
-        // Toggle sidebar for mobile
-        function toggleSidebar() {
-            const overlay = document.getElementById('sidebar-overlay');
-            overlay.classList.toggle('hidden');
-        }
-
-        // Close sidebar when clicking overlay
-        document.getElementById('sidebar-overlay').addEventListener('click', function(e) {
-            if (e.target === this) {
-                toggleSidebar();
-            }
-        });
-
         // Toggle switch functionality
-        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const statusText = this.parentElement.querySelector('span');
-                if (this.checked) {
-                    statusText.textContent = 'ON';
-                    statusText.className = 'ml-3 text-sm font-medium text-teal-custom';
-                } else {
-                    statusText.textContent = 'OFF';
-                    statusText.className = 'ml-3 text-sm font-medium text-red-500';
-                }
+    //   document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    //         checkbox.addEventListener('change', function () {
+    //             const statusText = this.parentElement.querySelector('.status-text');
+    //             console.log(statusText);
+    //             if (statusText) {
+    //                 if (this.checked) {
+    //                     statusText.textContent = 'ON';
+    //                     statusText.className = 'status-text ml-3 text-sm font-medium text-teal-custom';
+    //                 } else {
+    //                     statusText.textContent = 'OFF';
+    //                     statusText.className = 'status-text ml-3 text-sm font-medium text-red-500';
+    //                 }
+    //             }
+    //         });
+    //     });
+
+        document.querySelectorAll('.toggle-status').forEach(checkbox => {
+            checkbox.addEventListener('change', function (e) {
+                const userId = this.getAttribute('data-id');
+                const statusText = this.parentElement.querySelector('.status-text');
+                const isChecked = this.checked;
+
+                // Tahan perubahan UI dulu
+                this.checked = !isChecked;
+
+                // SweetAlert konfirmasi
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    text: 'Apakah Anda yakin ingin mengubah status user ini?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, ubah!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Jalankan fetch setelah dikonfirmasi
+                        fetch("{{ route('superadmin.toggle-status') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ id: userId })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                statusText.textContent = data.status;
+                                statusText.className = `status-text ml-3 text-sm font-medium ${data.class}`;
+                                checkbox.checked = data.status === 'ON'; // Pastikan toggle sesuai data terbaru
+                                Swal.fire('Berhasil', 'Status user berhasil diubah.', 'success');
+                            } else {
+                                Swal.fire('Gagal', 'Gagal mengubah status.', 'error');
+                            }
+                        })
+                        .catch(() => {
+                            Swal.fire('Error', 'Terjadi kesalahan server.', 'error');
+                        });
+                    }
+                });
             });
         });
-    </script>
+
+        document.querySelectorAll('.btn-delete-user').forEach(button => {
+            button.addEventListener('click', function () {
+                const userId = this.getAttribute('data-id');
+                const deleteUrl = this.getAttribute('data-url');
+                const row = document.getElementById(`user-row-${userId}`);
+
+                Swal.fire({
+                    title: 'Yakin mau hapus?',
+                    text: 'Data user akan dihapus permanen!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e3342f',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(deleteUrl, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                row.remove(); // Hapus baris user
+                                Swal.fire('Dihapus!', 'User berhasil dihapus.', 'success');
+                            } else {
+                                Swal.fire('Gagal', 'Terjadi kesalahan saat menghapus.', 'error');
+                            }
+                        })
+                        .catch(() => {
+                            Swal.fire('Error', 'Server tidak merespons.', 'error');
+                        });
+                    }
+                });
+            });
+        });
+
+
+       function bukaModalRuangan() {
+            const modal = document.getElementById('modalTambahRuangan');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0', 'scale-95', 'bg-opacity-0');
+                modal.classList.add('opacity-100', 'scale-100', 'bg-opacity-50');
+            }, 100);
+        }   
+
+        function tutupModalRuangan() {
+            const modal = document.getElementById('modalTambahRuangan');
+            modal.classList.remove('opacity-100', 'scale-100', 'bg-opacity-50');
+            modal.classList.add('opacity-0', 'scale-95', 'bg-opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300); // sesuai dengan durasi transition
+        }
+
+   </script>
 @endsection

@@ -16,10 +16,10 @@
                 $dashboardRoute = route('admin.dashboard-page');
                 break;
             case 'kepalaupt':
-                $dashboardRoute = route('kepalaupt.dashboard');
+                $dashboardRoute = route('kepalaupt.dashboard-page');
                 break;
             case 'supkorla':
-                $dashboardRoute = route('supkorla.dashboard');
+                $dashboardRoute = route('supkorla.dashboard-page');
                 break;
         }
     }

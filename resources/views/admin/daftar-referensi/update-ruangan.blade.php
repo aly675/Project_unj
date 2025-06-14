@@ -295,8 +295,18 @@
         }
 
         // Batal form
-        function batalForm() {
-            if (confirm('Apakah Anda yakin ingin membatalkan? Semua data yang telah diisi akan hilang.')) {
+    function batalForm() {
+        Swal.fire({
+            title: 'Yakin ingin membatalkan?',
+            text: "Semua data yang telah diisi akan hilang.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, batalkan',
+            cancelButtonText: 'Kembali'
+        }).then((result) => {
+            if (result.isConfirmed) {
                 // Reset form
                 document.getElementById('roomForm').reset();
 
@@ -317,10 +327,19 @@
                 firstFasilitas.querySelector('select').selectedIndex = 0;
                 firstFasilitas.querySelector('input[type="number"]').value = 1;
 
-                alert('Form telah dihapus!');
+                // Tutup modal dan notifikasi sukses
                 const modal = document.getElementById('modalTambahRuangan');
                 modal.classList.add('hidden');
                 document.body.classList.remove('overflow-hidden');
+
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Form telah dibatalkan.',
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
             }
-        }
+        });
+    }
     </script>

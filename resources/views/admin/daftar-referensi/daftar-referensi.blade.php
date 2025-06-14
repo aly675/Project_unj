@@ -4,29 +4,28 @@
 
 @section('style')
     <style>
-    /* resources/css/app.css */
-   /* Modern scrollbar */
-.scrollbar-modern {
-  scrollbar-width: thin;              /* Firefox */
-  scrollbar-color: #94a3b8 #f1f5f9;   /* thumb color & track color */
-}
+        /* Modern scrollbar */
+        .scrollbar-modern {
+        scrollbar-width: thin;              /* Firefox */
+        scrollbar-color: #94a3b8 #f1f5f9;   /* thumb color & track color */
+        }
 
-/* Chrome, Edge, Safari */
-.scrollbar-modern::-webkit-scrollbar {
-  width: 6px;                         /* scroll bar width */
-}
+        /* Chrome, Edge, Safari */
+        .scrollbar-modern::-webkit-scrollbar {
+        width: 6px;                         /* scroll bar width */
+        }
 
-.scrollbar-modern::-webkit-scrollbar-track {
-  background: #f1f5f9;                /* light gray */
-  border-radius: 100px;
-}
+        .scrollbar-modern::-webkit-scrollbar-track {
+        background: #f1f5f9;                /* light gray */
+        border-radius: 100px;
+        }
 
-.scrollbar-modern::-webkit-scrollbar-thumb {
-  background-color: #94a3b8;          /* slate-400 */
-  border-radius: 100px;
-  border: 2px solid transparent;      /* spacing */
-  background-clip: content-box;
-}
+        .scrollbar-modern::-webkit-scrollbar-thumb {
+        background-color: #94a3b8;          /* slate-400 */
+        border-radius: 100px;
+        border: 2px solid transparent;      /* spacing */
+        background-clip: content-box;
+        }
 
     </style>
 @endsection
@@ -124,13 +123,16 @@
                     <button onclick="bukaModalRuangan()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs rounded mb-[15px] px-5 py-2 flex items-center gap-1">
                         <i class="fas fa-edit"></i> Edit
                     </button>
-                    <form method="POST" class="" action="{{ route('admin.delete-ruangan', $ruangan->id) }}" onsubmit="return confirm('Yakin ingin hapus ruangan ini?')">
+                    <form id="form-hapus-{{ $ruangan->id }}" method="POST" action="{{ route('admin.delete-ruangan', $ruangan->id) }}">
                         @csrf
                         @method('DELETE')
-                        <button class="bg-red-600 hover:bg-red-700 text-white text-xs rounded px-4 py-2 flex items-center gap-1" type="submit">
+                        <button type="button"
+                                onclick="konfirmasiHapus({{ $ruangan->id }})"
+                                class="bg-red-600 hover:bg-red-700 text-white text-xs rounded px-4 py-2 flex items-center gap-1">
                             <i class="fas fa-trash-alt"></i> Hapus
                         </button>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -142,24 +144,25 @@
 </section>
 
 <!-- Modal Tambah Ruangan -->
-<div id="modalTambahRuangan" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
-  <div class="relative w-full max-w-xl bg-white rounded-lg shadow-xl">
+<div id="modalTambahRuangan"
+     class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black bg-opacity-0 opacity-0 scale-95
+            transition-all duration-300 ease-out">
+    <div class="relative w-full max-w-xl bg-white rounded-lg shadow-xl scale-95 transition-transform duration-300">
+        <!-- Header -->
+        <div class="bg-teal-800 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
+            <h1 class="text-xl font-semibold">Form Edit Ruangan</h1>
+            <button onclick="tutupModalRuangan()" class="text-white text-2xl hover:text-gray-300">&times;</button>
+        </div>
 
-    <!-- Header (tetap) -->
-    <div class="bg-teal-800 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
-      <h1 class="text-xl font-semibold">Form edit Ruangan</h1>
-      <button onclick="tutupModalRuangan()" class="text-white text-2xl hover:text-gray-300">&times;</button>
+        <!-- Konten -->
+        <div class="max-h-[100vh] overflow-y-auto scrollbar-modern p-2">
+            <div class="bg-white rounded-lg border p-6">
+                @include('admin.daftar-referensi.update-ruangan')
+            </div>
+        </div>
     </div>
-
-    <!-- Konten Scrollable Saja -->
-    <div class="max-h-[80vh] overflow-y-auto scrollbar-modern p-2">
-      <div class="bg-white rounded-lg border p-6">
-        @include('admin.daftar-referensi.update-ruangan')
-      </div>
-    </div>
-
-  </div>
 </div>
+
 
 
 
@@ -169,17 +172,40 @@
 
 @section('js')
 <script>
-  function bukaModalRuangan() {
-    const modal = document.getElementById('modalTambahRuangan');
-    modal.classList.remove('hidden');
-    document.body.classList.add('overflow-hidden'); // Kunci scroll halaman utama
-  }
+    function bukaModalRuangan() {
+        const modal = document.getElementById('modalTambahRuangan');
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0', 'scale-95', 'bg-opacity-0');
+            modal.classList.add('opacity-100', 'scale-100', 'bg-opacity-50');
+        }, 10);
+    }
 
-  function tutupModalRuangan() {
-    const modal = document.getElementById('modalTambahRuangan');
-    modal.classList.add('hidden');
-    document.body.classList.remove('overflow-hidden'); // Kembalikan scroll utama
-  }
+    function tutupModalRuangan() {
+        const modal = document.getElementById('modalTambahRuangan');
+        modal.classList.remove('opacity-100', 'scale-100', 'bg-opacity-50');
+        modal.classList.add('opacity-0', 'scale-95', 'bg-opacity-0');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300); // sesuai dengan durasi transition
+    }
+
+    function konfirmasiHapus(id) {
+        Swal.fire({
+            title: 'Yakin ingin menghapus?',
+            text: 'Data ruangan yang dihapus tidak dapat dikembalikan.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('form-hapus-' + id).submit();
+            }
+        });
+    }
 </script>
 
 @endsection

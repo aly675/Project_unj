@@ -19,7 +19,7 @@
  <body class="bg-gray-100 min-h-screen flex">
   <!-- Sidebar -->
      <aside id="sidebar" class="bg-teal-800 w-64 transition-all duration-300 ease-in-out min-h-screen flex flex-col">
-      <div class="flex items-center gap-3 px-6 py-5 border-b border-teal-700">
+      <div class="flex items-center gap-3 px-6 py-8 border-b border-teal-700">
         <img alt="logo unj" class="w-8 h-8" src="{{asset('assets/images/icon/logo-unj.svg')}}">
         <div id="sidebar-labels">
           <h1 class="text-white font-extrabold text-sm uppercase leading-none">PUSTIKOM</h1>
@@ -48,15 +48,17 @@
   </div>
 </button>
 
-
   <!-- Dropdown Menu -->
-<div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-36 bg-white rounded-xl shadow-md ring-1 ring-gray-200 py-1 z-50">
-  <a href="/profile" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+<div id="profile-dropdown"
+     class="absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-xl ring-1 ring-gray-200 py-2 z-50 opacity-0 scale-95 pointer-events-none transition-all duration-200 ease-out">
+  <a href="/profile"
+     class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
     <i class="fas fa-user text-gray-400 text-xs"></i> Profile
   </a>
   <form id="logout-form" method="POST" action="{{ route('logout') }}">
     @csrf
-    <button type="button" onclick="logoutConfirm()" class="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-50 transition">
+    <button type="button" onclick="logoutConfirm()"
+            class="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 transition-colors">
       <i class="fas fa-sign-out-alt text-red-400 text-xs"></i> Logout
     </button>
   </form>
@@ -72,7 +74,8 @@
    </main>
   </div>
 
-  @yield('js')
   <script src="{{asset('assets/js/layout/script.js')}}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  @yield('js')
  </body>
 </html>

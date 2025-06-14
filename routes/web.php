@@ -11,6 +11,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::fallback(function () {
+    return view('errors.404'); // pakai view kamu sendiri
+})->middleware(['web', 'auth']); // ini penting!
+
 
 Route::middleware(['guest'])->group(function(){
 
@@ -26,7 +30,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 
     Route::prefix('/peminjaman')->group( function(){
         Route::get("", [AdminController::class, "peminjaman_page"])->name(name: "admin.peminjaman-page");
-        Route::get("/tambah-peminjaman", [AdminController::class, "tambah_peminjaman_page"])->name(name: "admin.tambah-peminjaman-page");
+        Route::get("/tambah-peminjaman", [AdminController::class, "tambah_peminjaman_page"])->name("admin.tambah-peminjaman-page");
         Route::get("/detail-peminjaman", [AdminController::class, "detail_peminjaman_page"])->name("admin.detail-peminjaman-page");
         Route::get("/update-peminjaman", [AdminController::class, "update_peminjaman_page"])->name("admin.update-peminjaman-page");
 
@@ -47,6 +51,8 @@ Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(func
     Route::prefix('/manajemen-users')->group( function() {
         Route::get('', [SuperAdminController::class, 'manejemen_users_page'])->name('superadmin.manejemen-users-page');
         Route::get('/tambah-user', [SuperAdminController::class, 'tambah_user_page'])->name('superadmin.tambah-user-page');
+        Route::post('/users/toggle-status', [SuperAdminController::class, 'toggleStatus'])->name('superadmin.toggle-status');
+        Route::delete('delete/user/{id}', [SuperAdminController::class, 'destroy'])->name('superadmin.delete-user');
     });
 });
 
@@ -55,7 +61,7 @@ Route::prefix('kepala-upt')->middleware( ['auth', 'role:kepalaupt'])->group(func
 });
 
 Route::prefix( 'supkorla')->middleware(['auth', 'role:supkorla'])->group(function () {
-    Route::get("/", [SupkorlaController::class, "dashboard"])->name("supkorla.dashboard");
+    Route::get("/", [SupkorlaController::class, "dashboard"])->name("supkorla.dashboard-page");
 });
 
 Route::get('/token', function() {

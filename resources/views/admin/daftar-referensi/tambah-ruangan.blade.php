@@ -105,7 +105,7 @@
             </div>
 
             <div class="flex justify-end space-x-3 pt-6">
-                <a href="{{ route('admin.daftar-referensi-page') }}" class="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors">Batal</a>
+                <button type="button" onclick="batalForm()" class="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors">Batal</button>
                 <button type="submit" onclick="simpanForm()" class="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-md transition-colors">Simpan</button>
             </div>
         </form>
@@ -222,5 +222,52 @@
 
             alert('Data ruangan berhasil disimpan!');
         }
+
+              // Batal form
+    function batalForm() {
+        Swal.fire({
+            title: 'Yakin ingin membatalkan?',
+            text: "Semua data yang telah diisi akan hilang.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, batalkan',
+            cancelButtonText: 'Kembali'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Reset form
+                document.getElementById('roomForm').reset();
+
+                // Reset preview gambar
+                removeImage();
+
+                // Reset fasilitas ke kondisi awal (hanya 1 fasilitas)
+                const container = document.getElementById('fasilitasContainer');
+                const fasilitasItems = container.querySelectorAll('.fasilitas-item');
+
+                // Hapus semua fasilitas kecuali yang pertama
+                for (let i = 1; i < fasilitasItems.length; i++) {
+                    fasilitasItems[i].remove();
+                }
+
+                // Reset nilai fasilitas pertama
+                const firstFasilitas = container.querySelector('.fasilitas-item');
+                firstFasilitas.querySelector('select').selectedIndex = 0;
+                firstFasilitas.querySelector('input[type="number"]').value = 1;
+
+                    window.location.href = "{{ route('admin.daftar-referensi-page') }}";
+
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Form telah dibatalkan.',
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            }
+        });
+    }
+
 </script>
 @endsection

@@ -10,7 +10,10 @@ class SuperAdminController extends Controller
     public function dashboard()
     {
         $users = User::all(); // Menampilkan semua user ke dashboard
-        return view('superadmin.dashboard', compact('users'));
+        $totalUsers = $users->count();
+        $activeUsers = $users->where('status', 'aktif')->count();
+        $nonActiveUsers = $users->where('status', 'non-aktif')->count();
+        return view('superadmin.dashboard', compact('users', 'totalUsers', 'activeUsers', 'nonActiveUsers'));
     }
 
     public function store(Request $request)
@@ -69,19 +72,41 @@ class SuperAdminController extends Controller
 
     public function destroy($id)
     {
+        // $user = User::findOrFail($id);
+        // $user->delete();
+
+        // return redirect()->back()->with("success", "Data berhasil dihapus");
+
         $user = User::findOrFail($id);
         $user->delete();
 
-        return redirect()->back()->with("success", "Data berhasil dihapus");
+        return response()->json(['success' => true]);
     }
 
     public function manejemen_users_page()
     {
-        return view('superadmin.manajemen-users.manejemen-users');
+        $users = User::all(); // Menampilkan semua user ke dashboard
+        return view('superadmin.manajemen-users.manejemen-users', compact('users'));
     }
 
     public function tambah_user_page()
     {
         return view('superadmin.manajemen-users.tambah-user');
     }
+
+    public function toggleStatus(Request $request)
+    {
+        $user = User::findOrFail($request->id);
+
+        // Toggle status dari enum
+        $user->status = $user->status === 'aktif' ? 'non-aktif' : 'aktif';
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'status' => $user->status === 'aktif' ? 'ON' : 'OFF',
+            'class'  => $user->status === 'aktif' ? 'text-teal-custom' : 'text-red-500'
+        ]);
+    }
+
 }

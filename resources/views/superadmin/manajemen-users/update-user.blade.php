@@ -1,14 +1,4 @@
-@extends('layouts.super-admin-layout')
-
-@section('title', 'Tambah User')
-
-@section('main')
-
-          <h1 class="text-2xl font-bold text-gray-800 mb-6">Form Pendaftaran</h1>
-
-      <!-- Form Card -->
-      <div class="bg-white rounded-lg shadow-sm p-6">
-        <form>
+        <form class="space-y-6">
           <!-- Nama -->
           <div class="mb-4">
             <label for="nama" class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
@@ -45,7 +35,7 @@
           </div>
 
           <!-- Gambar Profil -->
-          <div class="mb-6">
+          <div class="mb-14">
                 <label for="gambar-ruangan" class="block text-sm font-medium text-gray-700 mb-2">
                     Gambar Ruangan
                 </label>
@@ -76,24 +66,22 @@
                 </div>
             </div>
 
-
           <!-- Buttons -->
-          <div class="flex justify-end space-x-3">
-            <button type="button" onclick="confirmCancel()" class="px-6 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
-              Batal
+          <div class="flex justify-end mt-10 space-x-3 ">
+           <button type="button"
+                    onclick="confirmCancel()"
+                    class="px-6 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
+                Batal
             </button>
             <button type="submit" class="px-6 py-2 bg-teal-700 text-white font-medium rounded-md hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-500">
               Simpan
             </button>
           </div>
         </form>
-      </div>
 
-@endsection
 
-@section('js')
-<script>
-        function confirmCancel() {
+        <script>
+                function confirmCancel() {
                     Swal.fire({
                         title: 'Yakin ingin membatalkan?',
                         text: "Perubahan yang belum disimpan akan hilang.",
@@ -128,43 +116,41 @@
                     });
                 }
 
+                // Preview gambar ketika file dipilih
+                function previewImage(input) {
+                    const file = input.files[0];
+                    const preview = document.getElementById('imagePreview');
+                    const previewImg = document.getElementById('previewImg');
 
-        // Preview gambar ketika file dipilih
-        function previewImage(input) {
-            const file = input.files[0];
-            const preview = document.getElementById('imagePreview');
-            const previewImg = document.getElementById('previewImg');
+                    if (file) {
+                        // Validasi ukuran file (2MB = 2 * 1024 * 1024 bytes)
+                        if (file.size > 2 * 1024 * 1024) {
+                            alert('Ukuran file terlalu besar! Maksimum 2MB.');
+                            input.value = '';
+                            return;
+                        }
 
-            if (file) {
-                // Validasi ukuran file (2MB = 2 * 1024 * 1024 bytes)
-                if (file.size > 2 * 1024 * 1024) {
-                    alert('Ukuran file terlalu besar! Maksimum 2MB.');
-                    input.value = '';
-                    return;
+                        // Validasi tipe file
+                        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+                        if (!allowedTypes.includes(file.type)) {
+                            alert('Format file tidak didukung! Gunakan JPEG, JPG, atau PNG.');
+                            input.value = '';
+                            return;
+                        }
+
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            previewImg.src = e.target.result;
+                            preview.classList.remove('hidden');
+                        };
+                        reader.readAsDataURL(file);
+                    }
                 }
 
-                // Validasi tipe file
-                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-                if (!allowedTypes.includes(file.type)) {
-                    alert('Format file tidak didukung! Gunakan JPEG, JPG, atau PNG.');
-                    input.value = '';
-                    return;
+                // Hapus preview gambar
+                function removeImage() {
+                    document.getElementById('gambar-ruangan').value = '';
+                    document.getElementById('imagePreview').classList.add('hidden');
+                    document.getElementById('previewImg').src = '';
                 }
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImg.src = e.target.result;
-                    preview.classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // Hapus preview gambar
-        function removeImage() {
-            document.getElementById('gambar-ruangan').value = '';
-            document.getElementById('imagePreview').classList.add('hidden');
-            document.getElementById('previewImg').src = '';
-        }
-</script>
-@endsection
+        </script>

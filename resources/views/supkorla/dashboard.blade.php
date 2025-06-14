@@ -1,18 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    @if (session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
+@extends('layouts.supkorla-layout')
 
-    <p>supkorla</p>
-</body>
-</html>
+@section('title', 'Dashboard')
+
+@section('page', 'Dashboard')
+
+@section('style')
+    <style>
+
+    </style>
+@endsection
+
+@section('main')
+
+@endsection
+
+@section('js')
+
+@endsection

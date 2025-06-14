@@ -38,11 +38,11 @@ class AuthController extends Controller
             }
 
             if (Auth::user()->role === 'kepalaupt') {
-                return redirect()->route('kepalaupt.dashboard')->with('success', "Selamat Datang $name");
+                return redirect()->route('kepalaupt.dashboard-page')->with('success', "Selamat Datang $name");
             }
 
             if (Auth::user()->role === 'supkorla') {
-                return redirect()->route('supkorla.dashboard')->with('success', "Selamat Datang $name");
+                return redirect()->route('supkorla.dashboard-page')->with('success', "Selamat Datang $name");
             }
 
             // fallback kalau role tidak cocok

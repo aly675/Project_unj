@@ -13,29 +13,50 @@
       sidebarTexts.forEach(text => text.classList.toggle('hidden'));
       sidebarLabels?.classList.toggle('hidden');
 
-      if (window.myChart) {
-        setTimeout(() => {
-            window.myChart.resize();
-        }, 250); // Delay opsional buat animasi
-    }
+        if (window.myChart) {
+            setTimeout(() => {
+                window.myChart.resize();
+            }, 250); // Delay opsional buat animasi
+        }
     }
 
     const button = document.getElementById('profile-button');
     const dropdown = document.getElementById('profile-dropdown');
 
-  button.addEventListener('click', () => {
-    dropdown.classList.toggle('hidden');
-  });
+    button.addEventListener('click', () => {
+        const isHidden = dropdown.classList.contains('pointer-events-none');
 
-  // Optional: Close when clicking outside
-  document.addEventListener('click', function (e) {
-    if (!button.contains(e.target) && !dropdown.contains(e.target)) {
-      dropdown.classList.add('hidden');
-    }
-  });
+        if (isHidden) {
+            dropdown.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+            dropdown.classList.add('opacity-100', 'scale-100');
+        } else {
+            dropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+            dropdown.classList.remove('opacity-100', 'scale-100');
+        }
+    });
 
-  function logoutConfirm() {
-    if (confirm('Apakah Anda yakin ingin logout?')) {
-        document.getElementById('logout-form').submit();
-    }
-}
+    // Close when clicking outside
+    document.addEventListener('click', function (e) {
+        if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+            dropdown.classList.remove('opacity-100', 'scale-100');
+        }
+    });
+
+
+        function logoutConfirm() {
+            Swal.fire({
+                title: 'Konfirmasi Logout',
+                text: "Apakah Anda yakin ingin keluar?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, logout',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('logout-form').submit();
+                }
+            });
+        }
