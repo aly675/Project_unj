@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Ruangan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class SuperAdminController extends Controller
 {
@@ -58,47 +56,36 @@ public function store(Request $request)
         return view('superadmin.edit', compact('user'));
     }
 
-public function update(Request $request, $id)
-{
-    $ruangan = Ruangan::findOrFail($id);
+        public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
 
-    // Validasi
-    $request->validate([
-        'nomor_ruangan' => 'required',
-        'nama_ruangan' => 'required',
-        'kapasitas' => 'required|integer|min:1',
-        'fasilitas' => 'required|array',
-        'jumlah' => 'required|array',
-    ]);
+        $validate = $request->validate([
+            "email" => "required|email|unique:users,email," . $id,
+            "name" => "required",
+            "password" => "nullable|min:6",
+            "role" => "required",
+            "image" => "nullable|image|mimes:jpeg,png,jpg,gif|max:2048"
+        ]);
 
-    // Gambar baru (jika ada)
-    if ($request->hasFile('gambar_ruangan')) {
-        if ($ruangan->gambar) {
-            Storage::disk('public')->delete($ruangan->gambar);
+        $user->email = $request->email;
+        $user->name = $request->name;
+        $user->role = $request->role;
+        $user->status = $request->status ?? 'aktif';
+
+        if ($request->password) {
+            $user->password = bcrypt($request->password);
         }
-        $ruangan->gambar = $request->file('gambar_ruangan')->store('ruangan', 'public');
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('users', 'public');
+            $user->image = $imagePath;
+        }
+
+        $user->save();
+
+        return response()->json(['message' => 'Berhasil diupdate']);
     }
-
-    $ruangan->update([
-        'nomor' => $request->nomor_ruangan,
-        'nama' => $request->nama_ruangan,
-        'kapasitas' => $request->kapasitas,
-        'gambar' => $ruangan->gambar,
-    ]);
-
-    // Update fasilitas
-    $pivotData = [];
-    foreach ($request->fasilitas as $i => $id_fasilitas) {
-        $pivotData[$id_fasilitas] = ['jumlah' => $request->jumlah[$i] ?? 1];
-    }
-    $ruangan->fasilitas()->sync($pivotData);
-
-    return response()->json([
-        'message' => 'Ruangan berhasil diperbarui.',
-        'data' => $ruangan->load('fasilitas')
-    ]);
-}
-
 
 
     public function destroy($id)
