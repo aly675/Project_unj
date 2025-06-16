@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Ruangan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SuperAdminController extends Controller
 {
@@ -16,25 +18,34 @@ class SuperAdminController extends Controller
         return view('superadmin.dashboard', compact('users', 'totalUsers', 'activeUsers', 'nonActiveUsers'));
     }
 
-    public function store(Request $request)
-    {
-        $validate = $request->validate([
-            "email" => "required|email|unique:users,email",
-            "name" => "required|unique:users,name",
-            "password" => "required|confirmed|min:6",
-            "role" => "required"
-        ]);
+public function store(Request $request)
+{
+    $validate = $request->validate([
+        "email" => "required|email|unique:users,email",
+        "name" => "required|unique:users,name",
+        "password" => "required|min:6",
+        "role" => "required",
+        "image" => "nullable|image|mimes:jpeg,png,jpg,gif|max:2048"
+    ]);
 
-        $user = new User();
-        $user->email = $request->email;
-        $user->name = $request->name;
-        $user->password = bcrypt($request->password);
-        $user->role = $request->role;
-        $user->status = $request->status ?? 'aktif';
-        $user->save(); // <-- Jangan lupa save!
+    $user = new User();
+    $user->email = $request->email;
+    $user->name = $request->name;
+    $user->password = bcrypt($request->password);
+    $user->role = $request->role;
+    $user->status = $request->status ?? 'aktif';
 
-        return redirect()->back()->with("success", "Data Berhasil Ditambahkan");
+    // Simpan gambar ke storage/app/public/users
+    if ($request->hasFile('image')) {
+        $imagePath = $request->file('image')->store('users', 'public'); // folder 'users' di dalam 'storage/app/public'
+        $user->image = $imagePath; // simpan path relatif seperti 'users/namafile.jpg'
     }
+
+    $user->save();
+
+    return redirect()->route("superadmin.manejemen-users-page")->with("success", "Data Berhasil Ditambahkan");
+}
+
 
     public function show($id){
         $data = User::findOrFail($id);
@@ -47,28 +58,48 @@ class SuperAdminController extends Controller
         return view('superadmin.edit', compact('user'));
     }
 
-    public function update(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
-        $validate = $request->validate([
-            "name" => "required",
-            "email" => "required|email|unique:users,email," .$user->id,
-            "password" => "nullable|confirmed|min:6",
-            "role" => "required",
-            "status" => "required"
-        ]);
+public function update(Request $request, $id)
+{
+    $ruangan = Ruangan::findOrFail($id);
 
-        $user->name = $request->name;
-        $user->email = $request->email;
-        if ($request->filled('password')) {
-            $user->password = bcrypt($request->password);
+    // Validasi
+    $request->validate([
+        'nomor_ruangan' => 'required',
+        'nama_ruangan' => 'required',
+        'kapasitas' => 'required|integer|min:1',
+        'fasilitas' => 'required|array',
+        'jumlah' => 'required|array',
+    ]);
+
+    // Gambar baru (jika ada)
+    if ($request->hasFile('gambar_ruangan')) {
+        if ($ruangan->gambar) {
+            Storage::disk('public')->delete($ruangan->gambar);
         }
-        $user->role = $request->role;
-        $user->status = $request->status;
-        $user->update();
-
-        return redirect()->route('superadmin.dashboard')->with("success", "Data berhasil diupdate");
+        $ruangan->gambar = $request->file('gambar_ruangan')->store('ruangan', 'public');
     }
+
+    $ruangan->update([
+        'nomor' => $request->nomor_ruangan,
+        'nama' => $request->nama_ruangan,
+        'kapasitas' => $request->kapasitas,
+        'gambar' => $ruangan->gambar,
+    ]);
+
+    // Update fasilitas
+    $pivotData = [];
+    foreach ($request->fasilitas as $i => $id_fasilitas) {
+        $pivotData[$id_fasilitas] = ['jumlah' => $request->jumlah[$i] ?? 1];
+    }
+    $ruangan->fasilitas()->sync($pivotData);
+
+    return response()->json([
+        'message' => 'Ruangan berhasil diperbarui.',
+        'data' => $ruangan->load('fasilitas')
+    ]);
+}
+
+
 
     public function destroy($id)
     {

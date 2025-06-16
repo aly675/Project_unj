@@ -58,12 +58,17 @@
                                 <tr class="hover:bg-gray-50" id="user-row-{{ $data->id }}">
                                     <td class="py-4 px-6">
                                         <div class="flex items-center space-x-3">
-                                            <div class="w-10 h-10 bg-cyan-400 rounded-full flex items-center justify-center">
-                                                <span class="text-white font-semibold text-sm">RF</span>
+                                            <div class="w-10 h-10 rounded-full overflow-hidden">
+                                                <img
+                                                    src="{{ asset('storage/' . $data->image) }}"
+                                                    alt="Foto Profil"
+                                                    class="object-cover w-full h-full"
+                                                >
                                             </div>
-                                            <span class="font-medium text-gray-900">{{$data->name}}</span>
+                                            <span class="font-medium text-gray-900">{{ $data->name }}</span>
                                         </div>
                                     </td>
+
                                     <td class="py-4 px-6 text-gray-600">{{$data->email}}</td>
                                     <td class="py-4 px-6 text-gray-600">{{$data->role}}</td>
                                     <td class="py-4 px-6">
@@ -84,10 +89,12 @@
                                         </label>
                                     </td>
                                     <td class="py-4 px-6">
-                                        <button onclick="bukaModalRuangan()" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                            <i data-lucide="edit" class="w-4 h-4"></i>
-                                        </button>
-                                        <button
+                                            <button onclick="bukaModalRuangan(this)"
+                                                data-user='@json($data)'
+                                                class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                                                <i data-lucide="edit" class="w-4 h-4"></i>
+                                            </button>
+                                            <button
                                             type="button"
                                             class="btn-delete-user p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                             data-id="{{ $data->id }}"
@@ -98,36 +105,6 @@
                                     </td>
                                 </tr>
                                 @endforeach
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="py-4 px-6">
-                                        <div class="flex items-center space-x-3">
-                                            <div class="w-10 h-10 bg-cyan-400 rounded-full flex items-center justify-center">
-                                                <span class="text-white font-semibold text-sm">RF</span>
-                                            </div>
-                                            <span class="font-medium text-gray-900">Robert Fox</span>
-                                        </div>
-                                    </td>
-                                    <td class="py-4 px-6 text-gray-600">(201) 555-0124</td>
-                                    <td class="py-4 px-6 text-gray-600">Admin</td>
-                                    <td class="py-4 px-6">
-                                        <label class="relative inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" checked class="sr-only peer">
-                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-custom"></div>
-                                            <span class="status-text ml-3 text-sm font-medium text-teal-custom">ON</span>
-                                        </label>
-                                    </td>
-                                    <td class="py-4 px-6">
-                                        <div class="flex items-center space-x-2">
-                                            <button onclick="bukaModalRuangan()" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                                <i data-lucide="edit" class="w-4 h-4"></i>
-                                            </button>
-                                            <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -162,7 +139,7 @@
 
 
     <!-- Modal Tambah Ruangan -->
-    <div id="modalTambahRuangan"
+    <div id="modal-edit-user"
         class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black bg-opacity-0 opacity-0 scale-95
                 transition-all duration-300 ease-out">
         <div class="relative w-full max-w-xl bg-white rounded-lg shadow-xl scale-95 transition-transform duration-300">
@@ -297,23 +274,44 @@
         });
 
 
-       function bukaModalRuangan() {
-            const modal = document.getElementById('modalTambahRuangan');
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0', 'scale-95', 'bg-opacity-0');
-                modal.classList.add('opacity-100', 'scale-100', 'bg-opacity-50');
-            }, 100);
-        }   
+    function bukaModalRuangan(button) {
+        const modal = document.getElementById('modal-edit-user');
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.add('opacity-100', 'scale-100', 'bg-opacity-50');
+            modal.classList.remove('opacity-0', 'scale-95', 'bg-opacity-0');
+        }, 10); // delay kecil agar transisi berjalan
 
-        function tutupModalRuangan() {
-            const modal = document.getElementById('modalTambahRuangan');
-            modal.classList.remove('opacity-100', 'scale-100', 'bg-opacity-50');
-            modal.classList.add('opacity-0', 'scale-95', 'bg-opacity-0');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300); // sesuai dengan durasi transition
+        const data = JSON.parse(button.getAttribute('data-user'));
+
+        document.getElementById('nama').value = data.name;
+        document.getElementById('email').value = data.email;
+        document.getElementById('role').value = data.role;
+
+        // Optional: Untuk menyimpan ID user yang akan diupdate
+        document.getElementById('form-user').dataset.id = data.id;
+
+        // Jika ada gambar, tampilkan
+        if (data.image) {
+            const preview = document.getElementById('imagePreview');
+            const previewImg = document.getElementById('previewImg');
+            previewImg.src = `/storage/${data.image}`; // sesuaikan path sesuai storage kamu
+            preview.classList.remove('hidden');
         }
+
+        // Tampilkan modal (gunakan plugin/modal toggle kalau pakai misalnya Alpine.js atau Tailwind UI)
+        // contoh manual:
+        document.getElementById('modal-edit-user').classList.remove('hidden');
+    }
+            function tutupModalRuangan() {
+                const modal = document.getElementById('modal-edit-user');
+                modal.classList.remove('opacity-100', 'scale-100', 'bg-opacity-50');
+                modal.classList.add('opacity-0', 'scale-95', 'bg-opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300); // sesuai dengan durasi transition
+            }
+
 
    </script>
 @endsection

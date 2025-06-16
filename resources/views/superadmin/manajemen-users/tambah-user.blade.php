@@ -8,11 +8,12 @@
 
       <!-- Form Card -->
       <div class="bg-white rounded-lg shadow-sm p-6">
-        <form>
+        <form method="post" action="{{route("superadmin.user-submit")}}" enctype="multipart/form-data">
+            @csrf
           <!-- Nama -->
           <div class="mb-4">
             <label for="nama" class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
-            <input type="text" id="nama" name="nama" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
+            <input type="text" id="nama" name="name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
           </div>
 
           <!-- Password -->
@@ -32,9 +33,10 @@
             <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Role</label>
             <div class="relative">
               <select id="role" name="role" class="appearance-none w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
-                <option>Admin</option>
-                <option>User</option>
-                <option>Manager</option>
+                <option value="admin">Admin</option>
+                <option value="superadmin">Super Admin</option>
+                <option value="kepalaupt">Kepala UPT</option>
+                <option value="supkorla">SUP-Korla</option>
               </select>
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -52,7 +54,7 @@
                 <input
                     type="file"
                     id="gambar-ruangan"
-                    name="gambar_ruangan"
+                    name="image"
                     accept=".jpeg,.jpg,.png"
                     onchange="previewImage(this)"
                     class="w-full text-sm text-gray-500"

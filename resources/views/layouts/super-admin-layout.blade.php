@@ -16,7 +16,7 @@
       font-family: 'Poppins', sans-serif;
     }
 
-    
+
   </style>
   @yield('style')
   <script>

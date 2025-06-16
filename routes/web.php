@@ -40,9 +40,9 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::prefix('daftar-referensi')->group( function(){
         Route::get("", [AdminController::class, "daftar_referensi_page"])->name("admin.daftar-referensi-page");
         Route::get("/tambah-ruangan", [AdminController::class, "tambah_ruangan_page"])->name("admin.tambah-ruangan-page");
-        Route::get("/update-ruangan", [AdminController::class, "update_ruangan_page"])->name("admin.update-ruangan-page");
         Route::post("/tambah-peminjaman/submit", [AdminController::class, "tambahRuangan"])->name("tambah.ruangan");
         Route::delete('/admin/ruangan/{id}', [AdminController::class, 'destroy'])->name('admin.delete-ruangan');
+        Route::post("/update/ruangan/{id}", [AdminController::class, 'updateRuangan'])->name("admin.update-submit");
     });
 });
 
@@ -51,6 +51,8 @@ Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(func
     Route::prefix('/manajemen-users')->group( function() {
         Route::get('', [SuperAdminController::class, 'manejemen_users_page'])->name('superadmin.manejemen-users-page');
         Route::get('/tambah-user', [SuperAdminController::class, 'tambah_user_page'])->name('superadmin.tambah-user-page');
+        Route::post("/tambah-user/submit", [SuperAdminController::class,"store"])->name("superadmin.user-submit");
+       Route::post('/update-user/submit/{id}', [SuperAdminController::class, 'update'])->name('superadmin.update-submit');
         Route::post('/users/toggle-status', [SuperAdminController::class, 'toggleStatus'])->name('superadmin.toggle-status');
         Route::delete('delete/user/{id}', [SuperAdminController::class, 'destroy'])->name('superadmin.delete-user');
     });
