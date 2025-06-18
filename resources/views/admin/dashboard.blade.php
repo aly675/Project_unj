@@ -26,29 +26,6 @@
                 </div>
             </div>
 
-            <!-- Chart Section -->
-            <div class="bg-white p-6 rounded-lg shadow-sm mb-8">
-                <div class="flex flex-wrap items-center justify-between mb-6">
-                    <div class="flex flex-wrap items-center space-x-6 mb-4 sm:mb-0">
-                        <button class="text-gray-900 font-medium border-b-2 border-gray-900 pb-1">Total Surat</button>
-                        <button class="text-gray-500 hover:text-gray-700">Total Ruangan</button>
-                        <button class="text-gray-500 hover:text-gray-700">Status Surat</button>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="flex items-center space-x-2">
-                            <div class="w-3 h-3 bg-gray-800 rounded-full"></div>
-                            <span class="text-sm text-gray-600">Tahun ini</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <div class="w-3 h-3 bg-gray-400 rounded-full"></div>
-                            <span class="text-sm text-gray-600">Tahun lalu</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="h-64">
-                    <canvas id="chartCanvas"></canvas>
-                </div>
-            </div>
 
             <!-- User Table -->
             <div class="bg-white rounded-lg shadow-sm">

@@ -8,7 +8,7 @@
                 <h2 class="text-lg font-semibold">Detail Pengajuan Surat</h2>
                 <button
                     id="closeBtn"
-                    onclick="closeModalDetail()"
+                    onclick="closeModal()"
                     class="text-white hover:bg-white hover:bg-opacity-10 rounded p-1 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
                 >
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,10 +94,16 @@
                 <div class="flex gap-3">
                     <button
                         id="tolakBtn"
-                        onclick="closeModalDetail()"
                         class="bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 px-5 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                     >
-                        close
+                        Tolak
+                    </button>
+
+                    <button
+                        id="terimaBtn"
+                        class="bg-teal-700 hover:bg-teal-800 text-white font-medium py-2.5 px-5 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+                    >
+                        Terima
                     </button>
                 </div>
             </div>

@@ -49,29 +49,21 @@
 
                     <!-- Jumlah Hari -->
                     <div>
-                        <label for="jumlah-hari" class="text-sm font-medium text-gray-700 mb-2 block">
-                            Jumlah Hari
-                        </label>
-                        <input id="jumlah-hari" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
+                    <label for="jumlah-hari" class="text-sm font-medium text-gray-700 mb-2 block">
+                        Jumlah Hari
+                    </label>
+                    <input
+                        id="jumlah-hari"
+                        type="number"
+                        min="1"
+                        value="1"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                        oninput="renderTanggalInputs()"
+                    />
                     </div>
 
                     <!-- Tanggal Peminjaman -->
-                    <div>
-                        <label for="tanggal-peminjaman" class="text-sm font-medium text-gray-700 mb-2 block">
-                            Tanggal Peminjaman
-                        </label>
-                        <div class="flex space-x-2">
-                            <input
-                                id="tanggal-peminjaman"
-                                type="date"
-                                placeholder="mm/dd/yyyy"
-                                class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-                            />
-                            <button type="button" onclick="clearDate()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-colors">
-                                Hapus
-                            </button>
-                        </div>
-                    </div>
+                    <div id="tanggal-peminjaman-container" class="mt-4 space-y-2"></div>
 
                     <!-- Jumlah Ruangan -->
                     <div>
@@ -125,9 +117,64 @@
 
 @section('js')
     <script>
-        function clearDate() {
-            document.getElementById('tanggal-peminjaman').value = '';
+        function renderTanggalInputs() {
+            const container = document.getElementById("tanggal-peminjaman-container");
+            const jumlahHari = parseInt(document.getElementById("jumlah-hari").value);
+
+            // Clear existing inputs
+            container.innerHTML = "";
+
+            for (let i = 0; i < jumlahHari; i++) {
+            const wrapper = document.createElement("div");
+            wrapper.classList.add("flex", "space-x-2", "items-center");
+
+            const label = document.createElement("label");
+            label.innerText = `Hari ke-${i + 1}:`;
+            label.classList.add("w-24", "text-sm", "text-gray-700");
+
+            const input = document.createElement("input");
+            input.type = "date";
+            input.className =
+                "flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500";
+            input.name = `tanggal-hari-${i + 1}`;
+
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className =
+                "bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md transition-colors";
+            btn.innerText = "Hapus";
+            btn.onclick = function () {
+                const container = document.getElementById("tanggal-peminjaman-container");
+
+                if (container.children.length <= 1) {
+                    alert("Minimal harus ada 1 hari.");
+                    return;
+                }
+
+                wrapper.remove();
+
+                // Update jumlah hari
+                document.getElementById("jumlah-hari").value = container.children.length;
+
+                // Reindex semua label setelah penghapusan
+                Array.from(container.children).forEach((child, index) => {
+                    const label = child.querySelector("label");
+                    if (label) {
+                    label.innerText = `Hari ke-${index + 1}:`;
+                    }
+                });
+            };
+
+
+            wrapper.appendChild(label);
+            wrapper.appendChild(input);
+            wrapper.appendChild(btn);
+            container.appendChild(wrapper);
+            }
         }
+
+    // Initial render
+    window.onload = renderTanggalInputs;
 
         function handleCancel() {
             if (confirm('Apakah Anda yakin ingin membatalkan? Data yang telah diisi akan hilang.')) {

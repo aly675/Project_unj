@@ -119,10 +119,10 @@
    <div class="relative">
   <!-- Profile Button -->
   <button id="profile-button" class="flex items-center gap-3 bg-white hover:bg-gray-100 p-3 rounded-lg shadow-sm transition-colors duration-200 focus:outline-none">
-  <img alt="Profile picture" class="w-10 h-10 rounded-full object-cover" src="{{asset('assets/images/icon/none-profile-icon.svg')}}" />
+  <img alt="Profile picture" class="w-10 h-10 rounded-full object-cover" src="{{ $profile->image ? asset('storage/' . $profile->image) : asset('assets/images/icon/none-profile-icon.svg') }}" />
   <div class="text-right">
-    <p class="text-gray-900 font-semibold text-sm leading-tight">Rahul Shaw</p>
-    <p class="text-gray-400 text-xs leading-tight">Admin PUSTIKOM</p>
+    <p class="text-gray-900 font-semibold text-sm leading-tight">{{$profile->name}}</p>
+    <p class="text-gray-400 text-xs leading-tight">{{Str::upper($profile->role)}} PUSTIKOM</p>
   </div>
 </button>
 

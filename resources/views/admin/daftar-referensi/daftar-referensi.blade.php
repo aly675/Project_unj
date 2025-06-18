@@ -153,13 +153,13 @@
 <div id="modalTambahRuangan"
      class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black bg-opacity-0 opacity-0 scale-95
             transition-all duration-300 ease-out">
-    <div class="relative w-full max-w-xl bg-white rounded-lg shadow-xl scale-95 transition-transform duration-300">
+    <div class="relative w-full max-w-3xl bg-white rounded-lg shadow-xl scale-95 transition-transform duration-300">
         <div class="bg-teal-800 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
             <h1 class="text-xl font-semibold">Form Edit Ruangan</h1>
             <button onclick="tutupModalRuangan()" class="text-white text-2xl hover:text-gray-300">&times;</button>
         </div>
 
-        <div class="max-h-[100vh] overflow-y-auto scrollbar-modern p-2">
+        <div class="max-h-[90vh] overflow-y-auto scrollbar-modern p-2">
             <div class="bg-white rounded-lg border p-6">
                 @include('admin.daftar-referensi.update-ruangan')
             </div>

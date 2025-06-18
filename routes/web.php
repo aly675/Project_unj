@@ -52,7 +52,7 @@ Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(func
         Route::get('', [SuperAdminController::class, 'manejemen_users_page'])->name('superadmin.manejemen-users-page');
         Route::get('/tambah-user', [SuperAdminController::class, 'tambah_user_page'])->name('superadmin.tambah-user-page');
         Route::post("/tambah-user/submit", [SuperAdminController::class,"store"])->name("superadmin.user-submit");
-       Route::post('/update-user/submit/{id}', [SuperAdminController::class, 'update'])->name('superadmin.update-submit');
+        Route::post('/update-user/submit/{id}', [SuperAdminController::class, 'update'])->name('superadmin.update-submit');
         Route::post('/users/toggle-status', [SuperAdminController::class, 'toggleStatus'])->name('superadmin.toggle-status');
         Route::delete('delete/user/{id}', [SuperAdminController::class, 'destroy'])->name('superadmin.delete-user');
     });
@@ -60,6 +60,12 @@ Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(func
 
 Route::prefix('kepala-upt')->middleware( ['auth', 'role:kepalaupt'])->group(function () {
     Route::get("/", [KepalaUptController::class, "dashboard"])->name("kepalaupt.dashboard-page");
+    Route::prefix('pengajuan-surat')->group( function(){
+        Route::get('', [KepalaUptController::class, 'pengajuan_surat_page'])->name('kepalaupt.pengajuan-surat-page');
+    });
+    Route::prefix('kalender')->group( function(){
+        Route::get('', [KepalaUptController::class, 'kalender_page'])->name('kepalaupt.kalender');
+    });
 });
 
 Route::prefix( 'supkorla')->middleware(['auth', 'role:supkorla'])->group(function () {

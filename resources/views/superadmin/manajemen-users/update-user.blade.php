@@ -157,40 +157,40 @@
                 }
 
                 document.getElementById('form-user').addEventListener('submit', function (e) {
-    e.preventDefault();
+                e.preventDefault();
 
-    const form = e.target;
-    const id = form.dataset.id;
-    const formData = new FormData(form);
+                const form = e.target;
+                const id = form.dataset.id;
+                const formData = new FormData(form);
 
-    const updateUrl = `{{ route('superadmin.update-submit', ':id') }}`.replace(':id', id);
+                const updateUrl = `{{ route('superadmin.update-submit', ':id') }}`.replace(':id', id);
 
-    fetch(updateUrl, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
-        }
-    }).then(async response => {
-        if (!response.ok) {
-            const text = await response.text();
-            try {
-                const error = JSON.parse(text);
-                alert('Gagal update: ' + JSON.stringify(error.errors ?? error.message ?? error));
-            } catch (e) {
-                console.error('Gagal parsing JSON:', text);
-                alert('Gagal update: response server bukan JSON.');
-            }
-        } else {
-            const data = await response.json();
-            alert(data.message);
-            window.location.reload();
-        }
-    }).catch(err => {
-        console.error(err);
-        alert('Terjadi kesalahan.');
-    });
-});
+                fetch(updateUrl, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                }).then(async response => {
+                    if (!response.ok) {
+                        const text = await response.text();
+                        try {
+                            const error = JSON.parse(text);
+                            alert('Gagal update: ' + JSON.stringify(error.errors ?? error.message ?? error));
+                        } catch (e) {
+                            console.error('Gagal parsing JSON:', text);
+                            alert('Gagal update: response server bukan JSON.');
+                        }
+                    } else {
+                        const data = await response.json();
+                        alert(data.message);
+                        window.location.reload();
+                    }
+                }).catch(err => {
+                    console.error(err);
+                    alert('Terjadi kesalahan.');
+                });
+            });
 
-        </script>
+</script>

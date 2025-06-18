@@ -60,7 +60,7 @@
                                         <div class="flex items-center space-x-3">
                                             <div class="w-10 h-10 rounded-full overflow-hidden">
                                                 <img
-                                                    src="{{ asset('storage/' . $data->image) }}"
+                                                    src="{{$data->image ? asset('storage/' . $data->image) : asset('assets/images/icon/none-profile-icon.svg') }}"
                                                     alt="Foto Profil"
                                                     class="object-cover w-full h-full"
                                                 >

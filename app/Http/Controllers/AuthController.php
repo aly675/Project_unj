@@ -49,9 +49,7 @@ class AuthController extends Controller
             return redirect('/')->with('error', 'username not found');
         }
 
-        return back()->withErrors([
-            'name' => 'Login gagal, cek username dan password.',
-        ])->onlyInput('name');
+        return back()->withInput()->with('error','Login gagal, email atau password salah')->onlyInput('email');
     }
 
    public function logout(Request $request)

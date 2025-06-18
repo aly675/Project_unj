@@ -106,7 +106,7 @@
 
             <div class="flex justify-end space-x-3 pt-6">
                 <button type="button" onclick="batalForm()" class="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors">Batal</button>
-                <button type="submit" onclick="simpanForm()" class="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-md transition-colors">Simpan</button>
+                <button type="submit" class="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-md transition-colors">Simpan</button>
             </div>
         </form>
     </div>
@@ -115,6 +115,39 @@
 
 @section('js')
 <script>
+
+    document.getElementById('roomForm').addEventListener('submit', function(e) {
+            e.preventDefault();  // Ini kuncinya: cegah submit bawaan
+
+            const nomorRuangan = document.getElementById('nomor-ruangan').value.trim();
+            const namaRuangan = document.getElementById('nama-ruangan').value.trim();
+            const kapasitas = document.getElementById('kapasitas').value.trim();
+            const gambarRuangan = document.getElementById('gambar-ruangan').value;
+
+            if (!nomorRuangan || !namaRuangan || !kapasitas || !gambarRuangan) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Data Belum Lengkap!',
+                    text: 'Mohon lengkapi semua field yang wajib diisi!'
+                });
+                return;
+            }
+
+            // Kalau validasi lolos
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: 'Data berhasil disimpan!',
+                timer: 2000,
+                showConfirmButton: false
+            });
+
+            // Setelah validasi lolos, baru submit form ke server (manual)
+            // Pilihan 1: submit manual pakai AJAX
+            // Pilihan 2: submit manual pakai native form submit
+            this.submit(); // ini submit default baru dipanggil setelah validasi
+        });
+
     // Tambah fasilitas baru
     function tambahFasilitas() {
         const container = document.getElementById('fasilitasContainer');
@@ -181,46 +214,6 @@
             document.getElementById('gambar-ruangan').value = '';
             document.getElementById('imagePreview').classList.add('hidden');
             document.getElementById('previewImg').src = '';
-        }
-
-          function simpanForm() {
-            const form = document.getElementById('roomForm');
-            const formData = new FormData(form);
-
-            // Validasi form
-            const nomorRuangan = document.getElementById('nomor-ruangan').value;
-            const namaRuangan = document.getElementById('nama-ruangan').value;
-            const kapasitas = document.getElementById('kapasitas').value;
-            const gambarRuangan = document.getElementById('gambar-ruangan').value;
-
-            if (!nomorRuangan || !namaRuangan || !kapasitas || !gambarRuangan) {
-                alert('Mohon lengkapi semua field yang wajib diisi!');
-                return;
-            }
-
-            // Kumpulkan data fasilitas
-            const fasilitasItems = document.querySelectorAll('.fasilitas-item');
-            const fasilitas = [];
-
-            fasilitasItems.forEach(item => {
-                const select = item.querySelector('select');
-                const quantity = item.querySelector('input[type="number"]');
-                fasilitas.push({
-                    nama: select.value,
-                    jumlah: quantity.value
-                });
-            });
-
-            // Simulasi penyimpanan data
-            console.log('Data yang akan disimpan:', {
-                nomorRuangan: nomorRuangan,
-                namaRuangan: namaRuangan,
-                kapasitas: kapasitas,
-                fasilitas: fasilitas,
-                gambar: document.getElementById('gambar-ruangan').files[0]
-            });
-
-            alert('Data ruangan berhasil disimpan!');
         }
 
               // Batal form

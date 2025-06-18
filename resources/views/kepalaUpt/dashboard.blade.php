@@ -5,7 +5,7 @@
 @section('page', 'Dashboard')
 
 @section('main')
-      <h1 class="text-2xl font-semibold text-gray-800 px-6 mt-6">Ringkasan</h1>
+      <h1 class="text-2xl font-semibold text-gray-800 mt-6">Ringkasan</h1>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 mb-10">
                 <div class="bg-white p-4 rounded-lg shadow-md text-center">
@@ -79,54 +79,6 @@
                 <td class="px-4 py-3">(205) 555-0100</td>
                 <td class="px-4 py-3">
                   <span class="inline-block px-3 py-1 bg-red-200 text-red-700 rounded-md text-xs">Ditolak</span>
-                </td>
-              </tr>
-              <tr class="border-b border-gray-100">
-                <td class="px-4 py-3">Ronald Richards</td>
-                <td class="px-4 py-3">Adobe</td>
-                <td class="px-4 py-3">(302) 555-0107</td>
-                <td class="px-4 py-3">
-                  <span class="inline-block px-3 py-1 bg-red-200 text-red-700 rounded-md text-xs">Inactive</span>
-                </td>
-              </tr>
-              <tr class="border-b border-gray-100">
-                <td class="px-4 py-3">Marvin McKinney</td>
-                <td class="px-4 py-3">Tesla</td>
-                <td class="px-4 py-3">(252) 555-0126</td>
-                <td class="px-4 py-3">
-                  <span class="inline-block px-3 py-1 bg-teal-200 text-teal-800 rounded-md text-xs">Active</span>
-                </td>
-              </tr>
-              <tr class="border-b border-gray-100">
-                <td class="px-4 py-3">Jerome Bell</td>
-                <td class="px-4 py-3">Google</td>
-                <td class="px-4 py-3">(629) 555-0129</td>
-                <td class="px-4 py-3">
-                  <span class="inline-block px-3 py-1 bg-teal-200 text-teal-800 rounded-md text-xs">Active</span>
-                </td>
-              </tr>
-              <tr class="border-b border-gray-100">
-                <td class="px-4 py-3">Kathryn Murphy</td>
-                <td class="px-4 py-3">Microsoft</td>
-                <td class="px-4 py-3">(406) 555-0120</td>
-                <td class="px-4 py-3">
-                  <span class="inline-block px-3 py-1 bg-teal-200 text-teal-800 rounded-md text-xs">Active</span>
-                </td>
-              </tr>
-              <tr class="border-b border-gray-100">
-                <td class="px-4 py-3">Jacob Jones</td>
-                <td class="px-4 py-3">Yahoo</td>
-                <td class="px-4 py-3">(208) 555-0112</td>
-                <td class="px-4 py-3">
-                  <span class="inline-block px-3 py-1 bg-teal-200 text-teal-800 rounded-md text-xs">Active</span>
-                </td>
-              </tr>
-              <tr>
-                <td class="px-4 py-3">Kristin Watson</td>
-                <td class="px-4 py-3">Facebook</td>
-                <td class="px-4 py-3">(704) 555-0127</td>
-                <td class="px-4 py-3">
-                  <span class="inline-block px-3 py-1 bg-red-200 text-red-700 rounded-md text-xs">Inactive</span>
                 </td>
               </tr>
             </tbody>

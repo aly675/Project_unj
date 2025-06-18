@@ -109,16 +109,18 @@
               class="px-6 py-4 whitespace-nowrap text-xs text-blue-600 font-normal cursor-pointer hover:underline"
             >
               <div class="flex items-center gap-x-2">
-                <a href="{{route('admin.detail-peminjaman-page')}}"
+                <button
+                    onclick="openModalDetail()"
                   ><img
                     src="{{asset('assets/images/icon/action-view-icon.svg')}}"
                     alt="View action icon"
-                /></a>
-                <a href="{{route('admin.update-peminjaman-page')}}"
+                /></button>
+                <button
+                    onclick="openModalUpdate()"
                   ><img
                     src="{{asset('assets/images/icon/action-edit-icon.svg')}}"
                     alt="Edit action icon"
-                /></a>
+                /></button>
                 <a href="../"
                   ><img
                     src="{{asset('assets/images/icon/action-delete-icon.svg')}}"
@@ -202,5 +204,172 @@
       </div>
     </div>
 
+    <div id="modalOverlayDetail" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible transition-all duration-300 ease-out">
+        @include('admin.peminjaman.detail-peminjaman')
+    </div>
 
+    <div id="modalOverlayUpdate" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible transition-all duration-300 ease-out">
+        @include('admin.peminjaman.update-peminjaman')
+    </div>
+
+@endsection
+
+@section('js')
+
+   <script>
+                  // Get DOM elements
+        const openModalBtn = document.getElementById('openModalBtn');
+        const modalOverlayDetail = document.getElementById('modalOverlayDetail');
+        const modalOverlayUpdate = document.getElementById('modalOverlayUpdate');
+        const modal = document.getElementById('modal');
+        const closeBtn = document.getElementById('closeBtn');
+
+        // DETAIL MODAL
+        // Function to open modal with smooth animation
+        function openModalDetail() {
+            modalOverlayDetail.classList.remove('opacity-0', 'invisible');
+            modalOverlayDetail.classList.add('opacity-100', 'visible');
+
+            // Small delay to ensure overlay is visible before animating modal
+            setTimeout(() => {
+                modal.classList.remove('scale-75', '-translate-y-12');
+                modal.classList.add('scale-100', 'translate-y-0');
+            }, 10);
+
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        // CLOSE MODAL DETAIL
+        // Function to close modal with smooth animation
+        function closeModalDetail() {
+            modal.classList.remove('scale-100', 'translate-y-0');
+            modal.classList.add('scale-75', '-translate-y-12');
+
+            // Wait for modal animation to complete before hiding overlay
+            setTimeout(() => {
+                modalOverlayDetail.classList.remove('opacity-100', 'visible');
+                modalOverlayDetail.classList.add('opacity-0', 'invisible');
+            }, 200);
+
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        // UPDATE MODAL
+        // Function to open modal with smooth animation
+        function openModalUpdate() {
+            modalOverlayUpdate.classList.remove('opacity-0', 'invisible');
+            modalOverlayUpdate.classList.add('opacity-100', 'visible');
+
+            // Small delay to ensure overlay is visible before animating modal
+            setTimeout(() => {
+                modal.classList.remove('scale-75', '-translate-y-12');
+                modal.classList.add('scale-100', 'translate-y-0');
+            }, 10);
+
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        // CLOSE MODAL UPDATE
+        // Function to close modal with smooth animation
+        function closeModalUpdate() {
+            modal.classList.remove('scale-100', 'translate-y-0');
+            modal.classList.add('scale-75', '-translate-y-12');
+
+            // Wait for modal animation to complete before hiding overlay
+            setTimeout(() => {
+                modalOverlayUpdate.classList.remove('opacity-100', 'visible');
+                modalOverlayUpdate.classList.add('opacity-0', 'invisible');
+            }, 200);
+
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+
+        // Event listeners
+        // openModalBtn.addEventListener('click', openModal);
+        // closeBtn.addEventListener('click', closeModal);
+
+        // Close modal when clicking on overlay (outside the modal)
+        modalOverlayDetail.addEventListener('click', function(e) {
+            if (e.target === modalOverlayDetail) {
+                closeModalDetail();
+            }
+            if (e.target === modalOverlayUpdate) {
+                closeModalUpdate();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modalOverlayDetail.classList.contains('visible')) {
+                closeModalDetail();
+            }
+            if (e.key === 'Escape' && modalOverlayUpdate.classList.contains('visible')) {
+                closeModalUpdate();
+            }
+        });
+
+
+        //UPDATE FORM
+
+        function renderTanggalInputs() {
+            const container = document.getElementById("tanggal-peminjaman-container");
+            const jumlahHari = parseInt(document.getElementById("jumlah-hari").value);
+
+            // Clear existing inputs
+            container.innerHTML = "";
+
+            for (let i = 0; i < jumlahHari; i++) {
+            const wrapper = document.createElement("div");
+            wrapper.classList.add("flex", "space-x-2", "items-center");
+
+            const label = document.createElement("label");
+            label.innerText = `Hari ke-${i + 1}:`;
+            label.classList.add("w-24", "text-sm", "text-gray-700");
+
+            const input = document.createElement("input");
+            input.type = "date";
+            input.className =
+                "flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500";
+            input.name = `tanggal-hari-${i + 1}`;
+
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className =
+                "bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md transition-colors";
+            btn.innerText = "Hapus";
+            btn.onclick = function () {
+                const container = document.getElementById("tanggal-peminjaman-container");
+
+                if (container.children.length <= 1) {
+                    alert("Minimal harus ada 1 hari.");
+                    return;
+                }
+
+                wrapper.remove();
+
+                // Update jumlah hari
+                document.getElementById("jumlah-hari").value = container.children.length;
+
+                // Reindex semua label setelah penghapusan
+                Array.from(container.children).forEach((child, index) => {
+                    const label = child.querySelector("label");
+                    if (label) {
+                    label.innerText = `Hari ke-${index + 1}:`;
+                    }
+                });
+            };
+
+
+            wrapper.appendChild(label);
+            wrapper.appendChild(input);
+            wrapper.appendChild(btn);
+            container.appendChild(wrapper);
+            }
+        }
+
+    // Initial render
+    window.onload = renderTanggalInputs;
+
+    </script>
 @endsection
