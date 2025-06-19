@@ -44,7 +44,7 @@
               class="px-6 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider"
               scope="col"
             >
-              ID
+              NO
             </th>
             <th
               class="px-6 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider"
@@ -84,55 +84,44 @@
             </th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-200">
-          <!-- 10 rows as in screenshot -->
-          <tr>
-            <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-700 font-normal">
-              #5089
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-900 font-normal">
-              0001
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-700 font-normal">
-              Balai Samudra
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-700 font-normal">
-              Muhammad Fadlan
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-900 font-normal">
-              1 Hari
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-xs font-semibold text-yellow-400">
-              Pending
-            </td>
-            <td
-              class="px-6 py-4 whitespace-nowrap text-xs text-blue-600 font-normal cursor-pointer hover:underline"
-            >
-              <div class="flex items-center gap-x-2">
-                <button
-                    onclick="openModalDetail()"
-                  ><img
-                    src="{{asset('assets/images/icon/action-view-icon.svg')}}"
-                    alt="View action icon"
-                /></button>
-                <button
-                    onclick="openModalUpdate()"
-                  ><img
-                    src="{{asset('assets/images/icon/action-edit-icon.svg')}}"
-                    alt="Edit action icon"
-                /></button>
-                <a href="../"
-                  ><img
-                    src="{{asset('assets/images/icon/action-delete-icon.svg')}}"
-                    alt="Delete action icon"
-                /></a>
+       <tbody class="divide-y divide-gray-200">
+@foreach (  $peminjamans as $peminjaman)
+  <tr>
+    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-700 font-normal">
+      {{ $loop->iteration}}
+    </td>
+    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-900 font-normal">
+      {{ $peminjaman->nomor_surat }}
+    </td>
+    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-700 font-normal">
+      {{ $peminjaman->asal_surat }}
+    </td>
+    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-700 font-normal">
+      {{ $peminjaman->nama_peminjam }}
+    </td>
+    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-900 font-normal">
+      {{ $peminjaman->lama_hari }} Hari
+    </td>
+    <td class="px-6 py-4 whitespace-nowrap text-xs font-semibold text-yellow-400">
+      {{$peminjaman->status}}
+    </td>
+    <td class="px-6 py-4 whitespace-nowrap text-xs text-blue-600 font-normal cursor-pointer hover:underline">
+      <div class="flex items-center gap-x-2">
+        <button onclick="openModalDetail({{ $peminjaman->id }})">
+            <img src="{{ asset('assets/images/icon/action-view-icon.svg') }}" alt="View" />
+        </button>
+        <button onclick="openModalUpdate()">
+          <img src="{{ asset('assets/images/icon/action-edit-icon.svg') }}" alt="Edit action icon"/>
+        </button>
+        <a href="#">
+          <img src="{{ asset('assets/images/icon/action-delete-icon.svg') }}" alt="Delete action icon"/>
+        </a>
+      </div>
+    </td>
+  </tr>
+@endforeach
+</tbody>
 
-                {{-- <a href="../"/>Cetak</a> --}}
-
-              </div>
-            </td>
-          </tr>
-        </tbody>
       </table>
       <div
         class="mt-6 flex flex-col md:flex-row md:items-center md:justify-between text-xs text-gray-500 px-7 pb-5 font-light"
@@ -371,5 +360,37 @@
     // Initial render
     window.onload = renderTanggalInputs;
 
+     const peminjamanData = @json($peminjamans);
+
+    function openModalDetail(id) {
+        const data = peminjamanData.find(p => p.id === id);
+        if (!data) return;
+
+        document.getElementById('modal_nomor_surat').innerText = `: ${data.nomor_surat}`;
+        document.getElementById('modal_asal_surat').innerText = `: ${data.asal_surat}`;
+        document.getElementById('modal_nama_peminjam').innerText = `: ${data.nama_peminjam}`;
+        document.getElementById('modal_lama_peminjam').innerText = `: ${data.lama_hari} hari`;
+        document.getElementById('modal_status').innerText = data.status ?? 'Menunggu';
+
+        // render tanggal
+        const container = document.getElementById('modal_tanggal_peminjam');
+        container.innerHTML = '';
+        data.tanggal_formatted.forEach(tgl => {
+            const div = document.createElement('div');
+            div.innerText = `- ${tgl}`;
+            container.appendChild(div);
+        });
+
+        // Tampilkan modal
+        const modalOverlay = document.getElementById('modalOverlayDetail');
+        const modal = document.getElementById('modal');
+        modalOverlay.classList.remove('opacity-0', 'invisible');
+        modalOverlay.classList.add('opacity-100', 'visible');
+        setTimeout(() => {
+            modal.classList.remove('scale-75', '-translate-y-12');
+            modal.classList.add('scale-100', 'translate-y-0');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+    }
     </script>
 @endsection

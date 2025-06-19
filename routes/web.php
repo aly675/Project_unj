@@ -31,6 +31,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::prefix('/peminjaman')->group( function(){
         Route::get("", [AdminController::class, "peminjaman_page"])->name(name: "admin.peminjaman-page");
         Route::get("/tambah-peminjaman", [AdminController::class, "tambah_peminjaman_page"])->name("admin.tambah-peminjaman-page");
+        Route::post("/tambah-peminjaman/submit", [AdminController::class, "buatSurat"])->name("admin.tambah-peminjaman");
         Route::get("/detail-peminjaman", [AdminController::class, "detail_peminjaman_page"])->name("admin.detail-peminjaman-page");
         Route::get("/update-peminjaman", [AdminController::class, "update_peminjaman_page"])->name("admin.update-peminjaman-page");
 

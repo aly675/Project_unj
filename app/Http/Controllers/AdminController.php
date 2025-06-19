@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Ruangan;
 use App\Models\Fasilitas;
+use App\Models\peminjaman;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
@@ -23,10 +25,30 @@ class AdminController extends Controller
         return view('admin.daftar-referensi.daftar-referensi', compact("ruangans", "listFasilitas"));
     }
 
-    public function peminjaman_page()
-    {
-        return view('admin.peminjaman.peminjaman');
-    }
+        public function peminjaman_page()
+        {
+            $peminjamans = peminjaman::all();
+
+            // Format tanggal JSON ke "Senin, 01 Januari 2025"
+            Carbon::setLocale('id');
+            foreach ($peminjamans as $p) {
+                $decoded = json_decode($p->tanggal_peminjaman, true) ?? [];
+
+                // Format tanggal untuk ditampilkan
+                $formatted = collect($decoded)->map(function ($tgl) {
+                    return Carbon::parse($tgl)->translatedFormat('l, d F Y');
+                });
+
+                $p->tanggal_formatted = $formatted;
+                $p->lama_hari = count($decoded);
+
+                // Tambahkan URL lampiran (untuk JavaScript di blade)
+                $p->lampiran_url = $p->lampiran ? asset('storage/' . $p->lampiran) : null;
+            }
+
+            return view('admin.peminjaman.peminjaman', compact('peminjamans'));
+        }
+
 
     public function tambah_peminjaman_page()
     {
@@ -140,6 +162,51 @@ class AdminController extends Controller
                 Ruangan::findOrFail($id)->delete();
                 return redirect()->route('admin.daftar-referensi-page')->with('success','Ruangan berhasil dihapus.');
             }
+
+
+     public function buatSurat(Request $request)
+    {
+        $validated = $request->validate([
+            'nomor-surat' => 'required|string|max:255',
+            'asal-surat' => 'required|string|max:255',
+            'nama-peminjam' => 'required|string|max:255',
+            'jumlah-hari' => 'required|integer|min:1',
+            'jumlah-ruangan' => 'nullable|integer|min:0',
+            'jumlah-pc' => 'nullable|integer|min:0',
+            'lampiran' => 'nullable|file|mimes:pdf|max:2048', // max dalam KB
+            'tanggal_peminjaman' => 'required|array|min:1',
+            'tanggal_peminjaman.*' => 'required|date',
+        ]);
+
+        $tanggalPeminjaman = [];
+        for ($i = 1; $i <= $request->input('jumlah-hari'); $i++) {
+            $tanggalKey = "tanggal-hari-$i";
+            if ($request->has($tanggalKey)) {
+                $tanggalPeminjaman[] = $request->input($tanggalKey);
+            }
+        }
+
+        // Simpan file
+        $lampiranPath = null;
+        if ($request->hasFile('lampiran')) {
+            $lampiranPath = $request->file('lampiran')->store('lampiran-peminjaman', 'public');
+        }
+
+        // Simpan ke database
+        $peminjaman = new peminjaman();
+        $peminjaman->nomor_surat = $request->input('nomor-surat');
+        $peminjaman->asal_surat = $request->input('asal-surat');
+        $peminjaman->nama_peminjam = $request->input('nama-peminjam');
+        $peminjaman->jumlah_hari = $request->input('jumlah-hari');
+        $tanggalPeminjaman = $request->input('tanggal_peminjaman'); // array otomatis
+        $peminjaman->tanggal_peminjaman = json_encode($tanggalPeminjaman);
+        $peminjaman->jumlah_ruangan = $request->input('jumlah-ruangan');
+        $peminjaman->jumlah_pc = $request->input('jumlah-pc');
+        $peminjaman->lampiran = $lampiranPath;
+        $peminjaman->save();
+
+        return redirect()->route('admin.tambah-peminjaman-page')->with('success', 'Data peminjaman berhasil disimpan.');
+    }
 
 
 
