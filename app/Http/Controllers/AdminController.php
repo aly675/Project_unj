@@ -49,6 +49,65 @@ class AdminController extends Controller
             return view('admin.peminjaman.peminjaman', compact('peminjamans'));
         }
 
+        public function deletePinjamanRuangan($id){
+            $ruangan = peminjaman::findOrFail($id);
+
+            $ruangan->delete();
+            return redirect()->route("admin.peminjaman-page");
+        }
+
+public function update_peminjaman(Request $request, $id)
+{
+    $peminjaman = Peminjaman::findOrFail($id);
+    $request->validate([
+        'nomor_surat' => 'required|string|max:255|unique:peminjamen,nomor_surat'.$peminjaman->id ,
+        'asal_surat' => 'required|string|max:255',
+        'nama_peminjam' => 'required|string|max:255',
+        'jumlah_hari' => 'required|integer|min:1',
+        'tanggal_peminjaman' => 'required|array|min:1',
+        'tanggal_peminjaman.*' => 'required|date',
+        'jumlah_ruangan' => 'nullable|integer|min:0',
+        'jumlah_pc' => 'nullable|integer|min:0',
+        'lampiran' => 'nullable|file|mimes:pdf|max:2048',
+    ]);
+
+    try {
+        $peminjaman = Peminjaman::findOrFail($id);
+        // Update field dasar
+        $peminjaman->nomor_surat = $request->nomor_surat;
+        $peminjaman->asal_surat = $request->asal_surat;
+        $peminjaman->nama_peminjam = $request->nama_peminjam;
+        $peminjaman->jumlah_hari = $request->jumlah_hari;
+        $peminjaman->jumlah_ruangan = $request->jumlah_ruangan;
+        $peminjaman->jumlah_pc = $request->jumlah_pc;
+
+        // Simpan tanggal sebagai JSON
+        $peminjaman->tanggal_peminjaman = json_encode($request->tanggal_peminjaman);
+
+        // Handle file upload
+        if ($request->hasFile('lampiran')) {
+            // Hapus file lama jika ada
+            if ($peminjaman->lampiran && Storage::disk('public')->exists($peminjaman->lampiran)) {
+                Storage::disk('public')->delete($peminjaman->lampiran);
+            }
+
+            $path = $request->file('lampiran')->store('lampiran-peminjaman', 'public');
+            $peminjaman->lampiran = $path;
+        }
+
+        $peminjaman->save();
+
+        return redirect()->route('admin.peminjaman-page')
+                        ->with('success', 'Peminjaman berhasil diperbarui.');
+
+    } catch (\Exception $e) {
+        return redirect()->back()
+                        ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
+                        ->withInput();
+    }
+}
+
+
 
     public function tambah_peminjaman_page()
     {
@@ -167,7 +226,7 @@ class AdminController extends Controller
      public function buatSurat(Request $request)
     {
         $validated = $request->validate([
-            'nomor-surat' => 'required|string|max:255',
+            'nomor-surat' => 'required|string|max:255|unique:peminjamen,nomor_surat',
             'asal-surat' => 'required|string|max:255',
             'nama-peminjam' => 'required|string|max:255',
             'jumlah-hari' => 'required|integer|min:1',

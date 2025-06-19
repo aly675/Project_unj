@@ -110,12 +110,20 @@
         <button onclick="openModalDetail({{ $peminjaman->id }})">
             <img src="{{ asset('assets/images/icon/action-view-icon.svg') }}" alt="View" />
         </button>
-        <button onclick="openModalUpdate()">
-          <img src="{{ asset('assets/images/icon/action-edit-icon.svg') }}" alt="Edit action icon"/>
+        <button onclick="openModalUpdate({{ $peminjaman->id }})">
+        <img src="{{ asset('assets/images/icon/action-edit-icon.svg') }}" alt="Edit action icon"/>
         </button>
-        <a href="#">
-          <img src="{{ asset('assets/images/icon/action-delete-icon.svg') }}" alt="Delete action icon"/>
-        </a>
+
+        <form method="post" action="{{route("admin.delete-pinjaman-ruangan", $peminjaman->id)}}" >
+            @method("DELETE")
+            @csrf
+
+            <button type="submit">
+                <img src="{{ asset('assets/images/icon/action-delete-icon.svg') }}" alt="Delete action icon"/>
+            </button>
+
+        </form>
+
       </div>
     </td>
   </tr>
@@ -206,191 +214,251 @@
 @section('js')
 
    <script>
-                  // Get DOM elements
-        const openModalBtn = document.getElementById('openModalBtn');
-        const modalOverlayDetail = document.getElementById('modalOverlayDetail');
-        const modalOverlayUpdate = document.getElementById('modalOverlayUpdate');
-        const modal = document.getElementById('modal');
-        const closeBtn = document.getElementById('closeBtn');
+ // Fixed JavaScript code untuk update peminjaman
 
-        // DETAIL MODAL
-        // Function to open modal with smooth animation
-        function openModalDetail() {
-            modalOverlayDetail.classList.remove('opacity-0', 'invisible');
-            modalOverlayDetail.classList.add('opacity-100', 'visible');
+// Get DOM elements
+const modalOverlayDetail = document.getElementById('modalOverlayDetail');
+const modalOverlayUpdate = document.getElementById('modalOverlayUpdate');
 
-            // Small delay to ensure overlay is visible before animating modal
-            setTimeout(() => {
-                modal.classList.remove('scale-75', '-translate-y-12');
-                modal.classList.add('scale-100', 'translate-y-0');
-            }, 10);
+// Variable untuk menyimpan ID peminjaman yang sedang diedit
+let currentPeminjamanId = null;
 
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
-        }
+// Get CSRF token
+const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-        // CLOSE MODAL DETAIL
-        // Function to close modal with smooth animation
-        function closeModalDetail() {
-            modal.classList.remove('scale-100', 'translate-y-0');
-            modal.classList.add('scale-75', '-translate-y-12');
+// Data peminjaman dari server
+const peminjamanData = @json($peminjamans);
 
-            // Wait for modal animation to complete before hiding overlay
-            setTimeout(() => {
-                modalOverlayDetail.classList.remove('opacity-100', 'visible');
-                modalOverlayDetail.classList.add('opacity-0', 'invisible');
-            }, 200);
+// DETAIL MODAL FUNCTIONS
+function openModalDetail(id) {
+    const data = peminjamanData.find(p => p.id === id);
+    if (!data) return;
 
-            document.body.style.overflow = 'auto'; // Restore scrolling
-        }
+    document.getElementById('modal_nomor_surat').innerText = `: ${data.nomor_surat}`;
+    document.getElementById('modal_asal_surat').innerText = `: ${data.asal_surat}`;
+    document.getElementById('modal_nama_peminjam').innerText = `: ${data.nama_peminjam}`;
+    document.getElementById('modal_lama_peminjam').innerText = `: ${data.lama_hari} hari`;
+    document.getElementById('modal_status').innerText = data.status ?? 'Menunggu';
 
-        // UPDATE MODAL
-        // Function to open modal with smooth animation
-        function openModalUpdate() {
-            modalOverlayUpdate.classList.remove('opacity-0', 'invisible');
-            modalOverlayUpdate.classList.add('opacity-100', 'visible');
+    // Render tanggal
+    const container = document.getElementById('modal_tanggal_peminjam');
+    container.innerHTML = '';
+    data.tanggal_formatted.forEach(tgl => {
+        const div = document.createElement('div');
+        div.innerText = `- ${tgl}`;
+        container.appendChild(div);
+    });
 
-            // Small delay to ensure overlay is visible before animating modal
-            setTimeout(() => {
-                modal.classList.remove('scale-75', '-translate-y-12');
-                modal.classList.add('scale-100', 'translate-y-0');
-            }, 10);
+    // Tampilkan modal detail
+    const modal = document.querySelector('#modalOverlayDetail .bg-white');
+    modalOverlayDetail.classList.remove('opacity-0', 'invisible');
+    modalOverlayDetail.classList.add('opacity-100', 'visible');
 
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
-        }
+    setTimeout(() => {
+        modal.classList.remove('scale-75', '-translate-y-12');
+        modal.classList.add('scale-100', 'translate-y-0');
+    }, 10);
 
-        // CLOSE MODAL UPDATE
-        // Function to close modal with smooth animation
-        function closeModalUpdate() {
-            modal.classList.remove('scale-100', 'translate-y-0');
-            modal.classList.add('scale-75', '-translate-y-12');
+    document.body.style.overflow = 'hidden';
+}
 
-            // Wait for modal animation to complete before hiding overlay
-            setTimeout(() => {
-                modalOverlayUpdate.classList.remove('opacity-100', 'visible');
-                modalOverlayUpdate.classList.add('opacity-0', 'invisible');
-            }, 200);
+function closeModalDetail() {
+    const modal = document.querySelector('#modalOverlayDetail .bg-white');
+    modal.classList.remove('scale-100', 'translate-y-0');
+    modal.classList.add('scale-75', '-translate-y-12');
 
-            document.body.style.overflow = 'auto'; // Restore scrolling
-        }
+    setTimeout(() => {
+        modalOverlayDetail.classList.remove('opacity-100', 'visible');
+        modalOverlayDetail.classList.add('opacity-0', 'invisible');
+    }, 200);
 
+    document.body.style.overflow = 'auto';
+}
 
-        // Event listeners
-        // openModalBtn.addEventListener('click', openModal);
-        // closeBtn.addEventListener('click', closeModal);
+// UPDATE MODAL FUNCTIONS
+function openModalUpdate(id) {
+    const data = peminjamanData.find(p => p.id === id);
+    if (!data) return;
 
-        // Close modal when clicking on overlay (outside the modal)
-        modalOverlayDetail.addEventListener('click', function(e) {
-            if (e.target === modalOverlayDetail) {
-                closeModalDetail();
+    // Set current ID untuk keperluan update
+    currentPeminjamanId = id;
+
+    // Prefill form dengan data yang ada
+    document.getElementById('nomor-surat').value = data.nomor_surat;
+    document.getElementById('asal-surat').value = data.asal_surat;
+    document.getElementById('nama-peminjam').value = data.nama_peminjam;
+    document.getElementById('jumlah-hari').value = data.lama_hari;
+    document.getElementById('jumlah-ruangan').value = data.jumlah_ruangan ?? '';
+    document.getElementById('jumlah-pc').value = data.jumlah_pc ?? '';
+
+    // Render tanggal inputs dengan data yang ada
+    const tanggalArray = JSON.parse(data.tanggal_peminjaman || '[]');
+    renderTanggalInputsWithPrefill(tanggalArray);
+
+    // Update form action URL
+    const form = document.querySelector('#modalOverlayUpdate form');
+    form.action = `/admin/peminjaman/update/${id}`;
+
+    // Tampilkan modal update
+    const modal = document.querySelector('#modalOverlayUpdate .bg-white');
+    modalOverlayUpdate.classList.remove('opacity-0', 'invisible');
+    modalOverlayUpdate.classList.add('opacity-100', 'visible');
+
+    setTimeout(() => {
+        modal.classList.remove('scale-75', '-translate-y-12');
+        modal.classList.add('scale-100', 'translate-y-0');
+    }, 10);
+
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModalUpdate() {
+    const modal = document.querySelector('#modalOverlayUpdate .bg-white');
+    modal.classList.remove('scale-100', 'translate-y-0');
+    modal.classList.add('scale-75', '-translate-y-12');
+
+    setTimeout(() => {
+        modalOverlayUpdate.classList.remove('opacity-100', 'visible');
+        modalOverlayUpdate.classList.add('opacity-0', 'invisible');
+    }, 200);
+
+    document.body.style.overflow = 'auto';
+    currentPeminjamanId = null;
+}
+
+// TANGGAL INPUT FUNCTIONS
+function renderTanggalInputs() {
+    const container = document.getElementById("tanggal-peminjaman-container");
+    const jumlahHari = parseInt(document.getElementById("jumlah-hari").value) || 1;
+
+    container.innerHTML = "";
+
+    for (let i = 0; i < jumlahHari; i++) {
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("flex", "space-x-2", "items-center", "mb-2");
+
+        const label = document.createElement("label");
+        label.innerText = `Hari ke-${i + 1}:`;
+        label.classList.add("w-24", "text-sm", "text-gray-700");
+
+        const input = document.createElement("input");
+        input.type = "date";
+        input.className = "flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500";
+        input.name = `tanggal_peminjaman[${i}]`;
+        input.required = true;
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md transition-colors";
+        btn.innerText = "Hapus";
+        btn.onclick = function () {
+            if (container.children.length <= 1) {
+                alert("Minimal harus ada 1 hari.");
+                return;
             }
-            if (e.target === modalOverlayUpdate) {
-                closeModalUpdate();
-            }
-        });
 
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && modalOverlayDetail.classList.contains('visible')) {
-                closeModalDetail();
-            }
-            if (e.key === 'Escape' && modalOverlayUpdate.classList.contains('visible')) {
-                closeModalUpdate();
-            }
-        });
+            wrapper.remove();
+            document.getElementById("jumlah-hari").value = container.children.length;
 
+            // Reindex labels
+            Array.from(container.children).forEach((child, index) => {
+                const label = child.querySelector("label");
+                const input = child.querySelector("input");
+                if (label) label.innerText = `Hari ke-${index + 1}:`;
+                if (input) input.name = `tanggal_peminjaman[${index}]`;
+            });
+        };
 
-        //UPDATE FORM
-
-        function renderTanggalInputs() {
-            const container = document.getElementById("tanggal-peminjaman-container");
-            const jumlahHari = parseInt(document.getElementById("jumlah-hari").value);
-
-            // Clear existing inputs
-            container.innerHTML = "";
-
-            for (let i = 0; i < jumlahHari; i++) {
-            const wrapper = document.createElement("div");
-            wrapper.classList.add("flex", "space-x-2", "items-center");
-
-            const label = document.createElement("label");
-            label.innerText = `Hari ke-${i + 1}:`;
-            label.classList.add("w-24", "text-sm", "text-gray-700");
-
-            const input = document.createElement("input");
-            input.type = "date";
-            input.className =
-                "flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500";
-            input.name = `tanggal-hari-${i + 1}`;
-
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.className =
-                "bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md transition-colors";
-            btn.innerText = "Hapus";
-            btn.onclick = function () {
-                const container = document.getElementById("tanggal-peminjaman-container");
-
-                if (container.children.length <= 1) {
-                    alert("Minimal harus ada 1 hari.");
-                    return;
-                }
-
-                wrapper.remove();
-
-                // Update jumlah hari
-                document.getElementById("jumlah-hari").value = container.children.length;
-
-                // Reindex semua label setelah penghapusan
-                Array.from(container.children).forEach((child, index) => {
-                    const label = child.querySelector("label");
-                    if (label) {
-                    label.innerText = `Hari ke-${index + 1}:`;
-                    }
-                });
-            };
-
-
-            wrapper.appendChild(label);
-            wrapper.appendChild(input);
-            wrapper.appendChild(btn);
-            container.appendChild(wrapper);
-            }
-        }
-
-    // Initial render
-    window.onload = renderTanggalInputs;
-
-     const peminjamanData = @json($peminjamans);
-
-    function openModalDetail(id) {
-        const data = peminjamanData.find(p => p.id === id);
-        if (!data) return;
-
-        document.getElementById('modal_nomor_surat').innerText = `: ${data.nomor_surat}`;
-        document.getElementById('modal_asal_surat').innerText = `: ${data.asal_surat}`;
-        document.getElementById('modal_nama_peminjam').innerText = `: ${data.nama_peminjam}`;
-        document.getElementById('modal_lama_peminjam').innerText = `: ${data.lama_hari} hari`;
-        document.getElementById('modal_status').innerText = data.status ?? 'Menunggu';
-
-        // render tanggal
-        const container = document.getElementById('modal_tanggal_peminjam');
-        container.innerHTML = '';
-        data.tanggal_formatted.forEach(tgl => {
-            const div = document.createElement('div');
-            div.innerText = `- ${tgl}`;
-            container.appendChild(div);
-        });
-
-        // Tampilkan modal
-        const modalOverlay = document.getElementById('modalOverlayDetail');
-        const modal = document.getElementById('modal');
-        modalOverlay.classList.remove('opacity-0', 'invisible');
-        modalOverlay.classList.add('opacity-100', 'visible');
-        setTimeout(() => {
-            modal.classList.remove('scale-75', '-translate-y-12');
-            modal.classList.add('scale-100', 'translate-y-0');
-        }, 10);
-        document.body.style.overflow = 'hidden';
+        wrapper.appendChild(label);
+        wrapper.appendChild(input);
+        wrapper.appendChild(btn);
+        container.appendChild(wrapper);
     }
+}
+
+function renderTanggalInputsWithPrefill(dates = []) {
+    const container = document.getElementById("tanggal-peminjaman-container");
+    const jumlahHari = parseInt(document.getElementById("jumlah-hari").value) || 1;
+
+    container.innerHTML = "";
+
+    for (let i = 0; i < jumlahHari; i++) {
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("flex", "space-x-2", "items-center", "mb-2");
+
+        const label = document.createElement("label");
+        label.innerText = `Hari ke-${i + 1}:`;
+        label.classList.add("w-24", "text-sm", "text-gray-700");
+
+        const input = document.createElement("input");
+        input.type = "date";
+        input.className = "flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500";
+        input.name = `tanggal_peminjaman[${i}]`;
+        input.value = dates[i] || "";
+        input.required = true;
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md transition-colors";
+        btn.innerText = "Hapus";
+        btn.onclick = function () {
+            if (container.children.length <= 1) {
+                alert("Minimal harus ada 1 hari.");
+                return;
+            }
+
+            wrapper.remove();
+            document.getElementById("jumlah-hari").value = container.children.length;
+
+            // Reindex labels
+            Array.from(container.children).forEach((child, index) => {
+                const label = child.querySelector("label");
+                const input = child.querySelector("input");
+                if (label) label.innerText = `Hari ke-${index + 1}:`;
+                if (input) input.name = `tanggal_peminjaman[${index}]`;
+            });
+        };
+
+        wrapper.appendChild(label);
+        wrapper.appendChild(input);
+        wrapper.appendChild(btn);
+        container.appendChild(wrapper);
+    }
+}
+
+// EVENT LISTENERS
+// Close modal saat click overlay
+modalOverlayDetail?.addEventListener('click', function(e) {
+    if (e.target === modalOverlayDetail) {
+        closeModalDetail();
+    }
+});
+
+modalOverlayUpdate?.addEventListener('click', function(e) {
+    if (e.target === modalOverlayUpdate) {
+        closeModalUpdate();
+    }
+});
+
+// Close modal dengan ESC key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        if (modalOverlayDetail?.classList.contains('visible')) {
+            closeModalDetail();
+        }
+        if (modalOverlayUpdate?.classList.contains('visible')) {
+            closeModalUpdate();
+        }
+    }
+});
+
+// Initial render saat page load
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById("tanggal-peminjaman-container")) {
+        renderTanggalInputs();
+    }
+});
+
+
     </script>
 @endsection
