@@ -31,11 +31,10 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::prefix('/peminjaman')->group( function(){
         Route::get("", [AdminController::class, "peminjaman_page"])->name(name: "admin.peminjaman-page");
         Route::get("/tambah-peminjaman", [AdminController::class, "tambah_peminjaman_page"])->name("admin.tambah-peminjaman-page");
-       Route::delete('/delete/{id}', [AdminController::class, 'deletePinjamanRuangan'])->name('admin.delete-pinjaman-ruangan');
+        Route::delete('/delete/{id}', [AdminController::class, 'deletePinjamanRuangan'])->name('admin.delete-pinjaman-ruangan');
         Route::post("/tambah-peminjaman/submit", [AdminController::class, "buatSurat"])->name("admin.tambah-peminjaman");
         Route::get("/detail-peminjaman", [AdminController::class, "detail_peminjaman_page"])->name("admin.detail-peminjaman-page");
         Route::put('/update/{id}', [AdminController::class, 'update_peminjaman'])->name('admin.update-peminjaman');
-
 
     });
 
@@ -45,6 +44,10 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::post("/tambah-peminjaman/submit", [AdminController::class, "tambahRuangan"])->name("tambah.ruangan");
         Route::delete('/admin/ruangan/{id}', [AdminController::class, 'destroy'])->name('admin.delete-ruangan');
         Route::post("/update/ruangan/{id}", [AdminController::class, 'updateRuangan'])->name("admin.update-submit");
+        Route::get('/daftar-fasilitas', [AdminController::class, 'daftar_fasilitas_page'])->name('admin.daftar-fasilitas-page');
+        Route::post('/fasilitas/submit', [AdminController::class, 'submit_fasilitas'])->name('admin.submit-fasilitas');
+        Route::delete('/fasilitas/delete/{id}', [AdminController::class, 'delete_fasilitas'])->name('admin.delete-fasilitas');
+        Route::put('/fasilitas/update/{id}', [AdminController::class, 'update_fasilitas'])->name('admin.update-fasilitas');
     });
 });
 

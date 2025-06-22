@@ -113,15 +113,12 @@
         <button onclick="openModalUpdate({{ $peminjaman->id }})">
         <img src="{{ asset('assets/images/icon/action-edit-icon.svg') }}" alt="Edit action icon"/>
         </button>
-
-        <form method="post" action="{{route("admin.delete-pinjaman-ruangan", $peminjaman->id)}}" >
+        <form method="post" class="mb-0" action="{{route("admin.delete-pinjaman-ruangan", $peminjaman->id)}}" >
             @method("DELETE")
             @csrf
-
             <button type="submit">
                 <img src="{{ asset('assets/images/icon/action-delete-icon.svg') }}" alt="Delete action icon"/>
             </button>
-
         </form>
 
       </div>

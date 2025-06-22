@@ -17,6 +17,45 @@
       font-family: 'Poppins', sans-serif;
     }
 
+      /* Custom transition for dropdown showing with delay */
+    .dropdown-enter {
+      max-height: 0;
+      opacity: 0;
+      transform-origin: top;
+      transition:
+        max-height 0.3s ease,
+        opacity 0.3s ease 0.2s,
+        padding-top 0.3s ease 0.2s,
+        padding-bottom 0.3s ease 0.2s;
+      overflow: hidden;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    .dropdown-enter-active {
+      max-height: 200px; /* enough to show content */
+      opacity: 1;
+      padding-top: 0.25rem; /* 1 */
+      padding-bottom: 0.25rem; /* 1 */
+    }
+    .dropdown-leave {
+      max-height: 200px;
+      opacity: 1;
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
+      transform-origin: top;
+      transition:
+        max-height 0.3s ease,
+        opacity 0.3s ease,
+        padding-top 0.3s ease,
+        padding-bottom 0.3s ease;
+    }
+    .dropdown-leave-active {
+      max-height: 0;
+      opacity: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
     </style>
 
     @yield('style')
@@ -34,24 +73,51 @@
       </div>
 
       <nav class="flex flex-col mt-6 text-teal-300 text-sm font-medium">
-        <a class="flex items-center gap-3 px-7 py-3 hover:text-white transition-colors
+        <a class="flex hover:bg-teal-700 items-center gap-3 px-7 py-3 hover:text-white transition-colors
          {{ request()->routeIs('admin.dashboard-page') ? 'bg-teal-700 text-white font-semibold' : '' }}"
           href="{{route('admin.dashboard-page')}}">
           <img alt="" src="{{asset('assets/images/icon/home-icon.svg')}}" class="w-5 h-5"/>
           <span class="sidebar-text">Dashboard</span>
         </a>
-        <a class="flex items-center gap-3 px-7 py-3 hover:text-white transition-colors
+
+        <a class="flex hover:bg-teal-700 items-center gap-3 px-7 py-3 hover:text-white transition-colors
          {{ request()->routeIs('admin.peminjaman-page') ? 'bg-teal-700 text-white font-semibold' : '' }}"
           href="{{route('admin.peminjaman-page')}}">
           <img alt="" src="{{asset('assets/images/icon/peminjaman-icon.svg')}}" class="w-5 h-5"/>
           <span class="sidebar-text">Peminjaman</span>
         </a>
-        <a class="flex items-center gap-3 px-7 py-3 hover:text-white transition-colors
-        {{ request()->routeIs('admin.daftar-referensi-page') ? 'bg-teal-700 text-white font-semibold' : ''}}"
-          href="{{route('admin.daftar-referensi-page')}}">
-          <img alt="" src="{{asset('assets/images/icon/referensi-icon.svg')}}" class="w-5 h-5"/>
-          <span class="sidebar-text">Daftar Referensi</span>
-        </a>
+
+                <!-- Dropdown Daftar Referensi -->
+          <button id="dropdownToggle" aria-expanded="false" aria-controls="dropdownMenu" class="flex hover:bg-teal-700 items-center gap-3 px-7 py-3 hover:text-white transition-colors
+          {{ request()->routeIs('admin.daftar-referensi-page') ||
+            request()->routeIs('admin.daftar-fasilitas-page') ||
+            request()->routeIs('admin.tambah-ruangan-page') ? 'bg-teal-700 text-white font-semibold' : ''}}">
+                <img alt="" src="{{asset('assets/images/icon/referensi-icon.svg')}}" class="w-5 h-5"/>
+                <span class="sidebar-text">Daftar Referensi</span>
+            <svg id="dropdownChevron" class="w-5 h-5 ml-auto transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+
+            <div id="dropdownMenu" class="overflow-hidden max-h-60 opacity-0 mt-1 ml-8 text-teal-200 select-none"
+            style="transition: max-height 0.3s ease, opacity 0.3s ease 0.2s, padding-top 0.3s ease 0.2s, padding-bottom 0.3s ease 0.2s; padding-top: 0; padding-bottom: 0;">
+                <ul class="relative px-1 space-y-1 max-h-dvh">
+                    <div class="absolute top-0 left-0 h-full border-l border-teal-400 ml-2"></div>
+                    <li class="relative pl-4">
+                        <div class="absolute top-1/2 left-0 w-2 border-t  border-teal-400"></div>
+                        <a href="{{route('admin.daftar-referensi-page')}}" class="block hover:bg-teal-700 rounded-full py-1 px-4 hover:text-white transition-colors cursor-pointer
+                        {{ request()->routeIs('admin.daftar-referensi-page') ? 'bg-teal-700 text-white font-semibold' : ''}}">
+                         Daftar Ruangan</a>
+                    </li>
+                    <li class="relative pl-4">
+                        <div class="absolute top-1/2 left-0 w-2 border-t border-teal-400"></div>
+                        <a href="{{route('admin.daftar-fasilitas-page')}}" class="block hover:bg-teal-700 rounded-full py-1 px-4 cursor-pointer hover:text-white transition-colors
+                        {{ request()->routeIs('admin.daftar-fasilitas-page') ? 'bg-teal-700 text-white font-semibold' : ''}}">
+                         Daftar Fasilitas
+                        </a>
+                    </li>
+                </ul>
+            </div>
       </nav>
     </aside>
 
@@ -98,19 +164,29 @@
         @if(
             request()->routeIs('admin.daftar-referensi-page') ||
             request()->routeIs('admin.tambah-ruangan-page') ||
-            request()->routeIs('admin.update-ruangan-page')
+            request()->routeIs('admin.daftar-fasilitas-page')
         )
-            <span class="text-gray-900 font-semibold">/</span>
-            <span class="{{ request()->routeIs('admin.daftar-referensi-page') ? 'text-gray-900 font-semibold' : '' }}">
-                <a href="{{ route('admin.daftar-referensi-page') }}">Daftar Referensi</a>
+            <span class="">
+                <a href="{{ route('admin.daftar-referensi-page') }}">
+                    / Daftar Referensi
+                </a>
             </span>
         @endif
 
         {{-- Tambah / Detail / Update Ruangan --}}
         @if(request()->routeIs('admin.tambah-ruangan-page'))
+            <span><a href="{{ route('admin.daftar-referensi-page') }}"> / Daftar Ruangan</a></span>
             <span class="text-gray-900 font-semibold">/ Tambah Ruangan</span>
-        @elseif(request()->routeIs('admin.update-ruangan-page'))
-            <span class="text-gray-900 font-semibold">/ Update Ruangan</span>
+        @elseif(request()->routeIs('admin.daftar-referensi-page'))
+            <span class="{{ request()->routeIs('admin.daftar-referensi-page') ? 'text-gray-900 font-semibold' : '' }}">
+                <a href="{{ route('admin.daftar-referensi-page') }}"> / Daftar Ruangan</a>
+            </span>
+        @elseif(request()->routeIs('admin.daftar-fasilitas-page'))
+            <span class="text-gray-900 font-semibold">
+                <a href="{{route('admin.daftar-fasilitas-page')}}">
+                    / Daftar Fasilitas
+                </a>
+            </span>
         @endif
     </div>
 
@@ -152,7 +228,48 @@
         @yield('main')
    </main>
   </div>
+  <script>
+      const toggleBtn = document.getElementById('dropdownToggle');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const chevron = document.getElementById('dropdownChevron');
 
+        toggleBtn.addEventListener('click', () => {
+        const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+        toggleBtn.setAttribute('aria-expanded', String(!expanded));
+
+        if (!expanded) {
+            // Show dropdown with animation and delay
+            dropdownMenu.style.display = 'block';
+            // Trigger reflow to restart animation
+            void dropdownMenu.offsetWidth;
+            // dropdownMenu.style.maxHeight = dropdownMenu.scrollHeight + 'px';
+            dropdownMenu.style.maxHeight = '1000px';
+            dropdownMenu.style.opacity = '1';
+            dropdownMenu.style.paddingTop = '0.25rem';
+            dropdownMenu.style.paddingBottom = '1.45rem';
+
+            chevron.style.transform = 'rotate(180deg)';
+        } else {
+            // Hide dropdown
+            dropdownMenu.style.maxHeight = '0';
+            dropdownMenu.style.opacity = '0';
+            dropdownMenu.style.paddingTop = '0';
+            dropdownMenu.style.paddingBottom = '0';
+            chevron.style.transform = 'rotate(0deg)';
+
+            // After transition set display none for accessibility
+            dropdownMenu.addEventListener('transitionend', function handler() {
+            if (dropdownMenu.style.maxHeight === '0px') {
+                dropdownMenu.style.display = 'none';
+            }
+            dropdownMenu.removeEventListener('transitionend', handler);
+            });
+        }
+        });
+
+        // Initialize dropdown as hidden
+        dropdownMenu.style.display = 'none';
+  </script>
   <script src="{{asset('assets/js/layout/script.js')}}"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   @yield('js')
