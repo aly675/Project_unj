@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\peminjaman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Response;
 
 class KepalaUptController extends Controller
 {
@@ -55,4 +56,5 @@ class KepalaUptController extends Controller
             return response()->json(['success' => true, 'message' => 'Pengajuan ditolak.']);
         }
 
+    
 }
