@@ -6,6 +6,7 @@
    Kepala UPT | @yield('title')
   </title>
   <link rel="icon" href="{{asset('assets/images/logo_unj.svg')}}">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <script src="https://cdn.tailwindcss.com">
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   </script>

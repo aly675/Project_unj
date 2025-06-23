@@ -67,6 +67,9 @@ Route::prefix('kepala-upt')->middleware( ['auth', 'role:kepalaupt'])->group(func
     Route::get("/", [KepalaUptController::class, "dashboard"])->name("kepalaupt.dashboard-page");
     Route::prefix('pengajuan-surat')->group( function(){
         Route::get('', [KepalaUptController::class, 'pengajuan_surat_page'])->name('kepalaupt.pengajuan-surat-page');
+        Route::post('/{id}/terima', [KepalaUptController::class, 'terima'])->name('pengajuan.terima');
+        Route::post('/{id}/tolak', [KepalaUptController::class, 'tolak'])->name('pengajuan.tolak');
+
     });
     Route::prefix('kalender')->group( function(){
         Route::get('', [KepalaUptController::class, 'kalender_page'])->name('kepalaupt.kalender');

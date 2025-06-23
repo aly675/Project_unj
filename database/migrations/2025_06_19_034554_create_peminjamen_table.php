@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('jumlah_ruangan')->nullable();
             $table->integer('jumlah_pc')->nullable();
             $table->string('lampiran')->nullable();
+            $table->enum("status", ["Menunggu Persetujuan", "Menunggu Verifikasi", "Diterima", "Ditolak"])->default("Menunggu Persetujuan");
             $table->timestamps();
         });
     }
