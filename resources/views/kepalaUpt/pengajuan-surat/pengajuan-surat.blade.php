@@ -87,12 +87,13 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span @class([
                             'inline-flex px-2 py-1 text-xs font-medium rounded-full',
-                            'bg-green-100 text-green-800' => $data->status === 'Diterima',
+                            'bg-green-100 text-green-800' => $data->status === 'Menunggu Verifikasi',
                             'bg-red-100 text-red-800' => $data->status === 'Ditolak',
-                            'bg-yellow-100 text-yellow-800' => !in_array($data->status, ['Diterima', 'Ditolak'])
+                            'bg-yellow-100 text-yellow-800' => !in_array($data->status, ['Menunggu Verifikasi', 'Ditolak']),
                         ])>
-                            {{ $data->status }}
+                            {{ $data->status === 'Menunggu Verifikasi' ? 'Disetujui' : $data->status }}
                         </span>
+
 
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
