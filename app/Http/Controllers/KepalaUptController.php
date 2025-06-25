@@ -16,7 +16,7 @@ class KepalaUptController extends Controller
 
     public function pengajuan_surat_page()
     {
-         $peminjamans = peminjaman::all();
+        $peminjamans = peminjaman::all();
         // Format tanggal JSON ke "Senin, 01 Januari 2025"
         Carbon::setLocale('id');
         foreach ($peminjamans as $p) {
@@ -39,22 +39,22 @@ class KepalaUptController extends Controller
     }
 
     public function terima($id)
-        {
-            $pengajuan = Peminjaman::findOrFail($id);
-            $pengajuan->status = 'Menunggu Verifikasi';
-            $pengajuan->save();
+    {
+        $pengajuan = Peminjaman::findOrFail($id);
+        $pengajuan->status = 'Menunggu Verifikasi';
+        $pengajuan->save();
 
-            return response()->json(['success' => true, 'message' => 'Pengajuan disetujui.']);
-        }
+        return response()->json(['success' => true, 'message' => 'Pengajuan disetujui.']);
+    }
 
     public function tolak($id)
-        {
-            $pengajuan = Peminjaman::findOrFail($id);
-            $pengajuan->status = 'Ditolak';
-            $pengajuan->save();
+    {
+        $pengajuan = Peminjaman::findOrFail($id);
+        $pengajuan->status = 'Ditolak';
+        $pengajuan->save();
+        
+        return response()->json(['success' => true, 'message' => 'Pengajuan ditolak.']);
+    }
 
-            return response()->json(['success' => true, 'message' => 'Pengajuan ditolak.']);
-        }
 
-    
 }

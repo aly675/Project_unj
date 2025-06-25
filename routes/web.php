@@ -78,6 +78,14 @@ Route::prefix('kepala-upt')->middleware( ['auth', 'role:kepalaupt'])->group(func
 
 Route::prefix( 'supkorla')->middleware(['auth', 'role:supkorla'])->group(function () {
     Route::get("/", [SupkorlaController::class, "dashboard"])->name("supkorla.dashboard-page");
+
+    Route::prefix('daftar-pengajuan-surat')->group( function(){
+        Route::get('/', [SupkorlaController::class, 'daftar_pengajuan_page'])->name('supkorla.daftar-pengajuan-surat-page');
+    });
+
+    Route::prefix('daftar-ruangan')->group( function(){
+        Route::get('/', [SupkorlaController::class, 'daftar_ruangan_page'])->name('supkorla.daftar-ruangan-page');
+    });
 });
 
 Route::get('/token', function() {

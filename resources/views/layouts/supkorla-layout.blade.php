@@ -36,6 +36,18 @@
           <img alt="" src="{{asset('assets/images/icon/home-icon.svg')}}" class="w-5 h-5"/>
           <span class="sidebar-text">Dashboard</span>
         </a>
+        <a class="flex items-center gap-3 px-7 py-3 hover:text-white transition-colors
+         {{ request()->routeIs('supkorla.daftar-pengajuan-surat-page') ? 'bg-teal-700 text-white font-semibold' : '' }}"
+          href="{{route('supkorla.daftar-pengajuan-surat-page')}}">
+          <img alt="" src="{{asset('assets/images/icon/surat-icon.svg')}}" class="w-5 h-5"/>
+          <span class="sidebar-text">Daftar Pengajuan</span>
+        </a>
+        <a class="flex items-center gap-3 px-7 py-3 hover:text-white transition-colors
+         {{ request()->routeIs('supkorla.daftar-ruangan-page') ? 'bg-teal-700 text-white font-semibold' : '' }}"
+          href="{{route('supkorla.daftar-ruangan-page')}}">
+          <img alt="" src="{{asset('assets/images/icon/referensi-icon.svg')}}" class="w-5 h-5"/>
+          <span class="sidebar-text">Daftar Ruangan</span>
+        </a>
       </nav>
     </aside>
 
@@ -45,12 +57,35 @@
    <header class="flex justify-between items-center bg-white px-6 py-4 border-b border-gray-200">
     <div class="flex items-center gap-2 text-gray-400 text-sm font-normal">
      <img alt="" onclick="toggleSidebar()" class="fas text-base" src="{{asset('assets/images/icon/sidebar-icon.svg')}}">
-     <a href="{{route('supkorla.dashboard-page')}}">
-      Sup-Korla
-     </a>
-     <span class=" {{ request()->routeIs('supkorla.dashboard-page') ? 'text-gray-900 font-semibold' : '' }}">
-      / @yield('page')
-     </span>
+       {{-- Admin --}}
+        <span class="{{ request()->routeIs('supkorla.dashboard-page') ? 'text-gray-900 font-semibold' : '' }}">
+            <a href="{{ route('supkorla.dashboard-page') }}">Supkorla</a>
+        </span>
+
+        {{-- Dashboard --}}
+        @if(request()->routeIs('supkorla.dashboard-page'))
+            <span class="text-gray-900 font-semibold">/ Dashboard</span>
+        @endif
+
+        {{-- Peminjaman Page --}}
+        @if(
+            request()->routeIs('supkorla.daftar-pengajuan-surat-page')
+        )
+            <span class="text-gray-900 font-semibold">/</span>
+            <span class="{{ request()->routeIs('supkorla.daftar-pengajuan-surat-page') ? 'text-gray-900 font-semibold' : '' }}">
+                <a href="{{ route('supkorla.daftar-pengajuan-surat-page') }}">Daftar Pengajuan</a>
+            </span>
+        @endif
+
+        {{-- Daftar Ruangan Page --}}
+        @if(
+            request()->routeIs('supkorla.daftar-ruangan-page')
+        )
+            <span class="text-gray-900 font-semibold">/</span>
+            <span class="{{ request()->routeIs('supkorla.daftar-ruangan-page') ? 'text-gray-900 font-semibold' : '' }}">
+                <a href="{{ route('supkorla.daftar-ruangan-page') }}">Daftar Ruangan</a>
+            </span>
+        @endif
     </div>
 
 
