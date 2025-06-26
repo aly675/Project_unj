@@ -27,4 +27,10 @@ class Peminjaman extends Model
     protected $casts = [
         'tanggal_peminjaman' => 'array',
     ];
+
+    public function verifikasiRuangans()
+{
+    return $this->hasMany(VerifikasiRuangan::class, 'peminjamen_id');
+}
+
 }

@@ -81,6 +81,7 @@ Route::prefix( 'supkorla')->middleware(['auth', 'role:supkorla'])->group(functio
 
     Route::prefix('daftar-pengajuan-surat')->group( function(){
         Route::get('/', [SupkorlaController::class, 'daftar_pengajuan_page'])->name('supkorla.daftar-pengajuan-surat-page');
+        Route::post("/submit", [SupkorlaController::class, 'verifikasi'])->name("verifikasi.submit");
     });
 
     Route::prefix('daftar-ruangan')->group( function(){

@@ -52,7 +52,7 @@ class KepalaUptController extends Controller
         $pengajuan = Peminjaman::findOrFail($id);
         $pengajuan->status = 'Ditolak';
         $pengajuan->save();
-        
+
         return response()->json(['success' => true, 'message' => 'Pengajuan ditolak.']);
     }
 
