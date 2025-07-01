@@ -24,7 +24,7 @@
             <h1 class="text-xl font-semibold text-gray-800 mb-6">Form Edit Fasilitas</h1>
 
             <!-- Form menggunakan method POST biasa tanpa fetch -->
-            <form id="formUpdateFasilitas" method="POST">
+            <form id="formUpdateFasilitas" method="POST" onsubmit="updateFasilitas(event)">
                 @csrf
                 @method("PUT")
                     <!-- Nama Fasilitas -->
@@ -61,3 +61,52 @@
         </div>
     </div>
 </div>
+
+<script>
+    function updateFasilitas(e) {
+        e.preventDefault();
+
+        const form = document.getElementById('formUpdateFasilitas');
+        const url = form.action;
+        const formData = new FormData(form);
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.message || 'Gagal memperbarui fasilitas.');
+                });
+            }
+            return response.json();
+        })
+        .then(res => {
+            closeModalUpdateFasilitas();
+
+            Swal.fire({
+                toast: true,
+                position: 'bottom-end',
+                icon: 'success',
+                title: res.message || 'Fasilitas berhasil diperbarui.',
+                timer: 3000,
+                showConfirmButton: false,
+                timerProgressBar: true
+            });
+
+            fetchFasilitas(); // Refresh tabel secara real-time jika sudah ada
+        })
+        .catch(err => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: err.message || 'Terjadi kesalahan saat memperbarui fasilitas.'
+            });
+        });
+    }
+</script>

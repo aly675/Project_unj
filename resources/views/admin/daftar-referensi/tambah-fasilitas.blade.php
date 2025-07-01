@@ -24,7 +24,7 @@
             <h1 class="text-xl font-semibold text-gray-800 mb-6">Form Tambah Fasilitas</h1>
 
             <!-- Form menggunakan method POST biasa tanpa fetch -->
-            <form method="POST" action="{{route('admin.submit-fasilitas')}}" enctype="multipart/form-data">
+            <form id="formTambahFasilitas" onsubmit="submitTambahFasilitas(event)">
                 @csrf
                     <!-- Nama Fasilitas -->
                 <div class="mb-4">
@@ -60,3 +60,65 @@
         </div>
     </div>
 </div>
+<script>
+    function submitTambahFasilitas(e) {
+        e.preventDefault();
+
+        const form = document.getElementById('formTambahFasilitas');
+        const formData = new FormData(form);
+
+        const nama = formData.get('nama').trim();
+        if (!nama) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Nama fasilitas wajib diisi!',
+                toast: true,
+                position: 'bottom-end',
+                timer: 3000,
+                showConfirmButton: false
+            });
+            return;
+        }
+
+        fetch('{{ route('admin.submit-fasilitas') }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.message || 'Gagal menambah fasilitas.');
+                });
+            }
+            return response.json();
+        })
+        .then(res => {
+            closeModalTambahFasilitas(); // tutup modal dulu
+
+            Swal.fire({
+                icon: 'success',
+                title: res.message || 'Fasilitas berhasil ditambahkan!',
+                toast: true,
+                position: 'bottom-end',
+                timer: 3000,
+                showConfirmButton: false
+            });
+
+            fetchFasilitas(); // panggil fungsi refresh tabel real-time
+            form.reset(); // reset form
+        })
+        .catch(err => {
+            Swal.fire({
+                icon: 'error',
+                title: err.message || 'Terjadi kesalahan.',
+                toast: true,
+                position: 'bottom-end',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        });
+    }
+</script>

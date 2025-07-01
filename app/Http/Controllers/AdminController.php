@@ -266,19 +266,54 @@ class AdminController extends Controller
         return view('admin.daftar-referensi.daftar-fasilitas' ,compact('fasilitasList'));
     }
 
+    public function fasilitas_json(Request $request )
+    {
+        $query = $request->get('search', '');
+        $sort = $request->get('sort', 'asc');
+
+        $fasilitas = Fasilitas::query()
+            ->when($query, fn($q) => $q->where('nama', 'like', "%{$query}%"))
+            ->orderBy('nama', $sort)
+            ->get(['id', 'nama']); // ambil kolom yang diperlukan saja
+
+        return response()->json($fasilitas);
+    }
+
     public function submit_fasilitas(Request $request)
     {
-        $validated = $request->validate(['nama' => 'required']);
+        $request->validate([
+            'nama' => 'required|string|max:255',
+        ]);
 
-        Fasilitas::create(['nama' => $validated['nama']]);
+        $fasilitas = Fasilitas::create([
+            'nama' => $request->nama,
+        ]);
 
-        return redirect()->route('admin.daftar-fasilitas-page')->with('success', 'Fasilitas Berhasil Ditambahkan');
+        return response()->json([
+            'message' => 'Fasilitas berhasil ditambahkan.',
+            'data' => $fasilitas,
+        ]);
     }
+
+    // public function submit_fasilitas(Request $request)
+    // {
+    //     $validated = $request->validate(['nama' => 'required']);
+
+    //     Fasilitas::create(['nama' => $validated['nama']]);
+
+    //     return redirect()->route('admin.daftar-fasilitas-page')->with('success', 'Fasilitas Berhasil Ditambahkan');
+    // }
 
     public function delete_fasilitas($id)
     {
-        Fasilitas::findOrfail($id)->delete();
-        return redirect()->route('admin.daftar-fasilitas-page')->with('deleteSuccess', 'Berhasil Menghapues Fasilitas');
+        // Fasilitas::findOrfail($id)->delete();
+        // return redirect()->route('admin.daftar-fasilitas-page')->with('deleteSuccess', 'Berhasil Menghapues Fasilitas');
+        $fasilitas = Fasilitas::findOrFail($id);
+        $fasilitas->delete();
+
+        return response()->json([
+            'message' => 'Fasilitas berhasil dihapus.'
+        ]);
     }
 
     public function update_fasilitas(Request $request, $id)
@@ -296,7 +331,11 @@ class AdminController extends Controller
         $fasilitas->save();
 
         // Redirect atau response
-        return redirect()->route('admin.daftar-fasilitas-page')->with('success', 'Fasilitas berhasil diupdate');
+        // return redirect()->route('admin.daftar-fasilitas-page')->with('success', 'Fasilitas berhasil diupdate');
+        return response()->json([
+            'message' => 'Fasilitas berhasil diperbarui.',
+            'data' => $fasilitas
+        ]);
     }
 
 }
