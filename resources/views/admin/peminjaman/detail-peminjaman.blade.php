@@ -37,6 +37,18 @@
                     <span class="text-gray-900" id="modal_nama_peminjam">: </span>
                 </div>
 
+                <!-- jumlah ruangan -->
+                <div class="flex flex-col sm:flex-row sm:items-start">
+                    <span class="font-medium text-gray-700 sm:min-w-[140px] sm:mr-4 mb-1 sm:mb-0">Jumlah Ruangan</span>
+                    <span class="text-gray-900" id="modal_jumlah_ruangan">: </span>
+                </div>
+
+                <!-- Jumlah PC -->
+                <div class="flex flex-col sm:flex-row sm:items-start">
+                    <span class="font-medium text-gray-700 sm:min-w-[140px] sm:mr-4 mb-1 sm:mb-0">Jumlah PC</span>
+                    <span class="text-gray-900" id="modal_jumlah_pc">: </span>
+                </div>
+
                 <!-- Lama Peminjaman -->
                 <div class="flex flex-col sm:flex-row sm:items-start">
                     <span class="font-medium text-gray-700 sm:min-w-[140px] sm:mr-4 mb-1 sm:mb-0">Lama Peminjam</span>

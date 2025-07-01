@@ -58,7 +58,7 @@
                 </label>
                 <div id="fasilitasContainer">
                     <div class="fasilitas-item flex items-center space-x-3 mb-3">
-                        <select name="fasilitas[]" class="px-3 py-2 border border-gray-300 rounded-md">
+                        <select name="fasilitas[]" class="w-64 truncate px-3 py-2 border border-gray-300 rounded-md">
                             @foreach($fasilitas as $item)
                                 <option value="{{ $item->id }}">{{ $item->nama }}</option>
                             @endforeach
@@ -111,6 +111,7 @@
         </form>
     </div>
 </div>
+
 @endsection
 
 @section('js')
@@ -118,7 +119,6 @@
 
     document.getElementById('roomForm').addEventListener('submit', function(e) {
             e.preventDefault();  // Ini kuncinya: cegah submit bawaan
-
             const nomorRuangan = document.getElementById('nomor-ruangan').value.trim();
             const namaRuangan = document.getElementById('nama-ruangan').value.trim();
             const kapasitas = document.getElementById('kapasitas').value.trim();
@@ -133,14 +133,14 @@
                 return;
             }
 
-            // Kalau validasi lolos
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: 'Data berhasil disimpan!',
-                timer: 2000,
-                showConfirmButton: false
-            });
+            // // Kalau validasi lolos
+            // Swal.fire({
+            //     icon: 'success',
+            //     title: 'Berhasil!',
+            //     text: 'Data berhasil disimpan!',
+            //     timer: 5000,
+            //     showConfirmButton: true
+            // });
 
             // Setelah validasi lolos, baru submit form ke server (manual)
             // Pilihan 1: submit manual pakai AJAX
@@ -148,34 +148,86 @@
             this.submit(); // ini submit default baru dipanggil setelah validasi
         });
 
+        const fasilitasList = @json($fasilitas);
+
     // Tambah fasilitas baru
     function tambahFasilitas() {
         const container = document.getElementById('fasilitasContainer');
-        const fasilitasList = @json($fasilitas);
+
+        // Ambil semua fasilitas yang sudah dipilih
+        const selectedValues = Array.from(document.querySelectorAll('select[name="fasilitas[]"]'))
+            .map(select => select.value);
+
+        // Filter fasilitas yang belum dipakai
+        const availableOptions = fasilitasList.filter(item => !selectedValues.includes(String(item.id)));
+
+        // Cegah tambah jika sudah habis
+        if (availableOptions.length === 0) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Semua fasilitas sudah dipilih!',
+                text: 'Tidak ada lagi fasilitas yang bisa ditambahkan.',
+                confirmButtonColor: '#3085d6'
+            });
+            return;
+        }
+
+        // Bangun opsi <option>
         let options = '';
-        fasilitasList.forEach(function(item) {
+        availableOptions.forEach(item => {
             options += `<option value="${item.id}">${item.nama}</option>`;
         });
 
+        // Buat elemen baru
         const newFasilitas = document.createElement('div');
         newFasilitas.className = 'fasilitas-item flex items-center space-x-3 mb-3';
         newFasilitas.innerHTML = `
-            <select name="fasilitas[]" class="px-3 py-2 border border-gray-300 rounded-md">${options}</select>
+            <select name="fasilitas[]" class="w-64 px-3 py-2 border border-gray-300 rounded-md">
+                ${options}
+            </select>
             <input type="number" name="jumlah[]" value="1" min="1" class="w-16 px-3 py-2 border border-gray-300 rounded-md text-center" />
             <button type="button" onclick="hapusFasilitas(this)" class="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors">Hapus</button>
         `;
         container.appendChild(newFasilitas);
+        updateOptions(); // supaya opsi lainnya juga update
     }
 
-    // Hapus fasilitas
     function hapusFasilitas(button) {
-        const fasilitasItem = button.closest('.fasilitas-item');
         const container = document.getElementById('fasilitasContainer');
-        if (container.children.length > 1) {
-            fasilitasItem.remove();
+        const fasilitasItems = container.querySelectorAll('.fasilitas-item');
+
+        if (fasilitasItems.length > 1) {
+            button.closest('.fasilitas-item').remove();
+            updateOptions(); // update semua dropdown setelah hapus
         } else {
-            alert('Minimal harus ada 1 fasilitas!');
+            Swal.fire({
+            icon: 'warning',
+            title: 'Minimal 1 fasilitas diperlukan!',
+            text: 'Setidaknya harus ada satu fasilitas yang dipilih.',
+            confirmButtonColor: '#3085d6'
+            });
         }
+    }
+
+
+    function updateOptions() {
+        const allSelects = document.querySelectorAll('select[name="fasilitas[]"]');
+        const selectedValues = Array.from(allSelects).map(select => select.value);
+
+        allSelects.forEach(currentSelect => {
+            const currentValue = currentSelect.value;
+            currentSelect.innerHTML = '';
+
+            fasilitasList.forEach(item => {
+                if (!selectedValues.includes(String(item.id)) || item.id == currentValue) {
+                    const option = document.createElement('option');
+                    option.value = item.id;
+                    option.textContent = item.nama;
+                    if (item.id == currentValue) option.selected = true;
+                    currentSelect.appendChild(option);
+                }
+            });
+        });
     }
 
        // Preview gambar ketika file dipilih
@@ -216,7 +268,7 @@
             document.getElementById('previewImg').src = '';
         }
 
-              // Batal form
+    // Batal form
     function batalForm() {
         Swal.fire({
             title: 'Yakin ingin membatalkan?',
@@ -249,15 +301,15 @@
                 firstFasilitas.querySelector('select').selectedIndex = 0;
                 firstFasilitas.querySelector('input[type="number"]').value = 1;
 
-                    window.location.href = "{{ route('admin.daftar-referensi-page') }}";
-
-                Swal.fire({
-                    title: 'Berhasil!',
-                    text: 'Form telah dibatalkan.',
-                    icon: 'success',
-                    timer: 1500,
-                    showConfirmButton: false
-                });
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: 'Form telah dibatalkan.',
+                        icon: 'success',
+                        timer: 1500, // lama animasi, bisa disesuaikan
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = "{{ route('admin.daftar-referensi-page') }}";
+                    });
             }
         });
     }

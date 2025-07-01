@@ -170,11 +170,11 @@
 @endsection
 
 @section('js')
+
 <script>
     let formEditId = null;
 
     function editRuangan(button) {
-        // Ambil data dari attribute
         const id = button.dataset.id;
         const nama = button.dataset.nama;
         const nomor = button.dataset.nomor;
@@ -182,30 +182,29 @@
         const gambar = button.dataset.gambar;
         const fasilitas = JSON.parse(button.dataset.fasilitas);
 
-        // Isi form
         document.getElementById('nomor-ruangan').value = nomor;
         document.getElementById('nama-ruangan').value = nama;
         document.getElementById('kapasitas').value = kapasitas;
+        formEditId = id;
 
-        // Simpan ID edit untuk endpoint update
-        formEditId = button.dataset.id;
-
-        // Reset fasilitas
         const container = document.getElementById('fasilitasContainer');
-        container.innerHTML = ''; // Clear existing facilities
+        container.innerHTML = '';
 
-        // Populate facilities based on data-fasilitas
         fasilitas.forEach(item => {
             const div = document.createElement('div');
             div.className = 'fasilitas-item flex items-center space-x-3 mb-3';
+
+            let options = '';
+            fasilitasList.forEach(fas => {
+                options += `<option value="${fas.id}">${fas.nama}</option>`;
+            });
+
             div.innerHTML = `
-                <select name="fasilitas[]" class="px-3 py-2 border rounded-md">
-                    @foreach ($listFasilitas as $listFas)
-                        <option value="{{ $listFas->id }}">{{ $listFas->nama }}</option>
-                    @endforeach
+                <select name="fasilitas[]" class="w-64 px-3 py-2 border border-gray-300 rounded-md">
+                    ${options}
                 </select>
                 <div class="relative">
-                    <input type="number" value="${item.jumlah}" min="1" name="jumlah[]" class="w-16 px-3 py-2 border rounded-md text-center" />
+                    <input type="number" value="${item.jumlah}" min="1" name="jumlah[]" class="w-16 px-3 py-2 border border-gray-300 rounded-md text-center" />
                     <div class="absolute right-1 top-1/2 transform -translate-y-1/2 flex flex-col">
                         <button type="button" onclick="incrementQuantity(this)" class="text-gray-400 hover:text-gray-600">
                             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -221,13 +220,14 @@
                 </div>
                 <button type="button" onclick="hapusFasilitas(this)" class="px-3 py-2 bg-red-500 text-white rounded-md">Hapus</button>
             `;
+
             container.appendChild(div);
-            // Select the correct option
+
+            // Set value yang sesuai
             div.querySelector('select').value = item.id;
         });
 
-
-        // Gambar preview
+          // Gambar preview
         const preview = document.getElementById('imagePreview');
         const previewImg = document.getElementById('previewImg');
         if (gambar) {
@@ -237,9 +237,102 @@
             removeImage(); // reset preview
         }
 
-        // Tampilkan modal
         bukaModalRuangan();
+        // updateOptions();
+        // attachSelectListeners();
     }
+
+    function tambahFasilitas() {
+        const container = document.getElementById('fasilitasContainer');
+        const allSelects = container.querySelectorAll('select[name="fasilitas[]"]');
+
+        const selectedValues = Array.from(allSelects)
+            .map(s => s.value)
+            .filter(v => v !== "");
+
+        if (selectedValues.length >= fasilitasList.length) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Tidak bisa menambah',
+                text: 'Semua fasilitas sudah ditambahkan.',
+            });
+            return;
+        }
+
+        const div = document.createElement('div');
+        div.className = 'fasilitas-item flex items-center space-x-3 mb-3';
+
+        let options = '<option value="">Pilih Fasilitas</option>';
+        fasilitasList.forEach(fas => {
+            options += `<option value="${fas.id}">${fas.nama}</option>`;
+        });
+
+        div.innerHTML = `
+            <select name="fasilitas[]" class="w-64 px-3 py-2 border border-gray-300 rounded-md">
+                ${options}
+            </select>
+            <input type="number" value="1" min="1" name="jumlah[]" class="w-16 px-3 py-2 border border-gray-300 rounded-md text-center" />
+            <button type="button" onclick="hapusFasilitas(this)" class="px-3 py-2 bg-red-500 text-white rounded-md">Hapus</button>
+        `;
+
+        container.appendChild(div);
+        updateOptions();
+        attachSelectListeners();
+    }
+
+
+    function hapusFasilitas(button) {
+        const container = document.getElementById('fasilitasContainer');
+        const fasilitasItems = container.querySelectorAll('.fasilitas-item');
+
+        if (fasilitasItems.length <= 1) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Tidak bisa menghapus',
+                text: 'Minimal harus ada satu fasilitas.',
+            });
+            return;
+        }
+
+        button.parentElement.remove();
+        updateOptions();
+    }
+
+
+    function updateOptions() {
+        const allSelects = document.querySelectorAll('select[name="fasilitas[]"]');
+        const selectedValues = Array.from(allSelects)
+            .map(s => s.value)
+            .filter(v => v !== "");
+
+        allSelects.forEach(select => {
+            const currentValue = select.value;
+            select.innerHTML = "";
+
+            fasilitasList.forEach(fas => {
+                // Jika belum dipilih oleh select lain atau sedang dipakai di select ini, tampilkan
+                if (!selectedValues.includes(String(fas.id)) || String(fas.id) === currentValue) {
+                    const option = document.createElement('option');
+                    option.value = fas.id;
+                    option.textContent = fas.nama;
+                    if (String(fas.id) === currentValue) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                }
+            });
+        });
+    }
+
+    function attachSelectListeners() {
+        const allSelects = document.querySelectorAll('select[name="fasilitas[]"]');
+        allSelects.forEach(select => {
+            select.removeEventListener('change', updateOptions);
+            select.addEventListener('change', updateOptions);
+        });
+    }
+
+
 
     function bukaModalRuangan() {
         const modal = document.getElementById('modalTambahRuangan');
@@ -271,9 +364,65 @@
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
+                // Tampilkan loading
+                Swal.fire({
+                    title: 'Menghapus...',
+                    text: 'Mohon tunggu',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Submit form
                 document.getElementById('form-hapus-' + id).submit();
+
+                // Setelah submit berhasil, tampilkan alert berhasil
+                // Jika menggunakan redirect Laravel biasa, pasang session flash (lihat di bawah)
             }
         });
     }
+
+    // @if(session('successDeleteRuangan'))
+    //     Swal.fire({
+    //         icon: 'success',
+    //         title: 'Berhasil',
+    //         text: '{{ session('successDeleteRuangan') }}',
+    //         timer: 2000,
+    //         showConfirmButton: false
+    //     });
+    // @endif
+
+
 </script>
+
+@if(session('successTambahRuangan'))
+    <script>
+    Swal.fire({
+        toast: true,
+        position: 'bottom-end',
+        icon: 'success',
+        title: '{{ session('successTambahRuangan') }}',
+        showConfirmButton: false,
+        timer: 5000,
+        timerProgressBar: true
+    });
+    </script>
+@endif
+
+@if(session('successDeleteRuangan'))
+    <script>
+    Swal.fire({
+        toast: true,
+        position: 'bottom-end',
+        icon: 'success',
+        title: '{{ session('successDeleteRuangan') }}',
+        showConfirmButton: false,
+        timer: 5000,
+        timerProgressBar: true
+    });
+    </script>
+@endif
+
+
 @endsection

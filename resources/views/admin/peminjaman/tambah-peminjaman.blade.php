@@ -23,7 +23,7 @@
                 <h1 class="text-xl font-semibold text-gray-800 mb-6">Form Input Surat Peminjaman</h1>
 
                     <form class="space-y-6" method="POST" action="{{ route('admin.tambah-peminjaman') }}" enctype="multipart/form-data">
-                         @csrf
+                    @csrf
                     <div>
                         <label for="nomor-surat" class="text-sm font-medium text-gray-700 mb-2 block">
                             Nomor Surat

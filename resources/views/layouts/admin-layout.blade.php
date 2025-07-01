@@ -99,14 +99,20 @@
             </svg>
           </button>
 
-            <div id="dropdownMenu" class="overflow-hidden max-h-60 opacity-0 mt-1 ml-8 text-teal-200 select-none"
-            style="transition: max-height 0.3s ease, opacity 0.3s ease 0.2s, padding-top 0.3s ease 0.2s, padding-bottom 0.3s ease 0.2s; padding-top: 0; padding-bottom: 0;">
+        @php
+            $isDropdownOpen = request()->routeIs('admin.daftar-referensi-page') || request()->routeIs('admin.daftar-fasilitas-page') || request()->routeIs('admin.tambah-ruangan-page');
+        @endphp
+
+        <div id="dropdownMenu"
+            class="overflow-hidden max-h-60 mt-1 ml-8 text-teal-200 select-none {{ $isDropdownOpen ? '' : 'opacity-0' }}"
+            style="transition: max-height 0.3s ease, opacity 0.3s ease 0.2s, padding-top 0.3s ease 0.2s, padding-bottom 0.3s ease 0.2s;
+            {{ $isDropdownOpen ? 'display: block; max-height: 1000px; opacity: 1; padding-top: 0.25rem; padding-bottom: 1.45rem;' : 'display: none; padding-top: 0; padding-bottom: 0; max-height: 0;' }}">
                 <ul class="relative px-1 space-y-1 max-h-dvh">
                     <div class="absolute top-0 left-0 h-full border-l border-teal-400 ml-2"></div>
                     <li class="relative pl-4">
                         <div class="absolute top-1/2 left-0 w-2 border-t  border-teal-400"></div>
                         <a href="{{route('admin.daftar-referensi-page')}}" class="block hover:bg-teal-700 rounded-full py-1 px-4 hover:text-white transition-colors cursor-pointer
-                        {{ request()->routeIs('admin.daftar-referensi-page') ? 'bg-teal-700 text-white font-semibold' : ''}}">
+                        {{ request()->routeIs('admin.daftar-referensi-page') || request()->routeIs('admin.tambah-ruangan-page') ? 'bg-teal-700 text-white font-semibold' : ''}}">
                          Daftar Ruangan</a>
                     </li>
                     <li class="relative pl-4">
@@ -229,46 +235,43 @@
    </main>
   </div>
   <script>
-      const toggleBtn = document.getElementById('dropdownToggle');
-        const dropdownMenu = document.getElementById('dropdownMenu');
-        const chevron = document.getElementById('dropdownChevron');
+    const toggleBtn = document.getElementById('dropdownToggle');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    const chevron = document.getElementById('dropdownChevron');
 
-        toggleBtn.addEventListener('click', () => {
+    const isOpenInitially = dropdownMenu.style.display === 'block';
+    if (isOpenInitially) {
+        chevron.style.transform = 'rotate(180deg)';
+    }
+
+    toggleBtn.addEventListener('click', () => {
         const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
         toggleBtn.setAttribute('aria-expanded', String(!expanded));
 
         if (!expanded) {
-            // Show dropdown with animation and delay
             dropdownMenu.style.display = 'block';
-            // Trigger reflow to restart animation
             void dropdownMenu.offsetWidth;
-            // dropdownMenu.style.maxHeight = dropdownMenu.scrollHeight + 'px';
             dropdownMenu.style.maxHeight = '1000px';
             dropdownMenu.style.opacity = '1';
             dropdownMenu.style.paddingTop = '0.25rem';
             dropdownMenu.style.paddingBottom = '1.45rem';
-
             chevron.style.transform = 'rotate(180deg)';
         } else {
-            // Hide dropdown
             dropdownMenu.style.maxHeight = '0';
             dropdownMenu.style.opacity = '0';
             dropdownMenu.style.paddingTop = '0';
             dropdownMenu.style.paddingBottom = '0';
             chevron.style.transform = 'rotate(0deg)';
 
-            // After transition set display none for accessibility
             dropdownMenu.addEventListener('transitionend', function handler() {
-            if (dropdownMenu.style.maxHeight === '0px') {
-                dropdownMenu.style.display = 'none';
-            }
-            dropdownMenu.removeEventListener('transitionend', handler);
+                if (dropdownMenu.style.maxHeight === '0px') {
+                    dropdownMenu.style.display = 'none';
+                }
+                dropdownMenu.removeEventListener('transitionend', handler);
             });
         }
-        });
+    });
 
-        // Initialize dropdown as hidden
-        dropdownMenu.style.display = 'none';
   </script>
   <script src="{{asset('assets/js/layout/script.js')}}"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

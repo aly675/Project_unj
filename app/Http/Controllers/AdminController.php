@@ -160,7 +160,7 @@ class AdminController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.daftar-referensi-page')->with('success', 'Ruangan berhasil ditambahkan!');
+        return redirect()->route('admin.daftar-referensi-page')->with('successTambahRuangan', 'Ruangan berhasil ditambahkan!');
     }
 
     public function updateRuangan(Request $request, $id)
@@ -212,7 +212,7 @@ class AdminController extends Controller
     public function destroy($id)
     {
         Ruangan::findOrFail($id)->delete();
-        return redirect()->route('admin.daftar-referensi-page')->with('success','Ruangan berhasil dihapus.');
+        return redirect()->route('admin.daftar-referensi-page')->with('successDeleteRuangan','Ruangan berhasil dihapus.');
     }
 
 

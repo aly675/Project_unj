@@ -42,7 +42,7 @@
         </label>
         <div id="fasilitasContainer">
             <div class="fasilitas-item flex items-center space-x-3 mb-3">
-                <select name="fasilitas[]" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pustikom-teal focus:border-transparent">
+                <select name="fasilitas[]" class="w-64 px-3 py-2 border border-gray-300 rounded-md">
                     @foreach ($listFasilitas as $fasilitas)
                         <option value="{{ $fasilitas->id }}">{{ $fasilitas->nama }}</option>
                     @endforeach
@@ -141,17 +141,23 @@
         const form = document.getElementById('roomForm');
         const formData = new FormData(form);
 
-        // Validasi field
-        const nomorRuangan = document.getElementById('nomor-ruangan').value;
-        const namaRuangan = document.getElementById('nama-ruangan').value;
-        const kapasitas = document.getElementById('kapasitas').value;
+        const nomorRuangan = document.getElementById('nomor-ruangan').value.trim();
+        const namaRuangan = document.getElementById('nama-ruangan').value.trim();
+        const kapasitas = document.getElementById('kapasitas').value.trim();
 
         if (!nomorRuangan || !namaRuangan || !kapasitas) {
-            alert('Mohon lengkapi semua field yang wajib diisi!');
+            Swal.fire({
+                toast: true,
+                position: 'bottom-end',
+                icon: 'warning',
+                title: 'Mohon lengkapi semua field wajib!',
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true
+            });
             return;
         }
 
-        // Add facility data from dynamically added elements
         const fasilitasItems = document.querySelectorAll('#fasilitasContainer .fasilitas-item');
         const selectedFacilities = [];
         const selectedQuantities = [];
@@ -166,15 +172,14 @@
             }
         });
 
-        // Append to formData
-        formData.delete('fasilitas[]'); // Remove initial empty fields if any
+        formData.delete('fasilitas[]');
         formData.delete('jumlah[]');
         selectedFacilities.forEach(value => formData.append('fasilitas[]', value));
         selectedQuantities.forEach(value => formData.append('jumlah[]', value));
 
         const url = formEditId
             ? `/admin/daftar-referensi/update/ruangan/${formEditId}`
-            : '/admin/daftar-referensi/tambah-ruangan/submit'; // Assuming this is the correct route for adding
+            : '/admin/daftar-referensi/tambah-ruangan/submit';
 
         fetch(url, {
             method: 'POST',
@@ -185,8 +190,6 @@
         })
         .then(response => {
             if (!response.ok) {
-                // If the response is not OK (e.g., 422 for validation errors, 500 for server errors)
-                // Try to parse the error message from the response body
                 return response.json().then(errorData => {
                     throw new Error(errorData.message || 'Gagal menyimpan data.');
                 });
@@ -194,14 +197,47 @@
             return response.json();
         })
         .then(res => {
-            Swal.fire('Berhasil', res.message, 'success').then(() => {
-                location.reload();
-            });
+            // 1️⃣ Tutup modal terlebih dahulu
+            const modal = document.getElementById('modalTambahRuangan');
+            modal.classList.add('hidden');
+
+            // 2️⃣ Tampilkan toast setelah modal tertutup
+            setTimeout(() => {
+                Swal.fire({
+                    toast: true,
+                    position: 'bottom-end',
+                    icon: 'success',
+                    title: res.message,
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true
+                });
+
+                // 3️⃣ Reload setelah toast muncul sebentar
+                setTimeout(() => {
+                    location.reload();
+                }, 4000);
+            }, 300); // delay sedikit agar modal benar-benar hilang
         })
         .catch(error => {
-            Swal.fire('Gagal', error.message || 'Terjadi kesalahan saat menyimpan data', 'error');
+            const modal = document.getElementById('modalTambahRuangan');
+            modal.classList.add('hidden');
+
+            setTimeout(() => {
+                Swal.fire({
+                    toast: true,
+                    position: 'bottom-end',
+                    icon: 'error',
+                    title: error.message || 'Terjadi kesalahan saat menyimpan data',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true
+                });
+            }, 300);
         });
     }
+
+
 
     function previewImage(input) {
         const file = input.files[0];

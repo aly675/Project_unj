@@ -41,43 +41,43 @@
         <thead class="bg-gray-50">
           <tr>
             <th
-              class="px-6 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider"
+              class="px-6 py-3 text-left text-sm font-semibold text-gray-400 uppercase tracking-wider"
               scope="col"
             >
               NO
             </th>
             <th
-              class="px-6 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider"
+              class="px-6 py-3 text-left text-sm font-semibold text-gray-400 uppercase tracking-wider"
               scope="col"
             >
               NOMOR SURAT
             </th>
             <th
-              class="px-6 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider"
+              class="px-6 py-3 text-left text-sm font-semibold text-gray-400 uppercase tracking-wider"
               scope="col"
             >
               ASAL SURAT
             </th>
             <th
-              class="px-6 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider"
+              class="px-6 py-3 text-left text-sm font-semibold text-gray-400 uppercase tracking-wider"
               scope="col"
             >
               NAMA PEMINJAM
             </th>
             <th
-              class="px-6 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider"
+              class="px-6 py-3 text-left text-sm font-semibold text-gray-400 uppercase tracking-wider"
               scope="col"
             >
               LAMA PEMINJAM
             </th>
             <th
-              class="px-6 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider"
+              class="px-6 py-3 text-left text-sm font-semibold text-gray-400 uppercase tracking-wider"
               scope="col"
             >
               STATUS
             </th>
             <th
-              class="px-6 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider"
+              class="px-6 py-3 text-left text-sm font-semibold text-gray-400 uppercase tracking-wider"
               scope="col"
             >
               ACTION
@@ -87,25 +87,43 @@
        <tbody class="divide-y divide-gray-200">
 @foreach (  $peminjamans as $peminjaman)
   <tr>
-    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-700 font-normal">
+    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">
       {{ $loop->iteration}}
     </td>
-    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-900 font-normal">
+    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-normal">
       {{ $peminjaman->nomor_surat }}
     </td>
-    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-700 font-normal">
+    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">
       {{ $peminjaman->asal_surat }}
     </td>
-    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-700 font-normal">
+    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">
       {{ $peminjaman->nama_peminjam }}
     </td>
-    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-900 font-normal">
+    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-normal">
       {{ $peminjaman->lama_hari }} Hari
     </td>
-    <td class="px-6 py-4 whitespace-nowrap text-xs font-semibold text-yellow-400">
-      {{$peminjaman->status}}
+
+   <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold">
+        @if ($peminjaman->status === 'Menunggu Persetujuan' || $peminjaman->status === 'Menunggu Verifikasi')
+            <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full">
+                {{ $peminjaman->status }}
+            </span>
+        @elseif ($peminjaman->status === 'Diterima')
+            <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full">
+                {{ $peminjaman->status }}
+            </span>
+        @elseif ($peminjaman->status === 'Ditolak')
+            <span class="bg-red-100 text-red-600 px-3 py-1 rounded-full">
+                {{ $peminjaman->status }}
+            </span>
+        @else
+            <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full">
+                {{ $peminjaman->status }}
+            </span>
+        @endif
     </td>
-    <td class="px-6 py-4 whitespace-nowrap text-xs text-blue-600 font-normal cursor-pointer hover:underline">
+
+    <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-normal cursor-pointer hover:underline">
       <div class="flex items-center gap-x-2">
         <button onclick="openModalDetail({{ $peminjaman->id }})">
             <img src="{{ asset('assets/images/icon/action-view-icon.svg') }}" alt="View" />
@@ -129,13 +147,13 @@
 
       </table>
       <div
-        class="mt-6 flex flex-col md:flex-row md:items-center md:justify-between text-xs text-gray-500 px-7 pb-5 font-light"
+        class="mt-6 flex flex-col md:flex-row md:items-center md:justify-between text-sm text-gray-500 px-7 pb-5 font-light"
       >
         <div class="mb-3 md:mb-0 flex items-center gap-1">
           <span>Showing</span>
           <select
             title="p"
-            class="border border-gray-200 rounded px-2 py-1 text-xs text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#0d5c5c]"
+            class="border border-gray-200 rounded px-2 py-1 text-sm text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#0d5c5c]"
           >
             <option>10</option>
             <option>20</option>
@@ -234,6 +252,8 @@ function openModalDetail(id) {
     document.getElementById('modal_nomor_surat').innerText = `: ${data.nomor_surat}`;
     document.getElementById('modal_asal_surat').innerText = `: ${data.asal_surat}`;
     document.getElementById('modal_nama_peminjam').innerText = `: ${data.nama_peminjam}`;
+    document.getElementById('modal_jumlah_ruangan').innerText = `: ${data.jumlah_ruangan}`;
+    document.getElementById('modal_jumlah_pc').innerText = `: ${data.jumlah_pc}`;
     document.getElementById('modal_lama_peminjam').innerText = `: ${data.lama_hari} hari`;
     document.getElementById('modal_status').innerText = data.status ?? 'Menunggu';
 
