@@ -49,6 +49,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/fasilitas/delete/{id}', [AdminController::class, 'delete_fasilitas'])->name('admin.delete-fasilitas');
         Route::put('/fasilitas/update/{id}', [AdminController::class, 'update_fasilitas'])->name('admin.update-fasilitas');
         Route::get('/admin/fasilitas/json', [AdminController::class, 'fasilitas_json'])->name('admin.fasilitas.json');
+        Route::get('/admin/ruangan/json', [AdminController::class, 'ruangan_json'])->name('admin.ruangan.json');
     });
 });
 

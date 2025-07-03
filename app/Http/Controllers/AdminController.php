@@ -44,6 +44,44 @@ class AdminController extends Controller
         return view('admin.peminjaman.peminjaman', compact('peminjamans'));
     }
 
+    public function ruangan_json(Request $request)
+    {
+        $query = Ruangan::with(['fasilitas' => function ($q) {
+            $q->select('fasilitas.id', 'nama');
+        }]);
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                ->orWhere('nomor', 'like', "%{$search}%");
+            });
+        }
+
+        $ruangans = $query->latest()->get();
+
+        $data = $ruangans->map(function ($ruangan) {
+            return [
+                'id' => $ruangan->id,
+                'nama' => $ruangan->nama,
+                'nomor' => $ruangan->nomor,
+                'kapasitas' => $ruangan->kapasitas,
+                'gambar' => $ruangan->gambar ? asset('storage/' . $ruangan->gambar) : asset('/placeholder.svg'),
+                'fasilitas' => $ruangan->fasilitas->map(function ($fasilitas) {
+                    return [
+                        'id' => $fasilitas->id,
+                        'nama' => $fasilitas->nama,
+                        'jumlah' => $fasilitas->pivot->jumlah ?? 1,
+                    ];
+                }),
+            ];
+        });
+
+        return response()->json($data);
+    }
+
+
+
     public function deletePinjamanRuangan($id)
     {
         $ruangan = peminjaman::findOrFail($id);
@@ -212,7 +250,7 @@ class AdminController extends Controller
     public function destroy($id)
     {
         Ruangan::findOrFail($id)->delete();
-        return redirect()->route('admin.daftar-referensi-page')->with('successDeleteRuangan','Ruangan berhasil dihapus.');
+        return response()->json(['messageDeleteSuccess' => 'Ruangan berhasil dihapus.']);
     }
 
 

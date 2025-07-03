@@ -158,6 +158,28 @@
             return;
         }
 
+            // ✅ Cek semua jumlah fasilitas harus >= 1
+            const jumlahInputs = document.querySelectorAll('input[name="jumlah[]"]');
+            for (let input of jumlahInputs) {
+                if (parseInt(input.value) < 1 || isNaN(parseInt(input.value))) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Jumlah Fasilitas Tidak Valid!',
+                        text: 'Jumlah fasilitas tidak boleh kurang dari 1.'
+                    });
+                    return;
+                }
+            }
+
+            document.addEventListener('input', function(e) {
+                if (e.target.matches('input[name="jumlah[]"]')) {
+                    if (e.target.value === '' || parseInt(e.target.value) < 1) {
+                        e.target.value = 1;
+                    }
+                }
+            });
+
+
         const fasilitasItems = document.querySelectorAll('#fasilitasContainer .fasilitas-item');
         const selectedFacilities = [];
         const selectedQuantities = [];
@@ -165,7 +187,6 @@
         fasilitasItems.forEach(item => {
             const selectElement = item.querySelector('select');
             const inputElement = item.querySelector('input[type="number"]');
-
             if (selectElement && inputElement) {
                 selectedFacilities.push(selectElement.value);
                 selectedQuantities.push(inputElement.value);
@@ -188,54 +209,42 @@
             },
             body: formData
         })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(errorData => {
-                    throw new Error(errorData.message || 'Gagal menyimpan data.');
-                });
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(res => {
-            // 1️⃣ Tutup modal terlebih dahulu
             const modal = document.getElementById('modalTambahRuangan');
             modal.classList.add('hidden');
 
-            // 2️⃣ Tampilkan toast setelah modal tertutup
-            setTimeout(() => {
-                Swal.fire({
-                    toast: true,
-                    position: 'bottom-end',
-                    icon: 'success',
-                    title: res.message,
-                    showConfirmButton: false,
-                    timer: 4000,
-                    timerProgressBar: true
-                });
+            Swal.fire({
+                toast: true,
+                position: 'bottom-end',
+                icon: 'success',
+                title: res.message,
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true
+            });
 
-                // 3️⃣ Reload setelah toast muncul sebentar
-                setTimeout(() => {
-                    location.reload();
-                }, 4000);
-            }, 300); // delay sedikit agar modal benar-benar hilang
+            fetchRuangans();
+
+            // Reset form dan formEditId
+            form.reset();
+            removeImage();
+            formEditId = null;
         })
         .catch(error => {
-            const modal = document.getElementById('modalTambahRuangan');
-            modal.classList.add('hidden');
-
-            setTimeout(() => {
-                Swal.fire({
-                    toast: true,
-                    position: 'bottom-end',
-                    icon: 'error',
-                    title: error.message || 'Terjadi kesalahan saat menyimpan data',
-                    showConfirmButton: false,
-                    timer: 4000,
-                    timerProgressBar: true
-                });
-            }, 300);
+            Swal.fire({
+                toast: true,
+                position: 'bottom-end',
+                icon: 'error',
+                title: error.message || 'Terjadi kesalahan saat menyimpan data',
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true
+            });
         });
     }
+
+
 
 
 
@@ -276,68 +285,6 @@
         document.getElementById('gambar-ruangan').value = '';
         document.getElementById('imagePreview').classList.add('hidden');
         document.getElementById('previewImg').src = '';
-    }
-
-    // Tambah fasilitas baru
-    function tambahFasilitas() {
-        const container = document.getElementById('fasilitasContainer');
-        const div = document.createElement('div');
-        div.className = 'fasilitas-item flex items-center space-x-3 mb-3';
-        div.innerHTML = `
-            <select name="fasilitas[]" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pustikom-teal focus:border-transparent">
-                ${fasilitasList.map(fasilitas => `<option value="${fasilitas.id}">${fasilitas.nama}</option>`).join('')}
-            </select>
-            <div class="relative">
-                <input
-                    type="number"
-                    value="1"
-                    min="1"
-                    name="jumlah[]"
-                    class="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pustikom-teal focus:border-transparent text-center"
-                >
-                <div class="absolute right-1 top-1/2 transform -translate-y-1/2 flex flex-col">
-                    <button type="button" onclick="incrementQuantity(this)" class="text-gray-400 hover:text-gray-600">
-                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"/>
-                        </svg>
-                    </button>
-                    <button type="button" onclick="decrementQuantity(this)" class="text-gray-400 hover:text-gray-600">
-                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-            <button type="button" onclick="hapusFasilitas(this)" class="px-3 py-2 bg-red-500 text-white rounded-md">Hapus</button>
-        `;
-        container.appendChild(div);
-    }
-
-    // Hapus fasilitas
-    function hapusFasilitas(button) {
-        const fasilitasItem = button.closest('.fasilitas-item');
-        const container = document.getElementById('fasilitasContainer');
-
-        // Pastikan minimal ada 1 fasilitas
-        if (container.children.length > 1) {
-            fasilitasItem.remove();
-        } else {
-            alert('Minimal harus ada 1 fasilitas!');
-        }
-    }
-
-    // Increment quantity
-    function incrementQuantity(button) {
-        const input = button.closest('.relative').querySelector('input[type="number"]');
-        input.value = parseInt(input.value) + 1;
-    }
-
-    // Decrement quantity
-    function decrementQuantity(button) {
-        const input = button.closest('.relative').querySelector('input[type="number"]');
-        if (parseInt(input.value) > 1) {
-            input.value = parseInt(input.value) - 1;
-        }
     }
 
     // Batal form
@@ -404,11 +351,13 @@
                 document.body.classList.remove('overflow-hidden');
 
                 Swal.fire({
-                    title: 'Berhasil!',
-                    text: 'Form telah dibatalkan.',
+                    toast: true,
+                    position: 'bottom-end',
                     icon: 'success',
-                    timer: 1500,
-                    showConfirmButton: false
+                    title: 'Berhasil Membatalkan',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true
                 });
             }
         });

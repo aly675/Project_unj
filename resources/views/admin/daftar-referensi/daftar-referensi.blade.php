@@ -62,92 +62,8 @@
 
     </div>
 
-    @foreach($ruangans as $ruangan)
-        <div class="bg-white bg-opacity-30 shadow-xl rounded-xl p-10 max-w-9xl flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
-            <div class="flex-1 overflow-x-10">
-                <table class="w-full text-sm text-gray-900 font-normal">
-                    <tbody>
-                        <tr>
-                            <td class="pr-4 font-semibold text-right w-[150px]">Nama Ruangan</td>
-                            <td class="px-2 text-center w-2">:</td>
-                            <td class="text-left">{{ $ruangan->nama }}</td>
-                        </tr>
-                        <tr>
-                            <td class="pr-4 font-semibold text-right">Nomor Ruangan</td>
-                            <td class="px-2 text-center">:</td>
-                            <td class="text-left">{{ $ruangan->nomor }}</td>
-                        </tr>
-                        <tr>
-                            <td class="pr-4 font-semibold text-right">Kapasitas Orang</td>
-                            <td class="px-2 text-center">:</td>
-                            <td class="text-left">{{ $ruangan->kapasitas }}</td>
-                        </tr>
-                        <tr>
-                            <td class="pr-4 font-semibold text-right align-top" rowspan="{{ max(1, $ruangan->fasilitas->count()) }}">Fasilitas</td>
-                            <td class="px-2 text-center align-top" rowspan="{{ max(1, $ruangan->fasilitas->count()) }}">:</td>
-                            <td class="text-left">
-                                @if($ruangan->fasilitas->count())
-                                    {{ $ruangan->fasilitas[0]->nama }}
-                                    @if($ruangan->fasilitas[0]->pivot->jumlah > 1)
-                                        (Jumlah Fasilitas : {{ $ruangan->fasilitas[0]->pivot->jumlah }})
-                                    @endif
-                                @else
-                                    <em>Tidak ada fasilitas</em>
-                                @endif
-                            </td>
-                        </tr>
-                        @foreach($ruangan->fasilitas->slice(1) as $fasilitas)
-                            <tr>
-                                <td class="text-left">
-                                    {{ $fasilitas->nama }}
-                                    @if($fasilitas->pivot->jumlah > 1)
-                                        (Jumlah Fasilitas : {{ $fasilitas->pivot->jumlah }})
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            <div class="flex flex-col items-center gap-4">
-                <img alt="Gambar Ruangan" class="rounded-lg object-cover w-[300px] h-[220px]"
-                    src="{{ $ruangan->gambar ? asset('storage/'.$ruangan->gambar) : asset('/placeholder.svg') }}" width="200" height="120"/>
-                <div class="flex gap-2">
-                    <button
-                        onclick="editRuangan(this)"
-                        class="bg-blue-600 hover:bg-blue-700 text-white text-xs rounded mb-[15px] px-5 py-2 flex items-center gap-1"
-                        data-id="{{ $ruangan->id }}"
-                        data-nama="{{ $ruangan->nama }}"
-                        data-nomor="{{ $ruangan->nomor }}"
-                        data-kapasitas="{{ $ruangan->kapasitas }}"
-                        data-gambar="{{ $ruangan->gambar }}"
-                        data-fasilitas='@json($ruangan->fasilitas->map(fn($f) => [
-                            "id" => $f->id,
-                            "nama" => $f->nama,
-                            "jumlah" => $f->pivot->jumlah
-                        ]))'
-                    >
-                        <i class="fas fa-edit"></i> Edit
-                    </button>
+  <div id="ruanganContainer"></div>
 
-                    <form id="form-hapus-{{ $ruangan->id }}" method="POST" action="{{ route('admin.delete-ruangan', $ruangan->id) }}">
-                        @csrf
-                        @method('DELETE')
-                        <button type="button"
-                                onclick="konfirmasiHapus({{ $ruangan->id }})"
-                                class="bg-red-600 hover:bg-red-700 text-white text-xs rounded px-4 py-2 flex items-center gap-1">
-                            <i class="fas fa-trash-alt"></i> Hapus
-                        </button>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    @endforeach
-
-    @if($ruangans->isEmpty())
-        <div class="text-center text-gray-500 py-10">Belum ada data ruangan.</div>
-    @endif
 </section>
 
 <div id="modalTambahRuangan"
@@ -173,6 +89,129 @@
 
 <script>
     let formEditId = null;
+
+    function fetchRuangans(search = '') {
+        const url = `{{ route('admin.ruangan.json') }}?search=${encodeURIComponent(search)}`;
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('ruanganContainer');
+                container.innerHTML = '';
+
+                if (data.length === 0) {
+                    container.innerHTML = `<div class="text-center text-gray-500 py-10">Belum ada data ruangan.</div>`;
+                    return;
+                }
+
+                data.forEach(ruangan => {
+                    let fasilitasRows = '';
+                    if (ruangan.fasilitas.length > 0) {
+                        ruangan.fasilitas.forEach((fasilitas, idx) => {
+                            fasilitasRows += `
+                                <tr>
+                                    ${idx === 0 ? `
+                                        <td class="pr-4 font-semibold text-right align-top" rowspan="${ruangan.fasilitas.length}">Fasilitas</td>
+                                        <td class="px-2 text-center align-top" rowspan="${ruangan.fasilitas.length}">:</td>
+                                    ` : ''}
+                                    <td class="text-left">
+                                        ${fasilitas.nama}
+                                        ${fasilitas.jumlah > 1 ? `(Jumlah: ${fasilitas.jumlah})` : ''}
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                    } else {
+                        fasilitasRows = `
+                            <tr>
+                                <td class="pr-4 font-semibold text-right">Fasilitas</td>
+                                <td class="px-2 text-center">:</td>
+                                <td class="text-left"><em>Tidak ada fasilitas</em></td>
+                            </tr>
+                        `;
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = 'bg-white bg-opacity-30 shadow-xl rounded-xl p-10 max-w-9xl flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8';
+                    card.innerHTML = `
+                        <div class="flex-1 overflow-x-10">
+                            <table class="w-full text-sm text-gray-900 font-normal">
+                                <tbody>
+                                    <tr>
+                                        <td class="pr-4 font-semibold text-right w-[150px]">Nama Ruangan</td>
+                                        <td class="px-2 text-center w-2">:</td>
+                                        <td class="text-left">${ruangan.nama}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pr-4 font-semibold text-right">Nomor Ruangan</td>
+                                        <td class="px-2 text-center">:</td>
+                                        <td class="text-left">${ruangan.nomor}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pr-4 font-semibold text-right">Kapasitas Orang</td>
+                                        <td class="px-2 text-center">:</td>
+                                        <td class="text-left">${ruangan.kapasitas}</td>
+                                    </tr>
+                                    ${fasilitasRows}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="flex flex-col items-center gap-4">
+                            <img alt="Gambar Ruangan" class="rounded-lg object-cover w-[300px] h-[220px]" src="${ruangan.gambar}" />
+                            <div class="flex gap-2">
+                                <button
+                                    class="btn-edit bg-blue-600 hover:bg-blue-700 text-white text-xs rounded mb-[15px] px-5 py-2 flex items-center gap-1">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button
+                                    class="btn-delete bg-red-600 hover:bg-red-700 text-white text-xs rounded mb-[15px] px-4 py-2 flex items-center gap-1">
+                                    <i class="fas fa-trash-alt"></i> Hapus
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                const editButton = card.querySelector('.btn-edit');
+                editButton.dataset.id = ruangan.id;
+                editButton.dataset.nama = ruangan.nama;
+                editButton.dataset.nomor = ruangan.nomor;
+                editButton.dataset.kapasitas = ruangan.kapasitas;
+                editButton.dataset.gambar = ruangan.gambar ?? '';
+                editButton.dataset.fasilitas = JSON.stringify(ruangan.fasilitas);
+                editButton.addEventListener('click', function() {
+                    editRuangan(this);
+                });
+
+                 // Tambahkan event listener untuk delete
+                const deleteButton = card.querySelector('.btn-delete');
+                deleteButton.addEventListener('click', function() {
+                    konfirmasiHapus(ruangan.id, ruangan.nama);
+                });
+
+
+                    container.appendChild(card);
+                });
+            });
+    }
+
+     // Panggil saat halaman load
+    fetchRuangans();
+
+    // Jika ingin auto-refresh setiap 5 detik (opsional)
+    // setInterval(fetchRuangans, 5000);
+
+    function debounce(func, delay) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    document.querySelector('input[name="search"]').addEventListener('input', debounce(function() {
+        const searchValue = this.value.trim();
+        fetchRuangans(searchValue);
+    }, 300));
+
+
 
     function editRuangan(button) {
         const id = button.dataset.id;
@@ -231,7 +270,7 @@
         const preview = document.getElementById('imagePreview');
         const previewImg = document.getElementById('previewImg');
         if (gambar) {
-            previewImg.src = `/storage/${gambar}`;
+            previewImg.src = gambar;
             preview.classList.remove('hidden');
         } else {
             removeImage(); // reset preview
@@ -339,60 +378,76 @@
         modal.classList.remove('hidden');
         setTimeout(() => {
             modal.classList.remove('opacity-0', 'scale-95', 'bg-opacity-0');
-            modal.classList.add('opacity-100', 'scale-100', 'bg-opacity-50');
+            modal.classList.add('opacity-100', 'scale-100', 'bg-opacity-50', 'visible');
         }, 10);
     }
 
     function tutupModalRuangan() {
         const modal = document.getElementById('modalTambahRuangan');
         modal.classList.remove('opacity-100', 'scale-100', 'bg-opacity-50');
-        modal.classList.add('opacity-0', 'scale-95', 'bg-opacity-0');
+        modal.classList.add('opacity-0', 'scale-95', 'bg-opacity-0', 'visible');
         setTimeout(() => {
             modal.classList.add('hidden');
         }, 300); // sesuai dengan durasi transition
     }
 
-    function konfirmasiHapus(id) {
+    function konfirmasiHapus(id, nama) {
         Swal.fire({
-            title: 'Yakin ingin menghapus?',
+            title: `Hapus ruangan "${nama}"?`,
             text: 'Data ruangan yang dihapus tidak dapat dikembalikan.',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
             confirmButtonText: 'Ya, hapus',
-            cancelButtonText: 'Batal'
+            cancelButtonText: 'Batal',
+            reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                // Tampilkan loading
-                Swal.fire({
-                    title: 'Menghapus...',
-                    text: 'Mohon tunggu',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
+                fetch(`/admin/daftar-referensi/admin/ruangan/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
                     }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Gagal menghapus ruangan.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom-end',
+                        icon: 'success',
+                        title: data.messageDeleteSuccess || 'Ruangan berhasil dihapus.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
+                    fetchRuangans(); // refresh data setelah hapus
+                })
+                .catch(err => {
+                    Swal.fire('Error', err.message, 'error');
                 });
-
-                // Submit form
-                document.getElementById('form-hapus-' + id).submit();
-
-                // Setelah submit berhasil, tampilkan alert berhasil
-                // Jika menggunakan redirect Laravel biasa, pasang session flash (lihat di bawah)
             }
         });
     }
 
-    // @if(session('successDeleteRuangan'))
-    //     Swal.fire({
-    //         icon: 'success',
-    //         title: 'Berhasil',
-    //         text: '{{ session('successDeleteRuangan') }}',
-    //         timer: 2000,
-    //         showConfirmButton: false
-    //     });
-    // @endif
+    modalTambahRuangan?.addEventListener('click', function(e) {
+        if (e.target === modalTambahRuangan) {
+            tutupModalRuangan();
+        }
+    });
 
+// Close modal dengan ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (modalTambahRuangan?.classList.contains('visible')) {
+                tutupModalRuangan();
+            }
+        }
+    });
 
 </script>
 
@@ -410,19 +465,6 @@
     </script>
 @endif
 
-@if(session('successDeleteRuangan'))
-    <script>
-    Swal.fire({
-        toast: true,
-        position: 'bottom-end',
-        icon: 'success',
-        title: '{{ session('successDeleteRuangan') }}',
-        showConfirmButton: false,
-        timer: 5000,
-        timerProgressBar: true
-    });
-    </script>
-@endif
 
 
 @endsection

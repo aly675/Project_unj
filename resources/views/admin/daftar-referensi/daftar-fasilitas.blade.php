@@ -79,24 +79,35 @@
             .then(data => {
                 const tbody = document.getElementById('fasilitasTableBody');
                 tbody.innerHTML = '';
-                data.forEach((fasilitas, index) => {
+                if (data.length === 0) {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td class="px-6 py-4 text-sm text-gray-700">${index + 1}</td>
-                        <td class="px-6 py-4 text-sm text-gray-700">${fasilitas.nama}</td>
-                        <td class="py-3 px-6 text-center flex justify-center gap-4">
-                            <button onclick="openModalUpdateFasilitas(${fasilitas.id}, '${fasilitas.nama}')">
-                                <img src="{{ asset('assets/images/icon/action-edit-icon.svg') }}" alt="Edit"/>
-                            </button>
-                            <button type="button" onclick="hapusFasilitas(${fasilitas.id})">
-                                <img src="{{ asset('assets/images/icon/action-delete-icon.svg') }}" alt="Delete"/>
-                            </button>
+                        <td colspan="3" class="text-center text-gray-500 py-6">
+                            Tidak ada fasilitas yang ditemukan.
                         </td>
                     `;
                     tbody.appendChild(tr);
-                });
+                } else {
+                    data.forEach((fasilitas, index) => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="px-6 py-4 text-sm text-gray-700">${index + 1}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">${fasilitas.nama}</td>
+                            <td class="py-3 px-6 text-center flex justify-center gap-4">
+                                <button onclick="openModalUpdateFasilitas(${fasilitas.id}, '${fasilitas.nama}')">
+                                    <img src="{{ asset('assets/images/icon/action-edit-icon.svg') }}" alt="Edit"/>
+                                </button>
+                                <button type="button" onclick="hapusFasilitas(${fasilitas.id})">
+                                    <img src="{{ asset('assets/images/icon/action-delete-icon.svg') }}" alt="Delete"/>
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
             });
-    }
+    };
+
 
 
 

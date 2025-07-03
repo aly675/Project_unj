@@ -133,18 +133,28 @@
                 return;
             }
 
-            // // Kalau validasi lolos
-            // Swal.fire({
-            //     icon: 'success',
-            //     title: 'Berhasil!',
-            //     text: 'Data berhasil disimpan!',
-            //     timer: 5000,
-            //     showConfirmButton: true
-            // });
+             // ✅ Cek semua jumlah fasilitas harus >= 1
+            const jumlahInputs = document.querySelectorAll('input[name="jumlah[]"]');
+            for (let input of jumlahInputs) {
+                if (parseInt(input.value) < 1 || isNaN(parseInt(input.value))) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Jumlah Fasilitas Tidak Valid!',
+                        text: 'Jumlah fasilitas tidak boleh kurang dari 1.'
+                    });
+                    return;
+                }
+            }
 
-            // Setelah validasi lolos, baru submit form ke server (manual)
-            // Pilihan 1: submit manual pakai AJAX
-            // Pilihan 2: submit manual pakai native form submit
+            document.addEventListener('input', function(e) {
+                if (e.target.matches('input[name="jumlah[]"]')) {
+                    if (e.target.value === '' || parseInt(e.target.value) < 1) {
+                        e.target.value = 1;
+                    }
+                }
+            });
+
+
             this.submit(); // ini submit default baru dipanggil setelah validasi
         });
 
