@@ -18,13 +18,6 @@ class AdminController extends Controller
         return view('admin.dashboard', compact("ruangan"));
     }
 
-     public function daftar_referensi_page()
-    {
-        $listFasilitas = Fasilitas::all();
-        $ruangans = Ruangan::with('fasilitas')->get();
-        return view('admin.daftar-referensi.daftar-referensi', compact("ruangans", "listFasilitas"));
-    }
-
     public function peminjaman_page()
     {
         $peminjamans = peminjaman::all();
@@ -44,43 +37,11 @@ class AdminController extends Controller
         return view('admin.peminjaman.peminjaman', compact('peminjamans'));
     }
 
-    public function ruangan_json(Request $request)
+    public function cetak($id)
     {
-        $query = Ruangan::with(['fasilitas' => function ($q) {
-            $q->select('fasilitas.id', 'nama');
-        }]);
-
-        if ($request->has('search') && $request->search != '') {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('nama', 'like', "%{$search}%")
-                ->orWhere('nomor', 'like', "%{$search}%");
-            });
-        }
-
-        $ruangans = $query->latest()->get();
-
-        $data = $ruangans->map(function ($ruangan) {
-            return [
-                'id' => $ruangan->id,
-                'nama' => $ruangan->nama,
-                'nomor' => $ruangan->nomor,
-                'kapasitas' => $ruangan->kapasitas,
-                'gambar' => $ruangan->gambar ? asset('storage/' . $ruangan->gambar) : asset('/placeholder.svg'),
-                'fasilitas' => $ruangan->fasilitas->map(function ($fasilitas) {
-                    return [
-                        'id' => $fasilitas->id,
-                        'nama' => $fasilitas->nama,
-                        'jumlah' => $fasilitas->pivot->jumlah ?? 1,
-                    ];
-                }),
-            ];
-        });
-
-        return response()->json($data);
+        $data = peminjaman::findOrFail($id);
+        return view('pdf/cetak-pdf', compact('data'));
     }
-
-
 
     public function deletePinjamanRuangan($id)
     {
@@ -93,7 +54,7 @@ class AdminController extends Controller
     {
         $peminjaman = Peminjaman::findOrFail($id);
         $request->validate([
-            'nomor_surat' => 'required|string|max:255|unique:peminjamen,nomor_surat,'.$peminjaman->id.'',
+            'nomor_surat' => 'required|string|max:255|unique:peminjamen,nomor_surat,'.$peminjaman->id,
             'asal_surat' => 'required|string|max:255',
             'nama_peminjam' => 'required|string|max:255',
             'jumlah_hari' => 'required|integer|min:1',
@@ -140,20 +101,102 @@ class AdminController extends Controller
         }
     }
 
-
-
     public function tambah_peminjaman_page()
     {
         return view('admin.peminjaman.tambah-peminjaman');
     }
 
-    public function detail_peminjaman_page()
+    public function buatSurat(Request $request)
     {
-        return view('admin.peminjaman.detail-peminjaman');
+        $validated = $request->validate([
+            'nomor-surat' => 'required|string|max:255|unique:peminjamen,nomor_surat',
+            'asal-surat' => 'required|string|max:255',
+            'nama-peminjam' => 'required|string|max:255',
+            'jumlah-hari' => 'required|integer|min:1',
+            'jumlah-ruangan' => 'nullable|integer|min:0',
+            'jumlah-pc' => 'nullable|integer|min:0',
+            'lampiran' => 'nullable|file|mimes:pdf|max:2048', // max dalam KB
+            'tanggal_peminjaman' => 'required|array|min:1',
+            'tanggal_peminjaman.*' => 'required|date',
+        ]);
+
+        $tanggalPeminjaman = [];
+        for ($i = 1; $i <= $request->input('jumlah-hari'); $i++) {
+            $tanggalKey = "tanggal-hari-$i";
+            if ($request->has($tanggalKey)) {
+                $tanggalPeminjaman[] = $request->input($tanggalKey);
+            }
+        }
+
+        // Simpan file
+        $lampiranPath = null;
+        if ($request->hasFile('lampiran')) {
+            $lampiranPath = $request->file('lampiran')->store('lampiran-peminjaman', 'public');
+        }
+
+        // Simpan ke database
+        $peminjaman = new peminjaman();
+        $peminjaman->nomor_surat = $request->input('nomor-surat');
+        $peminjaman->asal_surat = $request->input('asal-surat');
+        $peminjaman->nama_peminjam = $request->input('nama-peminjam');
+        $peminjaman->jumlah_hari = $request->input('jumlah-hari');
+        $tanggalPeminjaman = $request->input('tanggal_peminjaman'); // array otomatis
+        $peminjaman->tanggal_peminjaman = json_encode($tanggalPeminjaman);
+        $peminjaman->jumlah_ruangan = $request->input('jumlah-ruangan');
+        $peminjaman->jumlah_pc = $request->input('jumlah-pc');
+        $peminjaman->lampiran = $lampiranPath;
+        $peminjaman->save();
+
+        return redirect()->route('admin.peminjaman-page')->with('tambahPeminjamanSuccess', 'Data peminjaman berhasil disimpan.');
     }
-    public function update_peminjaman_page()
+
+
+            // Daftar Referensi//
+
+
+    //Daftar Ruangan
+
+    public function daftar_referensi_page()
     {
-        return view('admin.peminjaman.update-peminjaman');
+        $listFasilitas = Fasilitas::all();
+        $ruangans = Ruangan::with('fasilitas')->get();
+        return view('admin.daftar-referensi.daftar-referensi', compact("ruangans", "listFasilitas"));
+    }
+
+    public function ruangan_json(Request $request)
+    {
+        $query = Ruangan::with(['fasilitas' => function ($q) {
+            $q->select('fasilitas.id', 'nama');
+        }]);
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                ->orWhere('nomor', 'like', "%{$search}%");
+            });
+        }
+
+        $ruangans = $query->latest()->get();
+
+        $data = $ruangans->map(function ($ruangan) {
+            return [
+                'id' => $ruangan->id,
+                'nama' => $ruangan->nama,
+                'nomor' => $ruangan->nomor,
+                'kapasitas' => $ruangan->kapasitas,
+                'gambar' => $ruangan->gambar ? asset('storage/' . $ruangan->gambar) : asset('/placeholder.svg'),
+                'fasilitas' => $ruangan->fasilitas->map(function ($fasilitas) {
+                    return [
+                        'id' => $fasilitas->id,
+                        'nama' => $fasilitas->nama,
+                        'jumlah' => $fasilitas->pivot->jumlah ?? 1,
+                    ];
+                }),
+            ];
+        });
+
+        return response()->json($data);
     }
 
     public function tambah_ruangan_page()
@@ -162,13 +205,7 @@ class AdminController extends Controller
         return view('admin.daftar-referensi.tambah-ruangan', compact('fasilitas'));
     }
 
-    public function update_ruangan_page()
-    {
-        $fasilitas = Fasilitas::all();
-        return view('admin.daftar-referensi.update-ruangan', compact('fasilitas'));
-    }
-
-        public function tambahRuangan(Request $request)
+    public function tambahRuangan(Request $request)
     {
         $request->validate([
             'nomor_ruangan' => 'required|unique:ruangans,nomor',
@@ -246,7 +283,6 @@ class AdminController extends Controller
         ]);
     }
 
-
     public function destroy($id)
     {
         Ruangan::findOrFail($id)->delete();
@@ -254,49 +290,7 @@ class AdminController extends Controller
     }
 
 
-     public function buatSurat(Request $request)
-    {
-        $validated = $request->validate([
-            'nomor-surat' => 'required|string|max:255|unique:peminjamen,nomor_surat',
-            'asal-surat' => 'required|string|max:255',
-            'nama-peminjam' => 'required|string|max:255',
-            'jumlah-hari' => 'required|integer|min:1',
-            'jumlah-ruangan' => 'nullable|integer|min:0',
-            'jumlah-pc' => 'nullable|integer|min:0',
-            'lampiran' => 'nullable|file|mimes:pdf|max:2048', // max dalam KB
-            'tanggal_peminjaman' => 'required|array|min:1',
-            'tanggal_peminjaman.*' => 'required|date',
-        ]);
-
-        $tanggalPeminjaman = [];
-        for ($i = 1; $i <= $request->input('jumlah-hari'); $i++) {
-            $tanggalKey = "tanggal-hari-$i";
-            if ($request->has($tanggalKey)) {
-                $tanggalPeminjaman[] = $request->input($tanggalKey);
-            }
-        }
-
-        // Simpan file
-        $lampiranPath = null;
-        if ($request->hasFile('lampiran')) {
-            $lampiranPath = $request->file('lampiran')->store('lampiran-peminjaman', 'public');
-        }
-
-        // Simpan ke database
-        $peminjaman = new peminjaman();
-        $peminjaman->nomor_surat = $request->input('nomor-surat');
-        $peminjaman->asal_surat = $request->input('asal-surat');
-        $peminjaman->nama_peminjam = $request->input('nama-peminjam');
-        $peminjaman->jumlah_hari = $request->input('jumlah-hari');
-        $tanggalPeminjaman = $request->input('tanggal_peminjaman'); // array otomatis
-        $peminjaman->tanggal_peminjaman = json_encode($tanggalPeminjaman);
-        $peminjaman->jumlah_ruangan = $request->input('jumlah-ruangan');
-        $peminjaman->jumlah_pc = $request->input('jumlah-pc');
-        $peminjaman->lampiran = $lampiranPath;
-        $peminjaman->save();
-
-        return redirect()->route('admin.tambah-peminjaman-page')->with('success', 'Data peminjaman berhasil disimpan.');
-    }
+    //Daftar Fasilitas
 
     public function daftar_fasilitas_page()
     {
@@ -333,19 +327,8 @@ class AdminController extends Controller
         ]);
     }
 
-    // public function submit_fasilitas(Request $request)
-    // {
-    //     $validated = $request->validate(['nama' => 'required']);
-
-    //     Fasilitas::create(['nama' => $validated['nama']]);
-
-    //     return redirect()->route('admin.daftar-fasilitas-page')->with('success', 'Fasilitas Berhasil Ditambahkan');
-    // }
-
     public function delete_fasilitas($id)
     {
-        // Fasilitas::findOrfail($id)->delete();
-        // return redirect()->route('admin.daftar-fasilitas-page')->with('deleteSuccess', 'Berhasil Menghapues Fasilitas');
         $fasilitas = Fasilitas::findOrFail($id);
         $fasilitas->delete();
 

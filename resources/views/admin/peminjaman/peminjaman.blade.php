@@ -2,6 +2,33 @@
 
 @section('title', 'Peminjaman')
 
+@section('style')
+    <style>
+        .print-out-button {
+            background-color: #a7f3d0;
+            color: #065f46;
+            padding: 8px 16px;
+            border: 1px solid #6ee7b7;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .print-out-button:hover {
+            background-color: #86efac;
+            border-color: #4ade80;
+        }
+
+        .print-out-button:active {
+            background-color: #6ee7b7;
+            transform: translateY(1px);
+        }
+    </style>
+@endsection
+
 @section('main')
 
 
@@ -104,7 +131,11 @@
     </td>
 
    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold">
-        @if ($peminjaman->status === 'Menunggu Persetujuan' || $peminjaman->status === 'Menunggu Verifikasi')
+        @if ($peminjaman->status === 'Menunggu Persetujuan')
+            <span class="bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full">
+                {{ $peminjaman->status }}
+            </span>
+        @elseif ($peminjaman->status === 'Menunggu Verifikasi')
             <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full">
                 {{ $peminjaman->status }}
             </span>
@@ -124,22 +155,31 @@
     </td>
 
     <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-normal cursor-pointer hover:underline">
-      <div class="flex items-center gap-x-2">
-        <button onclick="openModalDetail({{ $peminjaman->id }})">
-            <img src="{{ asset('assets/images/icon/action-view-icon.svg') }}" alt="View" />
-        </button>
-        <button onclick="openModalUpdate({{ $peminjaman->id }})">
-        <img src="{{ asset('assets/images/icon/action-edit-icon.svg') }}" alt="Edit action icon"/>
-        </button>
-        <form method="post" class="mb-0" action="{{route("admin.delete-pinjaman-ruangan", $peminjaman->id)}}" >
-            @method("DELETE")
-            @csrf
-            <button type="submit">
-                <img src="{{ asset('assets/images/icon/action-delete-icon.svg') }}" alt="Delete action icon"/>
-            </button>
-        </form>
-
-      </div>
+        <div class="flex items-center gap-x-2">
+            @if ($peminjaman->status === 'Diterima' || $peminjaman->status === 'Ditolak')
+                <a
+                    href="{{ route('admin.cetak-pdf-balasan', $peminjaman->id) }}"
+                    target="_blank"
+                    class="print-out-button w-full text-center text-sm"
+                >
+                    Cetak
+                </a>
+            @else
+                <button onclick="openModalDetail({{ $peminjaman->id }})">
+                    <img src="{{ asset('assets/images/icon/action-view-icon.svg') }}" alt="View" />
+                </button>
+                <button onclick="openModalUpdate({{ $peminjaman->id }})">
+                    <img src="{{ asset('assets/images/icon/action-edit-icon.svg') }}" alt="Edit action icon"/>
+                </button>
+                <form method="post" class="mb-0" action="{{ route('admin.delete-pinjaman-ruangan', $peminjaman->id) }}">
+                    @method("DELETE")
+                    @csrf
+                    <button type="submit">
+                        <img src="{{ asset('assets/images/icon/action-delete-icon.svg') }}" alt="Delete action icon"/>
+                    </button>
+                </form>
+            @endif
+        </div>
     </td>
   </tr>
 @endforeach
@@ -244,125 +284,261 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribut
 // Data peminjaman dari server
 const peminjamanData = @json($peminjamans);
 
-// DETAIL MODAL FUNCTIONS
-function openModalDetail(id) {
-    const data = peminjamanData.find(p => p.id === id);
-    if (!data) return;
+    function getStatusClasses(status) {
+        switch (status) {
+            case 'Menunggu Persetujuan':
+                return 'bg-yellow-100 text-yellow-600';
+            case 'Menunggu Verifikasi':
+                return 'bg-blue-100 text-blue-600';
+            case 'Diterima':
+                return 'bg-green-100 text-green-600';
+            case 'Ditolak':
+                return 'bg-red-100 text-red-600';
+            default:
+                return 'bg-gray-100 text-gray-600';
+        }
+    }
 
-    document.getElementById('modal_nomor_surat').innerText = `: ${data.nomor_surat}`;
-    document.getElementById('modal_asal_surat').innerText = `: ${data.asal_surat}`;
-    document.getElementById('modal_nama_peminjam').innerText = `: ${data.nama_peminjam}`;
-    document.getElementById('modal_jumlah_ruangan').innerText = `: ${data.jumlah_ruangan}`;
-    document.getElementById('modal_jumlah_pc').innerText = `: ${data.jumlah_pc}`;
-    document.getElementById('modal_lama_peminjam').innerText = `: ${data.lama_hari} hari`;
-    document.getElementById('modal_status').innerText = data.status ?? 'Menunggu';
+    // DETAIL MODAL FUNCTIONS
+    function openModalDetail(id) {
+        const data = peminjamanData.find(p => p.id === id);
+        if (!data) return;
 
-    // Render tanggal
-    const container = document.getElementById('modal_tanggal_peminjam');
-    container.innerHTML = '';
-    data.tanggal_formatted.forEach(tgl => {
-        const div = document.createElement('div');
-        div.innerText = `- ${tgl}`;
-        container.appendChild(div);
-    });
+        document.getElementById('modal_nomor_surat').innerText = `: ${data.nomor_surat}`;
+        document.getElementById('modal_asal_surat').innerText = `: ${data.asal_surat}`;
+        document.getElementById('modal_nama_peminjam').innerText = `: ${data.nama_peminjam}`;
+        document.getElementById('modal_jumlah_ruangan').innerText = `: ${data.jumlah_ruangan}`;
+        document.getElementById('modal_jumlah_pc').innerText = `: ${data.jumlah_pc}`;
+        document.getElementById('modal_lama_peminjam').innerText = `: ${data.lama_hari} hari`;
+        const statusElement = document.getElementById('modal_status');
+        statusElement.innerText = data.status ?? 'Menunggu';
+        // Reset semua class warna sebelumnya
+        statusElement.className = 'inline-flex px-2 py-1 text-sm font-medium rounded-full ' + getStatusClasses(data.status);
+        const lampiranLink = document.getElementById('modal_lampiran_link');
+        if (data.lampiran) {
+            lampiranLink.href = `/storage/${data.lampiran}`;
+            lampiranLink.classList.remove('hidden');
+        } else {
+            lampiranLink.href = `/storage/`;
+        }
 
-    // Tampilkan modal detail
-    const modal = document.querySelector('#modalOverlayDetail .bg-white');
-    modalOverlayDetail.classList.remove('opacity-0', 'invisible');
-    modalOverlayDetail.classList.add('opacity-100', 'visible');
+        // Render tanggal
+        const container = document.getElementById('modal_tanggal_peminjam');
+        container.innerHTML = '';
+        data.tanggal_formatted.forEach(tgl => {
+            const div = document.createElement('div');
+            div.innerText = `- ${tgl}`;
+            container.appendChild(div);
+        });
 
-    setTimeout(() => {
-        modal.classList.remove('scale-75', '-translate-y-12');
-        modal.classList.add('scale-100', 'translate-y-0');
-    }, 10);
+        // Tampilkan modal detail
+        const modal = document.querySelector('#modalOverlayDetail .bg-white');
+        modalOverlayDetail.classList.remove('opacity-0', 'invisible');
+        modalOverlayDetail.classList.add('opacity-100', 'visible');
 
-    document.body.style.overflow = 'hidden';
-}
+        setTimeout(() => {
+            modal.classList.remove('scale-75', '-translate-y-12');
+            modal.classList.add('scale-100', 'translate-y-0');
+        }, 10);
 
-function closeModalDetail() {
-    const modal = document.querySelector('#modalOverlayDetail .bg-white');
-    modal.classList.remove('scale-100', 'translate-y-0');
-    modal.classList.add('scale-75', '-translate-y-12');
+        document.body.style.overflow = 'hidden';
+    }
 
-    setTimeout(() => {
-        modalOverlayDetail.classList.remove('opacity-100', 'visible');
-        modalOverlayDetail.classList.add('opacity-0', 'invisible');
-    }, 200);
+    function closeModalDetail() {
+        const modal = document.querySelector('#modalOverlayDetail .bg-white');
+        modal.classList.remove('scale-100', 'translate-y-0');
+        modal.classList.add('scale-75', '-translate-y-12');
 
-    document.body.style.overflow = 'auto';
-}
+        setTimeout(() => {
+            modalOverlayDetail.classList.remove('opacity-100', 'visible');
+            modalOverlayDetail.classList.add('opacity-0', 'invisible');
+        }, 200);
 
-// UPDATE MODAL FUNCTIONS
-function openModalUpdate(id) {
-    const data = peminjamanData.find(p => p.id === id);
-    if (!data) return;
+        document.body.style.overflow = 'auto';
+    }
 
-    // Set current ID untuk keperluan update
-    currentPeminjamanId = id;
+    // UPDATE MODAL FUNCTIONS
+    function openModalUpdate(id) {
+        const data = peminjamanData.find(p => p.id === id);
+        if (!data) return;
 
-    // Prefill form dengan data yang ada
-    document.getElementById('nomor-surat').value = data.nomor_surat;
-    document.getElementById('asal-surat').value = data.asal_surat;
-    document.getElementById('nama-peminjam').value = data.nama_peminjam;
-    document.getElementById('jumlah-hari').value = data.lama_hari;
-    document.getElementById('jumlah-ruangan').value = data.jumlah_ruangan ?? '';
-    document.getElementById('jumlah-pc').value = data.jumlah_pc ?? '';
+        // Set current ID untuk keperluan update
+        currentPeminjamanId = id;
 
-    // Render tanggal inputs dengan data yang ada
-    const tanggalArray = JSON.parse(data.tanggal_peminjaman || '[]');
-    renderTanggalInputsWithPrefill(tanggalArray);
+        // Prefill form dengan data yang ada
+        document.getElementById('nomor-surat').value = data.nomor_surat;
+        document.getElementById('asal-surat').value = data.asal_surat;
+        document.getElementById('nama-peminjam').value = data.nama_peminjam;
+        document.getElementById('jumlah-hari').value = data.lama_hari;
+        document.getElementById('jumlah-ruangan').value = data.jumlah_ruangan ?? '';
+        document.getElementById('jumlah-pc').value = data.jumlah_pc ?? '';
 
-    // Update form action URL
-    const form = document.querySelector('#modalOverlayUpdate form');
-    form.action = `/admin/peminjaman/update/${id}`;
+        // Render tanggal inputs dengan data yang ada
+        const tanggalArray = JSON.parse(data.tanggal_peminjaman || '[]');
+        renderTanggalInputsWithPrefill(tanggalArray);
 
-    // Tampilkan modal update
-    const modal = document.querySelector('#modalOverlayUpdate .bg-white');
-    modalOverlayUpdate.classList.remove('opacity-0', 'invisible');
-    modalOverlayUpdate.classList.add('opacity-100', 'visible');
+        // Update form action URL
+        const form = document.querySelector('#modalOverlayUpdate form');
+        form.action = `/admin/peminjaman/update/${id}`;
 
-    setTimeout(() => {
-        modal.classList.remove('scale-75', '-translate-y-12');
-        modal.classList.add('scale-100', 'translate-y-0');
-    }, 10);
+        // Tampilkan modal update
+        const modal = document.querySelector('#modalOverlayUpdate .bg-white');
+        modalOverlayUpdate.classList.remove('opacity-0', 'invisible');
+        modalOverlayUpdate.classList.add('opacity-100', 'visible');
 
-    document.body.style.overflow = 'hidden';
-}
+        setTimeout(() => {
+            modal.classList.remove('scale-75', '-translate-y-12');
+            modal.classList.add('scale-100', 'translate-y-0');
+        }, 10);
 
-function closeModalUpdate() {
-    const modal = document.querySelector('#modalOverlayUpdate .bg-white');
-    modal.classList.remove('scale-100', 'translate-y-0');
-    modal.classList.add('scale-75', '-translate-y-12');
+        document.body.style.overflow = 'hidden';
+    }
 
-    setTimeout(() => {
-        modalOverlayUpdate.classList.remove('opacity-100', 'visible');
-        modalOverlayUpdate.classList.add('opacity-0', 'invisible');
-    }, 200);
+    function closeModalUpdate() {
+        const modal = document.querySelector('#modalOverlayUpdate .bg-white');
+        modal.classList.remove('scale-100', 'translate-y-0');
+        modal.classList.add('scale-75', '-translate-y-12');
 
-    document.body.style.overflow = 'auto';
-    currentPeminjamanId = null;
-}
+        setTimeout(() => {
+            modalOverlayUpdate.classList.remove('opacity-100', 'visible');
+            modalOverlayUpdate.classList.add('opacity-0', 'invisible');
+        }, 200);
 
-// TANGGAL INPUT FUNCTIONS
-function renderTanggalInputs() {
-    const container = document.getElementById("tanggal-peminjaman-container");
-    const jumlahHari = parseInt(document.getElementById("jumlah-hari").value) || 1;
+        document.body.style.overflow = 'auto';
+        currentPeminjamanId = null;
+    }
 
-    container.innerHTML = "";
+    // TANGGAL INPUT FUNCTIONS
+    function renderTanggalInputs() {
+        const container = document.getElementById("tanggal-peminjaman-container");
+        const jumlahHari = parseInt(document.getElementById("jumlah-hari").value) || 1;
 
-    for (let i = 0; i < jumlahHari; i++) {
+        container.innerHTML = "";
+
+        for (let i = 0; i < jumlahHari; i++) {
+            const wrapper = document.createElement("div");
+            wrapper.classList.add("flex", "space-x-2", "items-center", "mb-2");
+
+            const label = document.createElement("label");
+            label.innerText = `Hari ke-${i + 1}:`;
+            label.classList.add("w-24", "text-sm", "text-gray-700");
+
+            const input = document.createElement("input");
+            input.type = "date";
+            input.className = "flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500";
+            input.name = `tanggal_peminjaman[${i}]`;
+            input.required = true;
+
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md transition-colors";
+            btn.innerText = "Hapus";
+            btn.onclick = function () {
+                if (container.children.length <= 1) {
+                    alert("Minimal harus ada 1 hari.");
+                    return;
+                }
+
+                wrapper.remove();
+                document.getElementById("jumlah-hari").value = container.children.length;
+
+                // Reindex labels
+                Array.from(container.children).forEach((child, index) => {
+                    const label = child.querySelector("label");
+                    const input = child.querySelector("input");
+                    if (label) label.innerText = `Hari ke-${index + 1}:`;
+                    if (input) input.name = `tanggal_peminjaman[${index}]`;
+                });
+            };
+
+            wrapper.appendChild(label);
+            wrapper.appendChild(input);
+            wrapper.appendChild(btn);
+            container.appendChild(wrapper);
+        }
+    }
+
+    function renderTanggalInputsWithPrefill(dates = []) {
+        const container = document.getElementById("tanggal-peminjaman-container");
+        const jumlahHari = parseInt(document.getElementById("jumlah-hari").value) || 1;
+
+        container.innerHTML = "";
+
+        for (let i = 0; i < jumlahHari; i++) {
+            const wrapper = document.createElement("div");
+            wrapper.classList.add("flex", "space-x-2", "items-center", "mb-2");
+
+            const label = document.createElement("label");
+            label.innerText = `Hari ke-${i + 1}:`;
+            label.classList.add("w-24", "text-sm", "text-gray-700");
+
+            const input = document.createElement("input");
+            input.type = "date";
+            input.className = "flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500";
+            input.name = `tanggal_peminjaman[${i}]`;
+            input.value = dates[i] || "";
+            input.required = true;
+
+               // Atur minimal tanggal besok
+        const today = new Date();
+        today.setDate(today.getDate() + 1);
+        input.min = today.toISOString().split('T')[0];
+
+        input.addEventListener('change', validateTanggalUrutan);
+
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md transition-colors";
+            btn.innerText = "Hapus";
+            btn.onclick = function () {
+                if (container.children.length <= 1) {
+                    alert("Minimal harus ada 1 hari.");
+                    return;
+                }
+
+                wrapper.remove();
+                document.getElementById("jumlah-hari").value = container.children.length;
+
+                // Reindex labels
+                Array.from(container.children).forEach((child, index) => {
+                    const label = child.querySelector("label");
+                    const input = child.querySelector("input");
+                    if (label) label.innerText = `Hari ke-${index + 1}:`;
+                    if (input) input.name = `tanggal_peminjaman[${index}]`;
+                });
+            };
+
+            wrapper.appendChild(label);
+            wrapper.appendChild(input);
+            wrapper.appendChild(btn);
+            container.appendChild(wrapper);
+        }
+    }
+
+
+    function tambahTanggalInput() {
+        const container = document.getElementById("tanggal-peminjaman-container");
+
         const wrapper = document.createElement("div");
-        wrapper.classList.add("flex", "space-x-2", "items-center", "mb-2");
+        wrapper.classList.add("flex", "space-x-2", "items-center");
 
         const label = document.createElement("label");
-        label.innerText = `Hari ke-${i + 1}:`;
+        label.innerText = `Hari ke-${container.children.length + 1}:`;
         label.classList.add("w-24", "text-sm", "text-gray-700");
 
         const input = document.createElement("input");
         input.type = "date";
-        input.className = "flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500";
-        input.name = `tanggal_peminjaman[${i}]`;
+        input.name = "tanggal_peminjaman[]";
         input.required = true;
+        input.className = "flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500";
+
+        // Atur minimal tanggal adalah besok
+        const today = new Date();
+        today.setDate(today.getDate() + 1);
+        const minDate = today.toISOString().split('T')[0];
+        input.min = minDate;
+
+        input.addEventListener('change', validateTanggalUrutan);
 
         const btn = document.createElement("button");
         btn.type = "button";
@@ -370,112 +546,121 @@ function renderTanggalInputs() {
         btn.innerText = "Hapus";
         btn.onclick = function () {
             if (container.children.length <= 1) {
-                alert("Minimal harus ada 1 hari.");
+                alert("Minimal satu hari peminjaman.");
                 return;
             }
-
             wrapper.remove();
-            document.getElementById("jumlah-hari").value = container.children.length;
-
-            // Reindex labels
-            Array.from(container.children).forEach((child, index) => {
-                const label = child.querySelector("label");
-                const input = child.querySelector("input");
-                if (label) label.innerText = `Hari ke-${index + 1}:`;
-                if (input) input.name = `tanggal_peminjaman[${index}]`;
-            });
+            updateLabelTanggal();
         };
 
         wrapper.appendChild(label);
         wrapper.appendChild(input);
         wrapper.appendChild(btn);
         container.appendChild(wrapper);
+
+        updateLabelTanggal();
     }
-}
 
-function renderTanggalInputsWithPrefill(dates = []) {
-    const container = document.getElementById("tanggal-peminjaman-container");
-    const jumlahHari = parseInt(document.getElementById("jumlah-hari").value) || 1;
+    // Update label & jumlah hari
+    function updateLabelTanggal() {
+        const container = document.getElementById("tanggal-peminjaman-container");
+        const children = container.children;
+        for (let i = 0; i < children.length; i++) {
+            const label = children[i].querySelector("label");
+            label.innerText = `Hari ke-${i + 1}:`;
+        }
+        document.getElementById("jumlah-hari").value = children.length;
+    }
 
-    container.innerHTML = "";
 
-    for (let i = 0; i < jumlahHari; i++) {
-        const wrapper = document.createElement("div");
-        wrapper.classList.add("flex", "space-x-2", "items-center", "mb-2");
+    function updateLabelTanggal() {
+        const container = document.getElementById("tanggal-peminjaman-container");
+        const children = container.children;
+        for (let i = 0; i < children.length; i++) {
+            const label = children[i].querySelector("label");
+            label.innerText = `Hari ke-${i + 1}:`;
+        }
+        document.getElementById("jumlah-hari").value = children.length;
+    }
 
-        const label = document.createElement("label");
-        label.innerText = `Hari ke-${i + 1}:`;
-        label.classList.add("w-24", "text-sm", "text-gray-700");
-
-        const input = document.createElement("input");
-        input.type = "date";
-        input.className = "flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500";
-        input.name = `tanggal_peminjaman[${i}]`;
-        input.value = dates[i] || "";
-        input.required = true;
-
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md transition-colors";
-        btn.innerText = "Hapus";
-        btn.onclick = function () {
-            if (container.children.length <= 1) {
-                alert("Minimal harus ada 1 hari.");
-                return;
+    function validateTanggalUrutan() {
+        const container = document.getElementById("tanggal-peminjaman-container");
+        const inputs = container.querySelectorAll('input[type="date"]');
+        for (let i = 1; i < inputs.length; i++) {
+            const prevDate = new Date(inputs[i - 1].value);
+            const currentDate = new Date(inputs[i].value);
+            if (inputs[i].value && inputs[i - 1].value && currentDate <= prevDate) {
+                alert(`Tanggal pada Hari ke-${i + 1} tidak boleh sebelum atau sama dengan Hari ke-${i}. Harap pilih ulang.`);
+                inputs[i].value = "";
+                inputs[i].focus();
+                return false;
             }
-
-            wrapper.remove();
-            document.getElementById("jumlah-hari").value = container.children.length;
-
-            // Reindex labels
-            Array.from(container.children).forEach((child, index) => {
-                const label = child.querySelector("label");
-                const input = child.querySelector("input");
-                if (label) label.innerText = `Hari ke-${index + 1}:`;
-                if (input) input.name = `tanggal_peminjaman[${index}]`;
-            });
-        };
-
-        wrapper.appendChild(label);
-        wrapper.appendChild(input);
-        wrapper.appendChild(btn);
-        container.appendChild(wrapper);
+        }
+        return true;
     }
-}
 
-// EVENT LISTENERS
-// Close modal saat click overlay
-modalOverlayDetail?.addEventListener('click', function(e) {
-    if (e.target === modalOverlayDetail) {
-        closeModalDetail();
+    function handleSubmit(event) {
+        event.preventDefault();
+
+        if (!validateTanggalUrutan()) {
+            alert("Tanggal tidak valid!");
+            return;
+        }
+
+        document.getElementById('updatePeminjamanForm').submit();
     }
-});
 
-modalOverlayUpdate?.addEventListener('click', function(e) {
-    if (e.target === modalOverlayUpdate) {
-        closeModalUpdate();
-    }
-});
 
-// Close modal dengan ESC key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        if (modalOverlayDetail?.classList.contains('visible')) {
+
+
+    // EVENT LISTENERS
+    // Close modal saat click overlay
+    modalOverlayDetail?.addEventListener('click', function(e) {
+        if (e.target === modalOverlayDetail) {
             closeModalDetail();
         }
-        if (modalOverlayUpdate?.classList.contains('visible')) {
+    });
+
+    modalOverlayUpdate?.addEventListener('click', function(e) {
+        if (e.target === modalOverlayUpdate) {
             closeModalUpdate();
         }
-    }
-});
+    });
 
-// Initial render saat page load
-document.addEventListener('DOMContentLoaded', function() {
-    if (document.getElementById("tanggal-peminjaman-container")) {
-        renderTanggalInputs();
-    }
-});
+    // Close modal dengan ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (modalOverlayDetail?.classList.contains('visible')) {
+                closeModalDetail();
+            }
+            if (modalOverlayUpdate?.classList.contains('visible')) {
+                closeModalUpdate();
+            }
+        }
+    });
+
+    // Initial render saat page load
+    document.addEventListener('DOMContentLoaded', function() {
+        if (document.getElementById("tanggal-peminjaman-container")) {
+            renderTanggalInputsWithPrefill();
+        }
+    });
 
 
     </script>
+
+@if(session('tambahPeminjamanSuccess'))
+    <script>
+    Swal.fire({
+        toast: true,
+        position: 'bottom-end',
+        icon: 'success',
+        title: '{{ session('tambahPeminjamanSuccess') }}',
+        showConfirmButton: false,
+        timer: 5000,
+        timerProgressBar: true
+    });
+    </script>
+@endif
+
 @endsection

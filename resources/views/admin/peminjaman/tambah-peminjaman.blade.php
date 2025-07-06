@@ -22,13 +22,13 @@
     <div class="bg-white warna rounded-lg shadow-sm p-6">
                 <h1 class="text-xl font-semibold text-gray-800 mb-6">Form Input Surat Peminjaman</h1>
 
-                    <form class="space-y-6" method="POST" action="{{ route('admin.tambah-peminjaman') }}" enctype="multipart/form-data">
+                    <form id="formPeminjaman" onsubmit="handleSubmit(event)" class="space-y-6" method="POST" action="{{ route('admin.tambah-peminjaman') }}" enctype="multipart/form-data">
                     @csrf
                     <div>
                         <label for="nomor-surat" class="text-sm font-medium text-gray-700 mb-2 block">
                             Nomor Surat
                         </label>
-                        <input id="nomor-surat" name="nomor-surat" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
+                        <input id="nomor-surat" placeholder="1001/01/1111" name="nomor-surat" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
                     </div>
 
                     <!-- Asal Surat -->
@@ -36,7 +36,7 @@
                         <label for="asal-surat" class="text-sm font-medium text-gray-700 mb-2 block">
                             Asal Surat
                         </label>
-                        <input id="asal-surat" name="asal-surat" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
+                        <input id="asal-surat" placeholder="PUSTIKOM" name="asal-surat" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
                     </div>
 
                     <!-- Nama Peminjam -->
@@ -44,34 +44,41 @@
                         <label for="nama-peminjam" class="text-sm font-medium text-gray-700 mb-2 block">
                             Nama Peminjam
                         </label>
-                        <input id="nama-peminjam" name="nama-peminjam" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
+                        <input id="nama-peminjam" placeholder="Jonedoe" name="nama-peminjam" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
                     </div>
 
                     <!-- Jumlah Hari -->
                     <div>
-                    <label for="jumlah-hari" class="text-sm font-medium text-gray-700 mb-2 block">
-                        Jumlah Hari
-                    </label>
-                    <input
-                        id="jumlah-hari"
-                        type="number"
-                        name="jumlah-hari"
-                        min="1"
-                        value="1"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-                        oninput="renderTanggalInputs()"
-                    />
+                        <label class="text-sm font-medium text-gray-700 mb-2 block">Jumlah Hari</label>
+                        <input
+                            id="jumlah-hari"
+                            type="number"
+                            name="jumlah-hari"
+                            min="1"
+                            value="1"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
+                            readonly
+                        />
                     </div>
 
                     <!-- Tanggal Peminjaman -->
                     <div id="tanggal-peminjaman-container" class="mt-4 space-y-2"></div>
+
+                    <!-- Tombol Tambah Tanggal -->
+                    <button
+                        type="button"
+                        onclick="tambahTanggalInput()"
+                        class="mt-4 bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md transition-colors"
+                    >
+                        Tambah Tanggal
+                    </button>
 
                     <!-- Jumlah Ruangan -->
                     <div>
                         <label for="jumlah-ruangan" class="text-sm font-medium text-gray-700 mb-2 block">
                             Jumlah Ruangan
                         </label>
-                        <input id="jumlah-ruangan" name="jumlah-ruangan" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
+                        <input id="jumlah-ruangan" min="1" value="1" required name="jumlah-ruangan" type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
                     </div>
 
                     <!-- Jumlah PC -->
@@ -79,7 +86,7 @@
                         <label for="jumlah-pc" class="text-sm font-medium text-gray-700 mb-2 block">
                             Jumlah PC
                         </label>
-                        <input id="jumlah-pc" name="jumlah-pc" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
+                        <input id="jumlah-pc" min="1" value="1" required name="jumlah-pc" type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
                     </div>
 
                     <!-- Lampiran -->
@@ -108,7 +115,7 @@
                         >
                             Batal
                         </button>
-                        <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-md transition-colors">
+                        <button type="submit" onclick="" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-md transition-colors">
                             Simpan
                         </button>
                     </div>
@@ -118,97 +125,162 @@
 @endsection
 
 @section('js')
-    <script>
-        function renderTanggalInputs() {
-            const container = document.getElementById("tanggal-peminjaman-container");
-            const jumlahHari = parseInt(document.getElementById("jumlah-hari").value);
+<script>
+    function tambahTanggalInput() {
+        const container = document.getElementById("tanggal-peminjaman-container");
 
-            // Clear existing inputs
-            container.innerHTML = "";
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("flex", "space-x-2", "items-center");
 
-            for (let i = 0; i < jumlahHari; i++) {
-            const wrapper = document.createElement("div");
-            wrapper.classList.add("flex", "space-x-2", "items-center");
+        const label = document.createElement("label");
+        label.innerText = `Hari ke-${container.children.length + 1}:`;
+        label.classList.add("w-24", "text-sm", "text-gray-700");
 
-            const label = document.createElement("label");
-            label.innerText = `Hari ke-${i + 1}:`;
-            label.classList.add("w-24", "text-sm", "text-gray-700");
+        const input = document.createElement("input");
+        input.type = "date";
+        input.name = "tanggal_peminjaman[]";
+        input.required = true;
+        input.className = "flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500";
 
-            const input = document.createElement("input");
-            input.type = "date";
-            input.className =
-                "flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500";
-            input.name ="tanggal_peminjaman[]" ;
+        // Atur minimal tanggal adalah besok
+        const today = new Date();
+        today.setDate(today.getDate() + 1);
+        const minDate = today.toISOString().split('T')[0];
+        input.min = minDate;
 
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.className =
-                "bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md transition-colors";
-            btn.innerText = "Hapus";
-            btn.onclick = function () {
-                const container = document.getElementById("tanggal-peminjaman-container");
-
-                if (container.children.length <= 1) {
-                    alert("Minimal harus ada 1 hari.");
+        // Cek urutan tanggal
+        input.addEventListener('change', () => {
+            const inputs = document.querySelectorAll('input[name="tanggal_peminjaman[]"]');
+            for (let i = 1; i < inputs.length; i++) {
+                const prevDate = new Date(inputs[i - 1].value);
+                const currentDate = new Date(inputs[i].value);
+                if (inputs[i].value && inputs[i - 1].value && currentDate <= prevDate) {
+                    alert(`Tanggal pada Hari ke-${i + 1} tidak boleh sebelum Hari ke-${i}. Harap pilih ulang.`);
+                    inputs[i].value = "";
+                    inputs[i].focus();
                     return;
                 }
-
-                wrapper.remove();
-
-                // Update jumlah hari
-                document.getElementById("jumlah-hari").value = container.children.length;
-
-                // Reindex semua label setelah penghapusan
-                Array.from(container.children).forEach((child, index) => {
-                    const label = child.querySelector("label");
-                    if (label) {
-                    label.innerText = `Hari ke-${index + 1}:`;
-                    }
-                });
-            };
-
-
-            wrapper.appendChild(label);
-            wrapper.appendChild(input);
-            wrapper.appendChild(btn);
-            container.appendChild(wrapper);
             }
-        }
+        });
 
-    // Initial render
-    window.onload = renderTanggalInputs;
-
-        function handleCancel() {
-            if (confirm('Apakah Anda yakin ingin membatalkan? Data yang telah diisi akan hilang.')) {
-                document.querySelector('form').reset();
-            }
-        }
-
-        function handleSubmit(event) {
-            event.preventDefault();
-
-            // Get form data
-            const formData = new FormData(event.target);
-            const data = Object.fromEntries(formData.entries());
-
-            // Simple validation
-            const requiredFields = ['nomor-surat', 'asal-surat', 'nama-peminjam', 'jumlah-hari', 'tanggal-peminjaman'];
-            const missingFields = requiredFields.filter(field => !data[field]);
-
-            if (missingFields.length > 0) {
-                alert('Mohon lengkapi semua field yang wajib diisi.');
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md transition-colors";
+        btn.innerText = "Hapus";
+        btn.onclick = function () {
+            if (container.children.length <= 1) {
+                alert("Minimal satu hari peminjaman.");
                 return;
             }
+            wrapper.remove();
+            updateLabelTanggal();
+        };
 
-            // File size validation
-            const fileInput = document.getElementById('lampiran');
-            if (fileInput.files[0] && fileInput.files[0].size > 2 * 1024 * 1024) {
-                alert('Ukuran file tidak boleh lebih dari 2 MB.');
-                return;
+        wrapper.appendChild(label);
+        wrapper.appendChild(input);
+        wrapper.appendChild(btn);
+        container.appendChild(wrapper);
+
+        updateLabelTanggal();
+    }
+
+    // Update label & jumlah hari
+    function updateLabelTanggal() {
+        const container = document.getElementById("tanggal-peminjaman-container");
+        const children = container.children;
+        for (let i = 0; i < children.length; i++) {
+            const label = children[i].querySelector("label");
+            label.innerText = `Hari ke-${i + 1}:`;
+        }
+        document.getElementById("jumlah-hari").value = children.length;
+    }
+
+    // Saat halaman pertama kali dibuka, render 1 input tanggal
+    window.addEventListener('DOMContentLoaded', () => {
+        if (document.getElementById("tanggal-peminjaman-container").children.length === 0) {
+            tambahTanggalInput();
+        }
+    });
+
+
+    function updateLabelTanggal() {
+        const container = document.getElementById("tanggal-peminjaman-container");
+        const children = container.children;
+        for (let i = 0; i < children.length; i++) {
+            const label = children[i].querySelector("label");
+            label.innerText = `Hari ke-${i + 1}:`;
+        }
+        document.getElementById("jumlah-hari").value = children.length;
+    }
+
+
+    function handleCancel() {
+        Swal.fire({
+            title: 'Batalkan Form?',
+            text: 'Data yang telah diisi akan hilang.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, batalkan!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "{{ route('admin.peminjaman-page') }}";
             }
+        });
+    }
 
-            alert('Data berhasil disimpan!');
-            console.log('Form data:', data);
+
+    function handleSubmit(event) {
+        event.preventDefault();
+
+        // Get form data
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData.entries());
+
+        // Simple validation
+        const requiredFields = ['nomor-surat', 'asal-surat', 'nama-peminjam', 'jumlah-hari', 'lampiran'];
+        const missingFields = requiredFields.filter(field => !data[field]);
+
+        const tanggalInputs = document.querySelectorAll('input[name="tanggal_peminjaman[]"]');
+        let tanggalKosong = false;
+        tanggalInputs.forEach(input => {
+            if (!input.value) tanggalKosong = true;
+        });
+
+        if (missingFields.length > 0 || tanggalKosong) {
+            alert('Mohon lengkapi semua field yang wajib diisi.');
+            return;
+        }
+
+        if (tanggalKosong) {
+            alert('Mohon lengkapi semua tanggal peminjaman.');
+            return;
+        }
+
+        // File size validation
+        // File validation: wajib diisi, hanya PDF, ukuran maks 2MB
+        const fileInput = document.getElementById('lampiran');
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert('Mohon unggah lampiran (PDF).');
+            return;
+        }
+
+        if (file.type !== 'application/pdf') {
+            alert('Lampiran harus berupa file PDF.');
+            return;
+        }
+
+        if (file.size > 2 * 1024 * 1024) {
+            alert('Ukuran file tidak boleh lebih dari 2 MB.');
+            return;
+        }
+
+        // Jika semua valid, submit form secara manual
+        event.target.submit();
         }
 
         // File input change handler
@@ -227,5 +299,6 @@
                 }
             }
         });
+
     </script>
 @endsection

@@ -35,7 +35,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::post("/tambah-peminjaman/submit", [AdminController::class, "buatSurat"])->name("admin.tambah-peminjaman");
         Route::get("/detail-peminjaman", [AdminController::class, "detail_peminjaman_page"])->name("admin.detail-peminjaman-page");
         Route::put('/update/{id}', [AdminController::class, 'update_peminjaman'])->name('admin.update-peminjaman');
-
+        Route::get('/cetak-pdf-balasan/{id}', [AdminController::class, 'cetak'])->name('admin.cetak-pdf-balasan');
     });
 
     Route::prefix('daftar-referensi')->group( function(){

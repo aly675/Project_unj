@@ -24,7 +24,7 @@
             <h1 class="text-xl font-semibold text-gray-800 mb-6">Form Input Surat Peminjaman</h1>
 
             <!-- Form menggunakan method POST biasa tanpa fetch -->
-            <form method="POST" enctype="multipart/form-data" id="updatePeminjamanForm">
+            <form method="POST" onsubmit="handleSubmit(event)" enctype="multipart/form-data" id="updatePeminjamanForm">
                 @csrf
                 @method('PUT')
 
@@ -70,30 +70,32 @@
                     />
                 </div>
 
-                <!-- Jumlah Hari -->
-                <div class="mb-4">
-                    <label for="jumlah-hari" class="text-sm font-medium text-gray-700 mb-2 block">
-                        Jumlah Hari
-                    </label>
-                    <input
-                        id="jumlah-hari"
-                        type="number"
-                        name="jumlah_hari"
-                        min="1"
-                        value="1"
-                        required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-                        oninput="renderTanggalInputs()"
-                    />
-                </div>
+                    <!-- Jumlah Hari -->
+                    <div>
+                        <label class="text-sm font-medium text-gray-700 mb-2 block">Jumlah Hari</label>
+                        <input
+                            id="jumlah-hari"
+                            type="number"
+                            name="jumlah_hari"
+                            min="1"
+                            value="1"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
+                            readonly
+                        />
+                    </div>
 
-                <!-- Tanggal Peminjaman Container -->
-                <div class="mb-4">
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">
-                        Tanggal Peminjaman
-                    </label>
-                    <div id="tanggal-peminjaman-container" class="space-y-2"></div>
-                </div>
+                    <!-- Tanggal Peminjaman -->
+                    <div id="tanggal-peminjaman-container" class="mt-4 space-y-2"></div>
+
+                    <!-- Tombol Tambah Tanggal -->
+                    <button
+                        type="button"
+                        onclick="tambahTanggalInput()"
+                        class="mt-4 mb-5 bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md transition-colors"
+                    >
+                        Tambah Tanggal
+                    </button>
+
 
                 <!-- Jumlah Ruangan -->
                 <div class="mb-4">
