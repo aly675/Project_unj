@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Ruangan;
 use App\Models\Fasilitas;
 use App\Models\peminjaman;
-use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
@@ -37,24 +37,52 @@ class AdminController extends Controller
         return view('admin.peminjaman.peminjaman', compact('peminjamans'));
     }
 
+    public function peminjaman_json()
+    {
+        $peminjamans = peminjaman::orderBy('created_at', 'desc')->get();
+
+        Carbon::setLocale('id');
+        foreach ($peminjamans as $p) {
+            $decoded = json_decode($p->tanggal_peminjaman, true) ?? [];
+            $formatted = collect($decoded)->map(function ($tgl) {
+                return Carbon::parse($tgl)->translatedFormat('l, d F Y');
+            });
+            $p->tanggal_formatted = $formatted;
+            $p->lama_hari = count($decoded);
+            $p->lampiran_url = $p->lampiran ? asset('storage/' . $p->lampiran) : null;
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $peminjamans
+        ]);
+    }
+
+
     public function cetak($id)
     {
         $data = peminjaman::findOrFail($id);
         return view('pdf/cetak-pdf', compact('data'));
     }
 
-    public function deletePinjamanRuangan($id)
+    public function delete_peminjaman($id)
     {
-        $ruangan = peminjaman::findOrFail($id);
-        $ruangan->delete();
-        return redirect()->route("admin.peminjaman-page");
+        try {
+            $peminjaman = Peminjaman::findOrFail($id);
+            $peminjaman->delete();
+
+            return response()->json(['status' => 'success', 'message' => 'Data berhasil dihapus']);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'Gagal menghapus data'], 500);
+        }
     }
 
     public function update_peminjaman(Request $request, $id)
     {
         $peminjaman = Peminjaman::findOrFail($id);
+
         $request->validate([
-            'nomor_surat' => 'required|string|max:255|unique:peminjamen,nomor_surat,'.$peminjaman->id,
+            'nomor_surat' => 'required|string|max:255|unique:peminjamen,nomor_surat,' . $peminjaman->id,
             'asal_surat' => 'required|string|max:255',
             'nama_peminjam' => 'required|string|max:255',
             'jumlah_hari' => 'required|integer|min:1',
@@ -66,7 +94,6 @@ class AdminController extends Controller
         ]);
 
         try {
-            $peminjaman = Peminjaman::findOrFail($id);
             // Update field dasar
             $peminjaman->nomor_surat = $request->nomor_surat;
             $peminjaman->asal_surat = $request->asal_surat;
@@ -80,26 +107,38 @@ class AdminController extends Controller
 
             // Handle file upload
             if ($request->hasFile('lampiran')) {
-                // Hapus file lama jika ada
                 if ($peminjaman->lampiran && Storage::disk('public')->exists($peminjaman->lampiran)) {
                     Storage::disk('public')->delete($peminjaman->lampiran);
                 }
-
                 $path = $request->file('lampiran')->store('lampiran-peminjaman', 'public');
                 $peminjaman->lampiran = $path;
             }
 
             $peminjaman->save();
 
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Peminjaman berhasil diperbarui.'
+                ]);
+            }
+
             return redirect()->route('admin.peminjaman-page')
-                            ->with('success', 'Peminjaman berhasil diperbarui.');
+                ->with('success', 'Peminjaman berhasil diperbarui.');
 
         } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+                ], 500);
+            }
             return redirect()->back()
-                            ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
-                            ->withInput();
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
+                ->withInput();
         }
     }
+
 
     public function tambah_peminjaman_page()
     {

@@ -111,79 +111,10 @@
             </th>
           </tr>
         </thead>
-       <tbody class="divide-y divide-gray-200">
-@foreach (  $peminjamans as $peminjaman)
-  <tr>
-    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">
-      {{ $loop->iteration}}
-    </td>
-    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-normal">
-      {{ $peminjaman->nomor_surat }}
-    </td>
-    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">
-      {{ $peminjaman->asal_surat }}
-    </td>
-    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">
-      {{ $peminjaman->nama_peminjam }}
-    </td>
-    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-normal">
-      {{ $peminjaman->lama_hari }} Hari
-    </td>
 
-   <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold">
-        @if ($peminjaman->status === 'Menunggu Persetujuan')
-            <span class="bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full">
-                {{ $peminjaman->status }}
-            </span>
-        @elseif ($peminjaman->status === 'Menunggu Verifikasi')
-            <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full">
-                {{ $peminjaman->status }}
-            </span>
-        @elseif ($peminjaman->status === 'Diterima')
-            <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full">
-                {{ $peminjaman->status }}
-            </span>
-        @elseif ($peminjaman->status === 'Ditolak')
-            <span class="bg-red-100 text-red-600 px-3 py-1 rounded-full">
-                {{ $peminjaman->status }}
-            </span>
-        @else
-            <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full">
-                {{ $peminjaman->status }}
-            </span>
-        @endif
-    </td>
-
-    <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-normal cursor-pointer hover:underline">
-        <div class="flex items-center gap-x-2">
-            @if ($peminjaman->status === 'Diterima' || $peminjaman->status === 'Ditolak')
-                <a
-                    href="{{ route('admin.cetak-pdf-balasan', $peminjaman->id) }}"
-                    target="_blank"
-                    class="print-out-button w-full text-center text-sm"
-                >
-                    Cetak
-                </a>
-            @else
-                <button onclick="openModalDetail({{ $peminjaman->id }})">
-                    <img src="{{ asset('assets/images/icon/action-view-icon.svg') }}" alt="View" />
-                </button>
-                <button onclick="openModalUpdate({{ $peminjaman->id }})">
-                    <img src="{{ asset('assets/images/icon/action-edit-icon.svg') }}" alt="Edit action icon"/>
-                </button>
-                <form method="post" class="mb-0" action="{{ route('admin.delete-pinjaman-ruangan', $peminjaman->id) }}">
-                    @method("DELETE")
-                    @csrf
-                    <button type="submit">
-                        <img src="{{ asset('assets/images/icon/action-delete-icon.svg') }}" alt="Delete action icon"/>
-                    </button>
-                </form>
-            @endif
-        </div>
-    </td>
-  </tr>
-@endforeach
-</tbody>
+    <tbody id="peminjaman-table-body" class="divide-y divide-gray-200">
+        <!-- Akan diisi otomatis oleh JS -->
+    </tbody>
 
       </table>
       <div
@@ -271,18 +202,102 @@
    <script>
  // Fixed JavaScript code untuk update peminjaman
 
-// Get DOM elements
-const modalOverlayDetail = document.getElementById('modalOverlayDetail');
-const modalOverlayUpdate = document.getElementById('modalOverlayUpdate');
+    function fetchPeminjamanData() {
+        fetch('{{ route('admin.peminjaman-json') }}')
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById('peminjaman-table-body');
+                tbody.innerHTML = '';
+                data.data.forEach((peminjaman, index) => {
+                    const tr = document.createElement('tr');
 
-// Variable untuk menyimpan ID peminjaman yang sedang diedit
-let currentPeminjamanId = null;
+                    tr.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">${index + 1}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-normal">${peminjaman.nomor_surat}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">${peminjaman.asal_surat}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">${peminjaman.nama_peminjam}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-normal">${peminjaman.lama_hari} Hari</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold">
+                            ${getStatusBadge(peminjaman.status)}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-normal cursor-pointer hover:underline">
+                            ${getActionButtons(peminjaman)}
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
 
-// Get CSRF token
-const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    function getStatusBadge(status) {
+        let color, text;
+        switch (status) {
+            case 'Menunggu Persetujuan':
+                color = 'bg-yellow-100 text-yellow-600';
+                break;
+            case 'Menunggu Verifikasi':
+                color = 'bg-blue-100 text-blue-600';
+                break;
+            case 'Diterima':
+                color = 'bg-green-100 text-green-600';
+                break;
+            case 'Ditolak':
+                color = 'bg-red-100 text-red-600';
+                break;
+            default:
+                color = 'bg-gray-100 text-gray-600';
+        }
+        return `<span class="${color} px-3 py-1 rounded-full">${status}</span>`;
+    }
 
-// Data peminjaman dari server
-const peminjamanData = @json($peminjamans);
+    function getActionButtons(peminjaman) {
+        if (peminjaman.status === 'Diterima' || peminjaman.status === 'Ditolak') {
+            return `<a href="/admin/peminjaman/cetak-pdf-balasan/${peminjaman.id}"
+                    target="_blank"
+                    class="print-out-button block w-full text-center text-center text-sm"
+                    >Cetak</a>`;
+        } else {
+            return `
+                <div class="flex items-center gap-x-2">
+                    <button onclick="openModalDetail(${peminjaman.id})">
+                        <img src="/assets/images/icon/action-view-icon.svg" alt="View" />
+                    </button>
+                    <button onclick="openModalUpdate(${peminjaman.id})">
+                        <img src="/assets/images/icon/action-edit-icon.svg" alt="Edit action icon"/>
+                    </button>
+                    <button
+                        type="button"
+                        onclick="deletePeminjaman(${peminjaman.id})"
+                    >
+                        <img src="/assets/images/icon/action-delete-icon.svg" alt="Delete action icon"/>
+                    </button>
+
+                </div>
+            `;
+        }
+    }
+
+    // Jalankan saat halaman ready
+    document.addEventListener('DOMContentLoaded', fetchPeminjamanData);
+
+    setInterval(fetchPeminjamanData, 30000);
+
+
+    // Get DOM elements
+    const modalOverlayDetail = document.getElementById('modalOverlayDetail');
+    const modalOverlayUpdate = document.getElementById('modalOverlayUpdate');
+
+    // Variable untuk menyimpan ID peminjaman yang sedang diedit
+    let currentPeminjamanId = null;
+
+    // Get CSRF token
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+    // Data peminjaman dari server
+    const peminjamanData = @json($peminjamans);
 
     function getStatusClasses(status) {
         switch (status) {
@@ -480,11 +495,11 @@ const peminjamanData = @json($peminjamans);
             input.required = true;
 
                // Atur minimal tanggal besok
-        const today = new Date();
-        today.setDate(today.getDate() + 1);
-        input.min = today.toISOString().split('T')[0];
+            const today = new Date();
+            today.setDate(today.getDate() + 1);
+            input.min = today.toISOString().split('T')[0];
 
-        input.addEventListener('change', validateTanggalUrutan);
+            input.addEventListener('change', validateTanggalUrutan);
 
             const btn = document.createElement("button");
             btn.type = "button";
@@ -599,15 +614,127 @@ const peminjamanData = @json($peminjamans);
         return true;
     }
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
 
         if (!validateTanggalUrutan()) {
-            alert("Tanggal tidak valid!");
+            Swal.fire({
+                icon: 'warning',
+                title: 'Tanggal tidak valid!',
+                toast: true,
+                position: 'bottom-end',
+                timer: 3000,
+                showConfirmButton: false
+            });
             return;
         }
 
-        document.getElementById('updatePeminjamanForm').submit();
+        const form = document.getElementById('updatePeminjamanForm');
+        const url = form.action; // pastikan action sudah di-set dengan benar
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error(errorData);
+                throw new Error('Gagal memperbarui data');
+            }
+
+            const result = await response.json();
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Data berhasil diperbarui!',
+                toast: true,
+                position: 'bottom-end',
+                timer: 3000,
+                showConfirmButton: false
+            });
+
+            closeModalUpdate(); // jika ingin modal langsung tertutup
+            fetchPeminjamanData(); // jika ingin table auto refresh
+
+        } catch (error) {
+            console.error(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal memperbarui data',
+                text: error.message,
+                toast: true,
+                position: 'bottom-end',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        }
+    }
+
+
+
+    function deletePeminjaman(id) {
+        Swal.fire({
+            title: 'Yakin ingin menghapus?',
+            text: "Data akan terhapus permanen.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/admin/peminjaman/delete/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                    },
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Gagal menghapus data');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Hapus baris tabel tanpa reload
+                    const row = document.querySelector(`button[onclick="deletePeminjaman(${id})"]`).closest('tr');
+                    row.remove();
+
+                    // Tampilkan toast sukses SweetAlert
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom-end',
+                        icon: 'success',
+                        title: 'Data berhasil dihapus',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                    });
+                })
+                .catch(error => {
+                    console.error(error);
+
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom-end',
+                        icon: 'error',
+                        title: 'Gagal menghapus data',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                    });
+                });
+            }
+        });
     }
 
 

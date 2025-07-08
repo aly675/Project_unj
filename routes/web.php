@@ -29,9 +29,10 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get("/", [AdminController::class, "dashboard_page"])->name("admin.dashboard-page");
 
     Route::prefix('/peminjaman')->group( function(){
+        Route::get('/admin/peminjaman/json', [AdminController::class, 'peminjaman_json'])->name('admin.peminjaman-json');
         Route::get("", [AdminController::class, "peminjaman_page"])->name(name: "admin.peminjaman-page");
         Route::get("/tambah-peminjaman", [AdminController::class, "tambah_peminjaman_page"])->name("admin.tambah-peminjaman-page");
-        Route::delete('/delete/{id}', [AdminController::class, 'deletePinjamanRuangan'])->name('admin.delete-pinjaman-ruangan');
+        Route::delete('/delete/{id}', [AdminController::class, 'delete_peminjaman'])->name('admin.delete-pinjaman-ruangan');
         Route::post("/tambah-peminjaman/submit", [AdminController::class, "buatSurat"])->name("admin.tambah-peminjaman");
         Route::get("/detail-peminjaman", [AdminController::class, "detail_peminjaman_page"])->name("admin.detail-peminjaman-page");
         Route::put('/update/{id}', [AdminController::class, 'update_peminjaman'])->name('admin.update-peminjaman');
