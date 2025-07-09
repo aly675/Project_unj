@@ -108,11 +108,18 @@
             });
     };
 
-
+    // debounce untuk live search
+    function debounce(func, delay) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
 
 
     document.getElementById('searchInput').addEventListener('input', () => {
-        fetchFasilitas();
+        debounce(fetchFasilitas(), 3000);
     });
 
     document.getElementById('sortSelect').addEventListener('change', () => {

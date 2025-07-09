@@ -46,15 +46,13 @@
           ></i>
         </div>
         <select
-          title="t"
-          name=""
-          id=""
-          class="border border-gray-300 rounded-md py-2 px-3 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent"
+            class="border border-gray-300 rounded-md py-2 px-3 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent"
         >
-          <option>Status : All</option>
-          <option>Pending</option>
-          <option>Completed</option>
-          <option>Cancelled</option>
+            <option>Status : All</option>
+            <option>Menunggu Persetujuan</option>
+            <option>Menunggu Verifikasi</option>
+            <option>Diterima</option>
+            <option>Ditolak</option>
         </select>
       </div>
       <a
@@ -121,69 +119,16 @@
         class="mt-6 flex flex-col md:flex-row md:items-center md:justify-between text-sm text-gray-500 px-7 pb-5 font-light"
       >
         <div class="mb-3 md:mb-0 flex items-center gap-1">
-          <span>Showing</span>
-          <select
-            title="p"
-            class="border border-gray-200 rounded px-2 py-1 text-sm text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#0d5c5c]"
-          >
-            <option>10</option>
-            <option>20</option>
-            <option>50</option>
-          </select>
-          <span>of 50</span>
+            <span>Showing</span>
+            <select id="per-page-select" class="border border-gray-200 rounded px-2 py-1 text-sm text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#0d5c5c]">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+            </select>
+            <span id="total-data-text">of 0</span>
         </div>
-        <nav
-          class="flex items-center gap-1 select-none"
-          role="navigation"
-          aria-label="Pagination Navigation"
-        >
-          <button
-            aria-label="Previous page"
-            class="border border-gray-200 rounded px-2 py-1 text-gray-400 cursor-not-allowed"
-            disabled
-            tabindex="-1"
-          >
-            &lt;
-          </button>
-          <button
-            aria-current="page"
-            class="border border-gray-200 rounded px-2 py-1 bg-[#0d5c5c] text-white"
-            tabindex="0"
-          >
-            1
-          </button>
-          <button
-            class="border border-gray-200 rounded px-2 py-1 hover:bg-gray-100"
-            tabindex="0"
-          >
-            2
-          </button>
-          <button
-            class="border border-gray-200 rounded px-2 py-1 hover:bg-gray-100"
-            tabindex="0"
-          >
-            3
-          </button>
-          <button
-            class="border border-gray-200 rounded px-2 py-1 hover:bg-gray-100"
-            tabindex="0"
-          >
-            4
-          </button>
-          <button
-            class="border border-gray-200 rounded px-2 py-1 hover:bg-gray-100"
-            tabindex="0"
-          >
-            5
-          </button>
-          <button
-            aria-label="Next page"
-            class="border border-gray-200 rounded px-2 py-1 text-gray-400 hover:bg-gray-100"
-            tabindex="0"
-          >
-            &gt;
-          </button>
-        </nav>
+
+        <nav id="pagination-container" class="flex items-center gap-1 select-none" role="navigation" aria-label="Pagination Navigation"></nav>
       </div>
     </div>
 
@@ -200,37 +145,120 @@
 @section('js')
 
    <script>
- // Fixed JavaScript code untuk update peminjaman
 
-    function fetchPeminjamanData() {
-        fetch('{{ route('admin.peminjaman-json') }}')
+    const searchInput = document.querySelector('input[placeholder="Search..."]');
+    const statusSelect = document.querySelector('select');
+    let currentPage = 1;
+    let perPage = 10;
+
+    const fetchPeminjamanData = () => {
+        const query = searchInput.value.trim().toLowerCase();
+        const selectedStatus = statusSelect.value;
+        const peminjamanJsonUrl = "{{ route('admin.peminjaman-json') }}";
+        console.log(`${peminjamanJsonUrl}?page=${currentPage}&perPage=${perPage}&search=${encodeURIComponent(query)}&status=${encodeURIComponent(selectedStatus)}`);
+
+        fetch(`${peminjamanJsonUrl}?page=${currentPage}&perPage=${perPage}&search=${encodeURIComponent(query)}&status=${encodeURIComponent(selectedStatus)}`)
             .then(response => response.json())
             .then(data => {
                 const tbody = document.getElementById('peminjaman-table-body');
                 tbody.innerHTML = '';
-                data.data.forEach((peminjaman, index) => {
-                    const tr = document.createElement('tr');
 
+                // const filteredData = data.data.filter(peminjaman => {
+                //     const matchQuery = peminjaman.nomor_surat.toLowerCase().includes(query) ||
+                //                     peminjaman.asal_surat.toLowerCase().includes(query) ||
+                //                     peminjaman.nama_peminjam.toLowerCase().includes(query);
+                //     const matchStatus = (selectedStatus === 'Status : All') || (peminjaman.status === selectedStatus);
+                //     return matchQuery && matchStatus;
+                // });
+
+                const peminjamans = data.data;
+
+                if (peminjamans.length === 0) {
+                    const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">${index + 1}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-normal">${peminjaman.nomor_surat}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">${peminjaman.asal_surat}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">${peminjaman.nama_peminjam}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-normal">${peminjaman.lama_hari} Hari</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold">
-                            ${getStatusBadge(peminjaman.status)}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-normal cursor-pointer hover:underline">
-                            ${getActionButtons(peminjaman)}
+                        <td colspan="7" class="text-center py-6 text-gray-500">
+                            Data tidak tersedia.
                         </td>
                     `;
                     tbody.appendChild(tr);
-                });
+                } else {
+                    peminjamans.forEach((peminjaman, index) => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">${index + 1}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-normal">${peminjaman.nomor_surat}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">${peminjaman.asal_surat}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">${peminjaman.nama_peminjam}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-normal">${peminjaman.lama_hari} Hari</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold">
+                                ${getStatusBadge(peminjaman.status)}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-normal cursor-pointer hover:underline">
+                                ${getActionButtons(peminjaman)}
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+
+                updatePagination(data.current_page, data.last_page);
+                document.getElementById('total-data-text').textContent = `of ${data.total}`;
             })
+
             .catch(error => {
                 console.error('Error fetching data:', error);
             });
+    };
+
+    function updatePagination(current, last) {
+        const paginationContainer = document.getElementById('pagination-container');
+        paginationContainer.innerHTML = '';
+
+        const createButton = (label, page, disabled = false, active = false) => {
+            const button = document.createElement('button');
+            button.textContent = label;
+            button.className = `border border-gray-200 rounded px-2 py-1 ${active ? 'bg-[#0d5c5c] text-white' : 'hover:bg-gray-100'} ${disabled ? 'text-gray-400 cursor-not-allowed' : ''}`;
+            if (!disabled) {
+                button.addEventListener('click', () => {
+                    currentPage = page;
+                    fetchPeminjamanData();
+                });
+            }
+            return button;
+        };
+
+        // Previous
+        paginationContainer.appendChild(createButton('<', current - 1, current === 1));
+
+        for (let i = 1; i <= last; i++) {
+            paginationContainer.appendChild(createButton(i, i, false, i === current));
+        }
+
+        // Next
+        paginationContainer.appendChild(createButton('>', current + 1, current === last));
     }
+
+    // Event listeners
+    searchInput.addEventListener('input', debounce(() => {
+        currentPage = 1;
+        fetchPeminjamanData();
+    }, 300));
+    statusSelect.addEventListener('change', () => {
+        currentPage = 1;
+        fetchPeminjamanData();
+    });
+    document.getElementById('per-page-select').addEventListener('change', (e) => {
+        perPage = parseInt(e.target.value);
+        currentPage = 1;
+        fetchPeminjamanData();
+    });
+
+    // Initial fetch
+    fetchPeminjamanData();
+
+    // // jalankan pertama kali saat halaman load
+    // document.addEventListener('DOMContentLoaded', fetchPeminjamanData);
+
 
     function getStatusBadge(status) {
         let color, text;
@@ -251,6 +279,15 @@
                 color = 'bg-gray-100 text-gray-600';
         }
         return `<span class="${color} px-3 py-1 rounded-full">${status}</span>`;
+    }
+
+    // debounce untuk live search
+    function debounce(func, delay) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
     }
 
     function getActionButtons(peminjaman) {
@@ -676,8 +713,6 @@
             });
         }
     }
-
-
 
     function deletePeminjaman(id) {
         Swal.fire({

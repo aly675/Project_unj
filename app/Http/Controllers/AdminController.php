@@ -37,24 +37,50 @@ class AdminController extends Controller
         return view('admin.peminjaman.peminjaman', compact('peminjamans'));
     }
 
-    public function peminjaman_json()
+    public function peminjaman_json(Request $request)
     {
-        $peminjamans = peminjaman::orderBy('created_at', 'desc')->get();
+        $perPage = $request->get('perPage', 10); // default 10
+        $page = $request->get('page', 1);
+        $search = $request->get('search', '');
+        $status = $request->get('status', '');
+
+        $query = peminjaman::query();
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('nomor_surat', 'like', "%$search%")
+                ->orWhere('asal_surat', 'like', "%$search%")
+                ->orWhere('nama_peminjam', 'like', "%$search%");
+            });
+        }
+
+        if ($status && $status != 'Status : All') {
+            $query->where('status', $status);
+        }
+
+        $query->orderBy('created_at', 'desc');
+
+        $paginator = $query->paginate($perPage, ['*'], 'page', $page);
+        $peminjamans = $paginator->items();
 
         Carbon::setLocale('id');
-        foreach ($peminjamans as $p) {
-            $decoded = json_decode($p->tanggal_peminjaman, true) ?? [];
-            $formatted = collect($decoded)->map(function ($tgl) {
-                return Carbon::parse($tgl)->translatedFormat('l, d F Y');
-            });
-            $p->tanggal_formatted = $formatted;
-            $p->lama_hari = count($decoded);
-            $p->lampiran_url = $p->lampiran ? asset('storage/' . $p->lampiran) : null;
-        }
+            foreach ($peminjamans as $p) {
+                $decoded = json_decode($p->tanggal_peminjaman, true) ?? [];
+                $formatted = collect($decoded)->map(function ($tgl) {
+                    return Carbon::parse($tgl)->translatedFormat('l, d F Y');
+                });
+                $p->tanggal_formatted = $formatted;
+                $p->lama_hari = count($decoded);
+                $p->lampiran_url = $p->lampiran ? asset('storage/' . $p->lampiran) : null;
+            }
 
         return response()->json([
             'status' => 'success',
-            'data' => $peminjamans
+            'data' => $peminjamans,
+            'current_page' => $paginator->currentPage(),
+            'last_page' => $paginator->lastPage(),
+            'per_page' => $paginator->perPage(),
+            'total' => $paginator->total(),
         ]);
     }
 
