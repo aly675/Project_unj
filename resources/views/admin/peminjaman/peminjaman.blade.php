@@ -163,14 +163,6 @@
                 const tbody = document.getElementById('peminjaman-table-body');
                 tbody.innerHTML = '';
 
-                // const filteredData = data.data.filter(peminjaman => {
-                //     const matchQuery = peminjaman.nomor_surat.toLowerCase().includes(query) ||
-                //                     peminjaman.asal_surat.toLowerCase().includes(query) ||
-                //                     peminjaman.nama_peminjam.toLowerCase().includes(query);
-                //     const matchStatus = (selectedStatus === 'Status : All') || (peminjaman.status === selectedStatus);
-                //     return matchQuery && matchStatus;
-                // });
-
                 const peminjamans = data.data;
 
                 if (peminjamans.length === 0) {
@@ -243,10 +235,12 @@
         currentPage = 1;
         fetchPeminjamanData();
     }, 300));
+    
     statusSelect.addEventListener('change', () => {
         currentPage = 1;
         fetchPeminjamanData();
     });
+
     document.getElementById('per-page-select').addEventListener('change', (e) => {
         perPage = parseInt(e.target.value);
         currentPage = 1;
