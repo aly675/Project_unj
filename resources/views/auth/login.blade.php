@@ -16,6 +16,12 @@
       body {
         font-family: 'Poppins', sans-serif;
       }
+
+      input:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0px 1000px transparent inset;
+        -webkit-text-fill-color: #fff; /* ganti kalau mau teksnya putih */
+        transition: background-color 5000s ease-in-out 0s;
+      }
     </style>
   </head>
   <body
