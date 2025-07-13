@@ -4,7 +4,7 @@
 
 @section('main')
 
-     <h1 class="text-2xl font-bold text-gray-900 mb-6">Ringkasan</h1>
+     <h1 class="text-2xl font-semibold text-gray-900 mb-6">Ringkasan</h1>
 
             <!-- Statistics Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

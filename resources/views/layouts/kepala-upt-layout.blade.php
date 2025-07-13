@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      <nav class="flex flex-col mt-6 text-teal-300 text-sm font-medium">
+      <nav class="flex flex-col mt-6 text-white text-sm font-medium">
         <a class="flex items-center gap-3 px-7 py-3 hover:text-white transition-colors
          {{ request()->routeIs('kepalaupt.dashboard-page') ? 'bg-teal-700 text-white font-semibold' : '' }}"
           href="{{route('kepalaupt.dashboard-page')}}">
@@ -56,14 +56,20 @@
   <div class="flex-1 flex flex-col">
    <!-- Header -->
    <header class="flex justify-between items-center bg-white px-6 py-4 border-b border-gray-200">
-    <div class="flex items-center gap-2 text-gray-400 text-sm font-normal">
+    <div class="flex items-center gap-1.5 text-gray-400 text-sm font-normal md:text-base">
      <img alt="" onclick="toggleSidebar()" class="fas text-base" src="{{asset('assets/images/icon/sidebar-icon.svg')}}">
-     <a href="{{route('kepalaupt.dashboard-page')}}">
-      Kepala UPT
-     </a>
-     <span class=" {{ request()->routeIs('kepalaupt.dashboard-page') ? 'text-gray-900 font-semibold' : '' }}">
-      / @yield('page')
-     </span>
+      <span class="ml-2 {{ request()->routeIs('kepalaupt.dashboard-page') ? 'text-gray-700 font-semibold ' : '' }}">
+            <a href="{{route('kepalaupt.dashboard-page')}}">Kepala PUSTIKOM</a>
+        </span>
+       @if(request()->routeIs('kepalaupt.dashboard-page'))
+            <span class="text-gray-700 font-semibold">/ Dashboard</span>
+        @endif
+       @if(request()->routeIs('kepalaupt.pengajuan-surat-page'))
+            <span class="text-gray-700 font-semibold">/ Pengajuan Surat</span>
+        @endif
+       @if(request()->routeIs('kepalaupt.kalender'))
+            <span class="text-gray-700 font-semibold">/ Kalender</span>
+        @endif
     </div>
 
 

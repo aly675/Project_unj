@@ -32,7 +32,7 @@
 @section('main')
 
 
-    <h2 class="text-gray-900 font-extrabold text-2xl mb-6">Peminjaman</h2>
+    <h2 class="text-gray-900 font-semibold text-2xl mb-6">Peminjaman</h2>
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
       <div class="flex gap-3 flex-1 max-w-md">
         <div class="relative flex-1">
@@ -235,7 +235,7 @@
         currentPage = 1;
         fetchPeminjamanData();
     }, 300));
-    
+
     statusSelect.addEventListener('change', () => {
         currentPage = 1;
         fetchPeminjamanData();

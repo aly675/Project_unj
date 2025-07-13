@@ -8,7 +8,7 @@
 
 @section('main')
            <div class="mb-6">
-          <h1 class="text-2xl font-bold text-gray-900 mb-4">Daftar Fasilitas</h1>
+          <h1 class="text-2xl font-semibold text-gray-900 mb-4">Daftar Fasilitas</h1>
           <div class="flex flex-wrap gap-4 items-center">
             <div class="relative w-1/3">
               <input id="searchInput" type="search" placeholder="Search..." class="w-full border border-gray-300 rounded-md pl-9 pr-3 py-2 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600" />

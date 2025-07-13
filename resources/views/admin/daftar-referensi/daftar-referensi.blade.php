@@ -32,7 +32,7 @@
 
 @section('main')
 <section class="flex-1">
-    <h1 class="text-gray-900 font-extrabold text-2xl mb-4">Daftar Ruangan</h1>
+    <h1 class="text-gray-900 font-semibold text-2xl mb-4">Daftar Ruangan</h1>
     <div class="flex flex-wrap items-center gap-3 mb-6 text-xl text-gray-400">
         {{-- Search & Add Button --}}
         <div class="flex items-center justify-between gap-4 w-full">

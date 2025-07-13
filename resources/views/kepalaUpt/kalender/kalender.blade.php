@@ -2,12 +2,9 @@
 
 @section('title', 'Kalender')
 
-@section('page', 'Kalender')
-
 @section('style')
 <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
       background-color: #f9f9f9;
       margin: 20px;
     }
