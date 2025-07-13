@@ -7,6 +7,7 @@ use App\Models\Ruangan;
 use App\Models\Fasilitas;
 use App\Models\peminjaman;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,6 +17,76 @@ class AdminController extends Controller
     {
         $ruangan = Ruangan::count();
         return view('admin.dashboard', compact("ruangan"));
+    }
+
+    public function dashboard_summary_json()
+    {
+        try {
+            $totalSurat = Peminjaman::count();
+            $menungguPersetujuan = Peminjaman::where('status', 'Menunggu Persetujuan')->count();
+            $menungguVerifikasi = Peminjaman::where('status', 'Menunggu Verifikasi')->count();
+            $suratDitolak = Peminjaman::where('status', 'Ditolak')->count();
+            $suratDisetujui = Peminjaman::where('status', 'Diterima')->count();
+
+            $totalFasilitas = Fasilitas::count();
+            $totalRuangan = Ruangan::count();
+
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'total_surat' => $totalSurat,
+                    'menunggu_persetujuan' => $menungguPersetujuan,
+                    'menunggu_verifikasi' => $menungguVerifikasi,
+                    'surat_ditolak' => $suratDitolak,
+                    'surat_disetujui' => $suratDisetujui,
+                    'total_fasilitas' => $totalFasilitas,
+                    'total_ruangan' => $totalRuangan,
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function dashboard_peminjaman_table_json(Request $request)
+    {
+        $perPage = $request->get('perPage', 5);
+        $page = $request->get('page', 1);
+        $search = $request->get('search', '');
+        $status = $request->get('status', '');
+
+        $query = Peminjaman::query();
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('nomor_surat', 'like', "%$search%")
+                ->orWhere('asal_surat', 'like', "%$search%")
+                ->orWhere('nama_peminjam', 'like', "%$search%");
+            });
+        }
+
+        if ($status && $status != 'Status : All') {
+            $query->where('status', $status);
+        }
+
+        $query->orderBy('created_at', 'desc');
+
+        $paginator = $query->paginate($perPage, ['id', 'nomor_surat', 'asal_surat', 'nama_peminjam', 'status'], 'page', $page);
+        $peminjamans = $paginator->items();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $peminjamans,
+            'current_page' => $paginator->currentPage(),
+            'last_page' => $paginator->lastPage(),
+            'per_page' => $paginator->perPage(),
+            'total' => $paginator->total(),
+            'from' => $paginator->firstItem() ?? 0,
+            'to' => $paginator->lastItem() ?? 0,
+        ]);
     }
 
     public function peminjaman_page()
@@ -88,7 +159,12 @@ class AdminController extends Controller
     public function cetak($id)
     {
         $data = peminjaman::findOrFail($id);
-        return view('pdf/cetak-pdf', compact('data'));
+        $pdf = Pdf::loadView('pdf/cetak-pdf', compact('data'));
+
+        $safeFilename = str_replace(['/', '\\'], '-', $data->nomor_surat) . '.pdf';
+
+        return $pdf->stream($safeFilename, compact('data'));
+        // return view('pdf.cetak-pdf');
     }
 
     public function delete_peminjaman($id)

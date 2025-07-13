@@ -61,8 +61,8 @@
         Tambah Data
       </a>
     </div>
-    <div class="overflow-x-auto bg-white rounded-lg shadow">
-      <table class="min-w-full divide-y divide-gray-200">
+    <div class="overflow-x-auto max-w-full bg-white rounded-lg shadow">
+      <table class="min-w-full table-fixed divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>
             <th
@@ -222,13 +222,51 @@
         // Previous
         paginationContainer.appendChild(createButton('<', current - 1, current === 1));
 
-        for (let i = 1; i <= last; i++) {
-            paginationContainer.appendChild(createButton(i, i, false, i === current));
+        // Selalu tampilkan halaman 1
+        paginationContainer.appendChild(createButton(1, 1, false, current === 1));
+
+        let start = current - 2;
+        let end = current + 2;
+
+        if (start <= 2) {
+            start = 2;
+            end = 5;
+        }
+        if (end >= last - 1) {
+            end = last - 1;
+            start = last - 4;
+            if (start < 2) start = 2;
+        }
+
+        if (start > 2) {
+            const dots = document.createElement('span');
+            dots.textContent = '...';
+            dots.className = 'px-2 text-gray-500';
+            paginationContainer.appendChild(dots);
+        }
+
+        for (let i = start; i <= end; i++) {
+            if (i > 1 && i < last) {
+                paginationContainer.appendChild(createButton(i, i, false, i === current));
+            }
+        }
+
+        if (end < last - 1) {
+            const dots = document.createElement('span');
+            dots.textContent = '...';
+            dots.className = 'px-2 text-gray-500';
+            paginationContainer.appendChild(dots);
+        }
+
+        // Selalu tampilkan halaman terakhir jika last > 1
+        if (last > 1) {
+            paginationContainer.appendChild(createButton(last, last, false, current === last));
         }
 
         // Next
         paginationContainer.appendChild(createButton('>', current + 1, current === last));
     }
+
 
     // Event listeners
     searchInput.addEventListener('input', debounce(() => {

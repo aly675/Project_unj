@@ -1,24 +1,19 @@
- function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const mainContent = document.getElementById('main-content');
-      const sidebarTexts = document.querySelectorAll('.sidebar-text');
-      const sidebarLabels = document.getElementById('sidebar-labels');
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+        const sidebarTexts = document.querySelectorAll('.sidebar-text');
+        const sidebarLabels = document.getElementById('sidebar-labels');
 
-      // Toggle width
-      sidebar.classList.toggle('w-64');
-      sidebar.classList.toggle('w-20');
+        // Toggle width
+        sidebar.classList.toggle('w-64');
+        sidebar.classList.toggle('w-20');
 
 
-      // Toggle visibility of text labels
-      sidebarTexts.forEach(text => text.classList.toggle('hidden'));
-      sidebarLabels?.classList.toggle('hidden');
+        // Toggle visibility of text labels
+        sidebarTexts.forEach(text => text.classList.toggle('hidden'));
+        sidebarLabels?.classList.toggle('hidden');
 
-        if (window.myChart) {
-            setTimeout(() => {
-                window.myChart.resize();
-            }, 250); // Delay opsional buat animasi
         }
-    }
 
     const button = document.getElementById('profile-button');
     const dropdown = document.getElementById('profile-dropdown');

@@ -91,7 +91,14 @@
                             'bg-red-100 text-red-800' => $data->status === 'Ditolak',
                             'bg-yellow-100 text-yellow-800' => !in_array($data->status, ['Menunggu Verifikasi', 'Ditolak']),
                         ])>
-                            {{ $data->status === 'Menunggu Verifikasi' ? 'Disetujui' : $data->status }}
+                            {{-- {{ $data->status === 'Menunggu Verifikasi' ? 'Disetujui' : $data->status }} --}}
+                            @if($data->status === 'Ditolak')
+                                Ditolak
+                                @elseif ($data->status === 'Menunggu Persetujuan')
+                                Menunggu Persetujuan
+                                @else
+                                disetujui
+                            @endif
                         </span>
 
 

@@ -27,6 +27,8 @@ Route::middleware(['guest'])->group(function(){
 
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get("/", [AdminController::class, "dashboard_page"])->name("admin.dashboard-page");
+    Route::get('admin/dashboard-summary-json', [AdminController::class, 'dashboard_summary_json'])->name('admin.dashboard-summary-json');
+    Route::get('admin/dashboard-peminjaman-json', [AdminController::class, 'dashboard_peminjaman_table_json'])->name('admin.dashboard-peminjaman-json');
 
     Route::prefix('/peminjaman')->group( function(){
         Route::get('/admin/peminjaman/json', [AdminController::class, 'peminjaman_json'])->name('admin.peminjaman-json');
