@@ -13,7 +13,7 @@ class PeminjamanSeeder extends Seeder
         $faker = Faker::create('id_ID');
         $statuses = ['Menunggu Persetujuan', 'Menunggu Verifikasi', 'Diterima', 'Ditolak'];
 
-        for ($i = 1; $i <= 250; $i++) {
+        for ($i = 1; $i <= 10000; $i++) {
             $nomorSurat = str_pad($i, 4, '0', STR_PAD_LEFT) . '/UNJ/PUSTIKOM/2025';
             $tanggal = now()->setYear(2026)->subDays(rand(1, 60))->format('Y-m-d');
 

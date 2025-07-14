@@ -10,7 +10,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
     <!-- Toastify -->
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
@@ -67,7 +67,7 @@
  <body class="bg-gray-100 min-h-screen flex">
   <!-- Sidebar -->
      <aside id="sidebar" class="bg-teal-800 w-64 transition-all duration-300 ease-in-out min-h-screen flex flex-col">
-      <div class="flex items-center gap-3 px-6 py-6 border-b border-teal-700">
+      <div class="flex items-center gap-3 px-6 py-7 border-b border-teal-700">
         <img alt="logo unj" class="w-8 h-8" src="{{asset('assets/images/icon/logo-unj.svg')}}">
         <div id="sidebar-labels">
           <h1 class="text-white font-bold text-sm uppercase leading-none tracking-wider">PUSTIKOM</h1>

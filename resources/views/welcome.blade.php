@@ -231,7 +231,7 @@
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="facility-tag"><i class="fas fa-desktop"></i> 30 PC</span>
                 <span class="facility-tag"><i class="fas fa-snowflake"></i> AC</span>
-                <span class="facility-tag"><i class="fas fa-projector"></i> Proyektor</span>
+                <span class="facility-tag"><i class="fas fa-video"></i> Proyektor</span>
                 <span class="facility-tag"><i class="fas fa-wifi"></i> WiFi</span>
               </div>
               <div class="mt-auto pt-3 border-t border-gray-100 text-sm text-gray-500"><i class="fas fa-clock mr-2 text-[#006569]"></i> Senin-Jumat: 08.00-21.00 | Sabtu: 09.00-17.00</div>

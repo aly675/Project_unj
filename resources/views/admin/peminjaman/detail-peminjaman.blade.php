@@ -99,7 +99,7 @@
                         onclick="closeModalDetail()"
                         class="bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 px-5 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                     >
-                        close
+                        Close
                     </button>
                 </div>
             </div>

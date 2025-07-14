@@ -19,108 +19,160 @@
 
 @section('main')
 
-    <div class="bg-white warna rounded-lg shadow-sm p-6">
-                <h1 class="text-xl font-semibold text-gray-800 mb-6">Form Input Surat Peminjaman</h1>
+    <h1 class="text-xl font-semibold text-gray-800 mb-4">
+  Form Input Surat Peminjaman
+</h1>
 
-                    <form id="formPeminjaman" onsubmit="handleSubmit(event)" class="space-y-6" method="POST" action="{{ route('admin.tambah-peminjaman') }}" enctype="multipart/form-data">
-                    @csrf
-                    <div>
-                        <label for="nomor-surat" class="text-sm font-medium text-gray-700 mb-2 block">
-                            Nomor Surat
-                        </label>
-                        <input id="nomor-surat" placeholder="0000/UNJ/PUSTIKOM/2025" name="nomor-surat" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
-                    </div>
+<div class="bg-white rounded-lg shadow-sm pt-1 px-6 pb-6">
+  <form
+    id="formPeminjaman"
+    onsubmit="handleSubmit(event)"
+    class="space-y-6"
+    method="POST"
+    action="{{ route('admin.tambah-peminjaman') }}"
+    enctype="multipart/form-data"
+  >
+    @csrf
 
-                    <!-- Asal Surat -->
-                    <div>
-                        <label for="asal-surat" class="text-sm font-medium text-gray-700 mb-2 block">
-                            Asal Surat
-                        </label>
-                        <input id="asal-surat" placeholder="PUSTIKOM" name="asal-surat" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
-                    </div>
+    <!-- Nomor Surat -->
+    <div>
+      <label for="nomor-surat" class="text-sm font-medium text-gray-700 mb-2 block">
+        Nomor Surat
+      </label>
+      <input
+        id="nomor-surat"
+        name="nomor-surat"
+        type="text"
+        placeholder="0000/UNJ/PUSTIKOM/2025"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+      />
+    </div>
 
-                    <!-- Nama Peminjam -->
-                    <div>
-                        <label for="nama-peminjam" class="text-sm font-medium text-gray-700 mb-2 block">
-                            Nama Peminjam
-                        </label>
-                        <input id="nama-peminjam" placeholder="Jonedoe" name="nama-peminjam" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
-                    </div>
+    <!-- Asal Surat -->
+    <div>
+      <label for="asal-surat" class="text-sm font-medium text-gray-700 mb-2 block">
+        Asal Surat
+      </label>
+      <input
+        id="asal-surat"
+        name="asal-surat"
+        type="text"
+        placeholder="PUSTIKOM"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+      />
+    </div>
 
-                    <!-- Jumlah Hari -->
-                    <div>
-                        <label class="text-sm font-medium text-gray-700 mb-2 block">Jumlah Hari</label>
-                        <input
-                            id="jumlah-hari"
-                            type="number"
-                            name="jumlah-hari"
-                            min="1"
-                            value="1"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
-                            readonly
-                        />
-                    </div>
+    <!-- Nama Peminjam -->
+    <div>
+      <label for="nama-peminjam" class="text-sm font-medium text-gray-700 mb-2 block">
+        Nama Peminjam
+      </label>
+      <input
+        id="nama-peminjam"
+        name="nama-peminjam"
+        type="text"
+        placeholder="Jonedoe"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+      />
+    </div>
 
-                    <!-- Tanggal Peminjaman -->
-                    <div id="tanggal-peminjaman-container" class="mt-4 space-y-2"></div>
+    <!-- Jumlah Hari -->
+    <div>
+      <label class="text-sm font-medium text-gray-700 mb-2 block">
+        Jumlah Hari
+      </label>
+      <input
+        id="jumlah-hari"
+        name="jumlah-hari"
+        type="number"
+        min="1"
+        value="1"
+        readonly
+        class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
+      />
+    </div>
 
-                    <!-- Tombol Tambah Tanggal -->
-                    <button
-                        type="button"
-                        onclick="tambahTanggalInput()"
-                        class="mt-4 bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md transition-colors"
-                    >
-                        Tambah Tanggal
-                    </button>
+    <!-- Tanggal Peminjaman -->
+    <div id="tanggal-peminjaman-container" class="mt-4 space-y-2"></div>
 
-                    <!-- Jumlah Ruangan -->
-                    <div>
-                        <label for="jumlah-ruangan" class="text-sm font-medium text-gray-700 mb-2 block">
-                            Jumlah Ruangan
-                        </label>
-                        <input id="jumlah-ruangan" min="1" value="1" required name="jumlah-ruangan" type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
-                    </div>
+    <!-- Tombol Tambah Tanggal -->
+    <button
+      type="button"
+      onclick="tambahTanggalInput()"
+      class="mt-4 bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md transition-colors"
+    >
+      Tambah Tanggal
+    </button>
 
-                    <!-- Jumlah PC -->
-                    <div>
-                        <label for="jumlah-pc" class="text-sm font-medium text-gray-700 mb-2 block">
-                            Jumlah PC
-                        </label>
-                        <input id="jumlah-pc" min="1" value="1" required name="jumlah-pc" type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
-                    </div>
+    <!-- Jumlah Ruangan -->
+    <div>
+      <label for="jumlah-ruangan" class="text-sm font-medium text-gray-700 mb-2 block">
+        Jumlah Ruangan
+      </label>
+      <input
+        id="jumlah-ruangan"
+        name="jumlah-ruangan"
+        type="number"
+        min="1"
+        value="1"
+        required
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+      />
+    </div>
 
-                    <!-- Lampiran -->
-                    <div>
-                        <label for="lampiran" class="text-sm font-medium text-gray-700 mb-2 block">
-                            Lampiran
-                        </label>
-                        <input
-                            id="lampiran"
-                            type="file"
-                            accept=".pdf"
-                            name="lampiran"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
-                        />
-                        <p class="text-xs text-gray-500 mt-1">
-                            Format file yang diperbolehkan hanya pdf dengan ukuran maksimum 2 MB
-                        </p>
-                    </div>
+    <!-- Jumlah PC -->
+    <div>
+      <label for="jumlah-pc" class="text-sm font-medium text-gray-700 mb-2 block">
+        Jumlah PC
+      </label>
+      <input
+        id="jumlah-pc"
+        name="jumlah-pc"
+        type="number"
+        min="1"
+        value="1"
+        required
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+      />
+    </div>
 
-                    <!-- Action Buttons -->
-                    <div class="flex justify-end space-x-3 pt-6">
-                        <button
-                            type="button"
-                            onclick="handleCancel()"
-                            class="bg-red-600 hover:bg-red-700 text-white border border-red-600 px-6 py-2 rounded-md transition-colors"
-                        >
-                            Batal
-                        </button>
-                        <button type="submit" onclick="" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-md transition-colors">
-                            Simpan
-                        </button>
-                    </div>
-                </form>
-            </div>
+    <!-- Lampiran -->
+    <div>
+      <label for="lampiran" class="text-sm font-medium text-gray-700 mb-2 block">
+        Lampiran
+      </label>
+      <input
+        id="lampiran"
+        name="lampiran"
+        type="file"
+        accept=".pdf"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500
+        file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+      />
+      <p class="text-xs text-gray-500 mt-1">
+        Format file yang diperbolehkan hanya PDF dengan ukuran maksimum 2 MB
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-end space-x-3 pt-6">
+      <button
+        type="button"
+        onclick="handleCancel()"
+        class="bg-red-600 hover:bg-red-700 text-white border border-red-600 px-6 py-2 rounded-md transition-colors"
+      >
+        Batal
+      </button>
+      <button
+        type="submit"
+        class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-md transition-colors"
+      >
+        Simpan
+      </button>
+    </div>
+  </form>
+</div>
+
 
 @endsection
 

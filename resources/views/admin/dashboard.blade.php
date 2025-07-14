@@ -39,64 +39,108 @@
             </div>
 
 
-            <!-- User Table -->
-            <div class="bg-white rounded-lg shadow-sm">
-                <div class="p-6 border-b">
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-                        <div>
-                            <h2 class="text-lg font-semibold text-gray-900">Daftar Surat</h2>
-                            <p class="text-sm text-gray-500 mt-1">Pengajuan Surat</p>
-                        </div>
-                        <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
-                            <div class="relative">
-                                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                                <input type="text" placeholder="Search" class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pustikom-teal focus:border-transparent">
-                            </div>
-                            <select id="dashboard-status-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pustikom-teal focus:border-transparent">
-                                <option value="">Status: All</option>
-                                <option value="Diterima">Diterima</option>
-                                <option value="Menunggu Verifikasi">Menunggu Verifikasi</option>
-                                <option value="Menunggu Persetujuan">Menunggu Persetujuan</option>
-                                <option value="Ditolak">Ditolak</option>
-                            </select>
-                            <select id="dashboard-per-page-select" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pustikom-teal focus:border-transparent">
-                                <option value="5">5</option>
-                                <option value="10" selected>10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+           <!-- Wrapper -->
+<div class="bg-white rounded-lg shadow-sm">
+  <!-- Header -->
+  <div class="p-6 border-b">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-900">Daftar Surat</h2>
+        <p class="text-sm text-gray-500 mt-1">Pengajuan Surat</p>
+      </div>
+      <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+        <!-- Search -->
+        <div class="relative">
+          <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+          <input
+            type="text"
+            placeholder="Search"
+            class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent appearance-none"
+          />
+        </div>
 
-                <!-- Table -->
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nomer Surat</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NAMA PEMINJAM</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ASAL SURAT</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dashboard-table-body" class="bg-white divide-y divide-gray-200">
-                            <!-- Data will be fill here -->
-                        </tbody>
-                    </table>
-                </div>
+        <!-- Status Select -->
+        <div class="relative">
+          <select
+            id="dashboard-status-filter"
+            class="appearance-none px-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent"
+          >
+            <option value="">Status: All</option>
+            <option value="Diterima">Diterima</option>
+            <option value="Menunggu Verifikasi">Menunggu Verifikasi</option>
+            <option value="Menunggu Persetujuan">Menunggu Persetujuan</option>
+            <option value="Ditolak">Ditolak</option>
+          </select>
+          <!-- Custom Arrow -->
+          <svg
+            class="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
 
-                <!-- Pagination -->
-                <div class="px-6 py-4 border-t border-gray-200">
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
-                        <p id="dashboard-entries-info" class="text-sm text-gray-500">Showing data 0 to 0 of 0 entries</p>
-                        <div id="dashboard-pagination-container" class="flex items-center space-x-2">
-                            <!-- Pagination buttons will be injected here -->
-                        </div>
-                    </div>
-                </div>
+        <!-- Per Page Select -->
+        <div class="relative">
+          <select
+            id="dashboard-per-page-select"
+            class="appearance-none px-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent"
+          >
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
+          <!-- Custom Arrow -->
+          <svg
+            class="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- Table -->
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nomer Surat</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Peminjam</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asal Surat</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+        </tr>
+      </thead>
+      <tbody id="dashboard-table-body" class="bg-white divide-y divide-gray-200">
+        <!-- Data rows will be inserted here -->
+      </tbody>
+      <tfoot class="bg-gray-50">
+        <tr>
+            <td colspan="4" class="px-6 py-4 border-t border-gray-200 rounded-b-lg">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+                <p id="dashboard-entries-info" class="text-sm text-gray-500">
+                Showing data 0 to 0 of 0 entries
+                </p>
+                <div id="dashboard-pagination-container" class="flex items-center space-x-2">
+                <!-- Pagination buttons -->
+                </div>
             </div>
+            </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
 
 @endsection
 

@@ -11,8 +11,7 @@
             border: 1px solid #6ee7b7;
             border-radius: 6px;
             font-size: 14px;
-            font-weight: 500;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
         }
@@ -36,24 +35,37 @@
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
       <div class="flex gap-3 flex-1 max-w-md">
         <div class="relative flex-1">
-          <input
+            <input
             class="w-full border border-gray-300 rounded-md py-2 pl-3 pr-10 text-sm text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent"
             placeholder="Search..."
             type="text"
-          />
-          <i
+            />
+            <i
             class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"
-          ></i>
+            ></i>
         </div>
-        <select
-            class="border border-gray-300 rounded-md py-2 px-3 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent"
-        >
+
+        <div class="relative w-48">
+            <select
+            class="w-full border border-gray-300 rounded-md py-2 pl-3 pr-8 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent appearance-none"
+            >
             <option>Status : All</option>
             <option>Menunggu Persetujuan</option>
             <option>Menunggu Verifikasi</option>
             <option>Diterima</option>
             <option>Ditolak</option>
-        </select>
+            </select>
+            <!-- Custom Arrow -->
+            <svg
+            class="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </div>
       </div>
       <a
         href="{{route('admin.tambah-peminjaman-page')}}"
@@ -115,20 +127,36 @@
     </tbody>
 
       </table>
-      <div
-        class="mt-6 flex flex-col md:flex-row md:items-center md:justify-between text-sm text-gray-500 px-7 pb-5 font-light"
-      >
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between text-sm text-gray-500 px-7 pb-5 pt-4 border-t border-gray-200 font-light">
         <div class="mb-3 md:mb-0 flex items-center gap-1">
-            <span>Showing</span>
-            <select id="per-page-select" class="border border-gray-200 rounded px-2 py-1 text-sm text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#0d5c5c]">
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
+        <span>Showing</span>
+         <div class="relative">
+            <select
+            id="per-page-select"
+            class="appearance-none border border-gray-200 rounded px-2 pr-8 py-1 text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent"
+            >
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
             </select>
-            <span id="total-data-text">of 0</span>
+            <svg
+            class="w-4 h-4 text-gray-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+         <span id="total-data-text">of 0</span>
         </div>
-
-        <nav id="pagination-container" class="flex items-center gap-1 select-none" role="navigation" aria-label="Pagination Navigation"></nav>
+        <nav
+        id="pagination-container"
+        class="flex items-center gap-1 select-none"
+        role="navigation"
+        aria-label="Pagination Navigation"
+        ></nav>
       </div>
     </div>
 
@@ -185,7 +213,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold">
                                 ${getStatusBadge(peminjaman.status)}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-normal cursor-pointer hover:underline">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-normal cursor-pointer">
                                 ${getActionButtons(peminjaman)}
                             </td>
                         `;
@@ -326,7 +354,7 @@
         if (peminjaman.status === 'Diterima' || peminjaman.status === 'Ditolak') {
             return `<a href="/admin/peminjaman/cetak-pdf-balasan/${peminjaman.id}"
                     target="_blank"
-                    class="print-out-button block w-full text-center text-center text-sm"
+                    class="print-out-button block w-full text-center text-sm"
                     >Cetak</a>`;
         } else {
             return `
@@ -775,6 +803,7 @@
                     // Hapus baris tabel tanpa reload
                     const row = document.querySelector(`button[onclick="deletePeminjaman(${id})"]`).closest('tr');
                     row.remove();
+                    fetchPeminjamanData()
 
                     // Tampilkan toast sukses SweetAlert
                     Swal.fire({
