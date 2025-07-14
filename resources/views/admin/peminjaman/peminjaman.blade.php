@@ -179,8 +179,8 @@
                         tr.innerHTML = `
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">${index + 1}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-normal">${peminjaman.nomor_surat}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">${peminjaman.asal_surat}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">${peminjaman.nama_peminjam}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 font-normal">${peminjaman.asal_surat}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 font-normal">${peminjaman.nama_peminjam}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-normal">${peminjaman.lama_hari} Hari</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold">
                                 ${getStatusBadge(peminjaman.status)}
@@ -400,10 +400,10 @@
         statusElement.className = 'inline-flex px-2 py-1 text-sm font-medium rounded-full ' + getStatusClasses(data.status);
         const lampiranLink = document.getElementById('modal_lampiran_link');
         if (data.lampiran) {
-            lampiranLink.href = `/storage/${data.lampiran}`;
+            lampiranLink.href = `/storage/lampiran-peminjaman/${data.lampiran}`;
             lampiranLink.classList.remove('hidden');
         } else {
-            lampiranLink.href = `/storage/`;
+            lampiranLink.href = `/storage/lampiran-peminjaman/`;
         }
 
         // Render tanggal
