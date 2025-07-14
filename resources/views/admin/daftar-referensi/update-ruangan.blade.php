@@ -8,7 +8,7 @@
             type="text"
             id="nomor-ruangan"
             name="nomor_ruangan"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pustikom-teal focus:border-transparent"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
         >
     </div>
 
@@ -20,7 +20,7 @@
             type="text"
             id="nama-ruangan"
             name="nama_ruangan"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pustikom-teal focus:border-transparent"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
         >
     </div>
 
@@ -32,7 +32,7 @@
             type="number"
             id="kapasitas"
             name="kapasitas"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pustikom-teal focus:border-transparent"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
         >
     </div>
 
@@ -42,26 +42,36 @@
         </label>
         <div id="fasilitasContainer">
             <div class="fasilitas-item flex items-center space-x-3 mb-3">
-                <select name="fasilitas[]" class="w-64 px-3 py-2 border border-gray-300 rounded-md">
+                <div class="relative w-64">
+                <select
+                    name="fasilitas[]"
+                    class="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                >
                     @foreach ($listFasilitas as $fasilitas)
-                        <option value="{{ $fasilitas->id }}">{{ $fasilitas->nama }}</option>
+                    <option value="{{ $fasilitas->id }}">{{ $fasilitas->nama }}</option>
                     @endforeach
                 </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+                </div>
                 <div class="relative">
                     <input
                         type="number"
                         value="1"
                         min="1"
                         name="jumlah[]"
-                        class="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pustikom-teal focus:border-transparent text-center"
+                        class="appearance-none w-16 px-3 py-2 border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                     >
                     <div class="absolute right-1 top-1/2 transform -translate-y-1/2 flex flex-col">
-                        <button type="button" onclick="incrementQuantity(this)" class="text-gray-400 hover:text-gray-600">
+                        <button type="button" onclick="incrementQuantity(this)" class="text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
                             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"/>
                             </svg>
                         </button>
-                        <button type="button" onclick="decrementQuantity(this)" class="text-gray-400 hover:text-gray-600">
+                        <button type="button" onclick="decrementQuantity(this)" class="text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
                             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
                             </svg>

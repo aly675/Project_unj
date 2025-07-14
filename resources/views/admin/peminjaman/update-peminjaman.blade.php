@@ -19,7 +19,7 @@
   </div>
 
   <!-- Modal Body -->
-  <div class="px-6 py-6 max-h-[80vh] overflow-y-auto">
+  <div class="px-6 py-6 max-h-[80vh] overflow-y-auto scrollbar-modern">
 
     <form method="POST" onsubmit="handleSubmit(event)" enctype="multipart/form-data" id="updatePeminjamanForm">
       @csrf

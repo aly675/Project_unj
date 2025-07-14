@@ -26,7 +26,6 @@
         border: 2px solid transparent;       /* spacing */
         background-clip: content-box;
         }
-
     </style>
 @endsection
 
@@ -66,22 +65,26 @@
 
 </section>
 
-<div id="modalTambahRuangan"
-     class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black bg-opacity-0 opacity-0 scale-95
-            transition-all duration-300 ease-out">
-    <div class="relative w-full max-w-3xl bg-white rounded-lg shadow-xl scale-95 transition-transform duration-300">
-        <div class="bg-teal-800 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
-            <h1 class="text-xl font-semibold">Form Edit Ruangan</h1>
-            <button onclick="tutupModalRuangan()" class="text-white text-2xl hover:text-gray-300">&times;</button>
-        </div>
+<div id="modalTambahRuangan" class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black/50 transition-all duration-300 ease-out">
+  <div class="relative w-full max-w-3xl bg-white rounded-xl shadow-2xl transform transition-all duration-300 scale-95">
 
-        <div class="max-h-[90vh] overflow-y-auto scrollbar-modern p-2">
-            <div class="bg-white rounded-lg border p-6">
-                @include('admin.daftar-referensi.update-ruangan')
-            </div>
-        </div>
+    <!-- Header -->
+    <div class="bg-teal-800 text-white flex items-center justify-between px-6 py-4 rounded-t-lg">
+      <h2 class="text-lg font-semibold">Form Edit Ruangan</h2>
+      <button onclick="tutupModalRuangan()" class="p-1 rounded hover:bg-white hover:bg-opacity-10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
     </div>
+
+    <!-- Body -->
+    <div class="px-6 pb-6 max-h-[80vh] overflow-y-auto scrollbar-modern">
+     @include('admin.daftar-referensi.update-ruangan')
+    </div>
+  </div>
 </div>
+
 
 @endsection
 
@@ -110,7 +113,7 @@
                             fasilitasRows += `
                                 <tr>
                                     ${idx === 0 ? `
-                                        <td class="pr-4 font-semibold text-right align-top" rowspan="${ruangan.fasilitas.length}">Fasilitas</td>
+                                        <td class="pr-4 text-left align-top" rowspan="${ruangan.fasilitas.length}">Fasilitas</td>
                                         <td class="px-2 text-center align-top" rowspan="${ruangan.fasilitas.length}">:</td>
                                     ` : ''}
                                     <td class="text-left">
@@ -134,20 +137,20 @@
                     card.className = 'bg-white bg-opacity-30 shadow-xl rounded-xl p-10 max-w-9xl flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8';
                     card.innerHTML = `
                         <div class="flex-1 overflow-x-10">
-                            <table class="w-full text-sm text-gray-900 font-normal">
+                            <table class="w-full text-sm text-gray-900 border-separate border-spacing-y-2">
                                 <tbody>
                                     <tr>
-                                        <td class="pr-4 font-semibold text-right w-[150px]">Nama Ruangan</td>
+                                        <td class="pr-4 text-left w-[150px]">Nama Ruangan</td>
                                         <td class="px-2 text-center w-2">:</td>
                                         <td class="text-left">${ruangan.nama}</td>
                                     </tr>
                                     <tr>
-                                        <td class="pr-4 font-semibold text-right">Nomor Ruangan</td>
+                                        <td class="pr-4 text-left">Nomor Ruangan</td>
                                         <td class="px-2 text-center">:</td>
                                         <td class="text-left">${ruangan.nomor}</td>
                                     </tr>
                                     <tr>
-                                        <td class="pr-4 font-semibold text-right">Kapasitas Orang</td>
+                                        <td class="pr-4 text-left">Kapasitas Orang</td>
                                         <td class="px-2 text-center">:</td>
                                         <td class="text-left">${ruangan.kapasitas}</td>
                                     </tr>
@@ -155,15 +158,15 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="flex flex-col items-center gap-4">
-                            <img alt="Gambar Ruangan" class="rounded-lg object-cover w-[300px] h-[220px]" src="${ruangan.gambar}" />
-                            <div class="flex gap-2">
+                        <div class="flex flex-col gap-4">
+                            <img alt="Gambar Ruangan" class="rounded-lg object-cover w-[350px] h-[250px]" src="${ruangan.gambar}" />
+                            <div class="flex justify-end gap-3">
                                 <button
-                                    class="btn-edit bg-blue-600 hover:bg-blue-700 text-white text-xs rounded mb-[15px] px-5 py-2 flex items-center gap-1">
-                                    <i class="fas fa-edit"></i> Edit
+                                    class="btn-edit bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-sm rounded-lg px-4 py-3 flex items-center gap-2">
+                                    <i class="fas fa-edit "></i> Edit
                                 </button>
                                 <button
-                                    class="btn-delete bg-red-600 hover:bg-red-700 text-white text-xs rounded mb-[15px] px-4 py-2 flex items-center gap-1">
+                                    class="btn-delete bg-red-500 hover:bg-red-600 text-white text-sm rounded-lg transition-colors px-4 py-3 flex items-center gap-2">
                                     <i class="fas fa-trash-alt"></i> Hapus
                                 </button>
                             </div>
@@ -239,24 +242,17 @@
             });
 
             div.innerHTML = `
-                <select name="fasilitas[]" class="w-64 px-3 py-2 border border-gray-300 rounded-md">
-                    ${options}
-                </select>
-                <div class="relative">
-                    <input type="number" value="${item.jumlah}" min="1" name="jumlah[]" class="w-16 px-3 py-2 border border-gray-300 rounded-md text-center" />
-                    <div class="absolute right-1 top-1/2 transform -translate-y-1/2 flex flex-col">
-                        <button type="button" onclick="incrementQuantity(this)" class="text-gray-400 hover:text-gray-600">
-                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"/>
-                            </svg>
-                        </button>
-                        <button type="button" onclick="decrementQuantity(this)" class="text-gray-400 hover:text-gray-600">
-                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                            </svg>
-                        </button>
+                <div class="relative w-64 inline-block">
+                        <select name="fasilitas[]" class="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                        ${options}
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                        </div>
                     </div>
-                </div>
+                    <input type="number" value="${item.jumlah}" min="1" name="jumlah[]" class="w-16 px-3 py-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
                 <button type="button" onclick="hapusFasilitas(this)" class="px-3 py-2 bg-red-500 text-white rounded-md">Hapus</button>
             `;
 
@@ -307,7 +303,7 @@
         });
 
         div.innerHTML = `
-            <select name="fasilitas[]" class="w-64 px-3 py-2 border border-gray-300 rounded-md">
+            <select name="fasilitas[]" class="w-64 px-3 py-2 pr-8 border border-gray-300 rounded-md">
                 ${options}
             </select>
             <input type="number" value="1" min="1" name="jumlah[]" class="w-16 px-3 py-2 border border-gray-300 rounded-md text-center" />
