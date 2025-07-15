@@ -155,6 +155,26 @@ class AdminController extends Controller
         ]);
     }
 
+    public function peminjaman_json_detail($id)
+    {
+        $p = peminjaman::findOrFail($id);
+
+        Carbon::setLocale('id');
+        $decoded = json_decode($p->tanggal_peminjaman, true) ?? [];
+        $formatted = collect($decoded)->map(function ($tgl) {
+            return Carbon::parse($tgl)->translatedFormat('l, d F Y');
+        });
+        $p->tanggal_formatted = $formatted;
+        $p->lama_hari = count($decoded);
+        $p->lampiran_url = $p->lampiran ? asset('storage/lampiran-peminjaman/' . $p->lampiran) : null;
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $p
+        ]);
+    }
+
+
 
     public function cetak($id)
     {
@@ -290,6 +310,12 @@ class AdminController extends Controller
 
         return redirect()->route('admin.peminjaman-page')->with('tambahPeminjamanSuccess', 'Data peminjaman berhasil disimpan.');
     }
+
+    public function batal_peminjaman()
+    {
+        return redirect()->route('admin.peminjaman-page')->with('batalSuccess', 'Berhasil Membatalkan');
+    }
+
 
 
             // Daftar Referensi//

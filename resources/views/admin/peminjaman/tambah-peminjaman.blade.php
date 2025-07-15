@@ -159,7 +159,7 @@
       <button
         type="button"
         onclick="handleCancel()"
-        class="bg-red-600 hover:bg-red-700 text-white border border-red-600 px-6 py-2 rounded-md transition-colors"
+        class="bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors px-6 py-2 rounded-md"
       >
         Batal
       </button>
@@ -272,16 +272,16 @@
             text: 'Data yang telah diisi akan hilang.',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
             confirmButtonText: 'Ya, batalkan!',
-            cancelButtonText: 'Batal'
+            cancelButtonText: 'Batal',
+            reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = "{{ route('admin.peminjaman-page') }}";
+                window.location.href = "{{ route('admin.peminjaman-batal') }}";
             }
         });
     }
+
 
 
     function handleSubmit(event) {

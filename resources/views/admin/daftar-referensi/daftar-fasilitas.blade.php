@@ -7,50 +7,83 @@
 @endsection
 
 @section('main')
-           <div class="mb-6">
-          <h1 class="text-2xl font-semibold text-gray-900 mb-4">Daftar Fasilitas</h1>
-          <div class="flex flex-wrap gap-4 items-center">
-            <div class="relative w-1/3">
-              <input id="searchInput" type="search" placeholder="Search..." class="w-full border border-gray-300 rounded-md pl-9 pr-3 py-2 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600" />
-              <svg class="w-5 h-5 text-gray-400 absolute left-2 top-2.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="7" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
+
+
+           <h2 class="text-gray-900 font-semibold text-2xl mb-6">Daftar Fasilitas</h2>
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+             <div class="flex gap-3 flex-1 max-w-md">
+                <!-- Search Input -->
+                <div class="relative flex-1">
+                <input
+                    id="searchInput"
+                    type="text"
+                    placeholder="Search..."
+                    class="w-full border border-gray-300 rounded-md py-2 pl-3 pr-10 text-sm text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent"
+                />
+                <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"></i>
+                </div>
+
+                <!-- Sort Select -->
+                <div class="relative w-48">
+                <select
+                    id="sortSelect"
+                    class="w-full border border-gray-300 rounded-md py-2 pl-3 pr-8 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent appearance-none"
+                >
+                    <option selected disabled>Pilih Urutan</option>
+                    <option value="asc">A-Z</option>
+                    <option value="desc">Z-A</option>
+                    <option value="newest">Data Terbaru</option>
+                    <option value="oldest">Data Terlama</option>
+                </select>
+                <!-- Custom Arrow -->
+                <svg
+                    class="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+                </div>
             </div>
-            <!-- Sort select -->
-            <select id="sortSelect" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600">
-                <option value="oldest" selected disabled>Pilih Urutan</option>
-                <option value="asc">A-Z</option>
-                <option value="desc">Z-A</option>
-                <option value="newest">Data Terbaru</option>
-                <option value="oldest">Data Terlama</option>
-            </select>
-            <button type="button" onclick="openModalTambahFasilitas()" class="ml-auto bg-teal-800 hover:bg-teal-900 rounded-full px-5 py-2 text-white transition">Tambah Fasilitas</button>
-          </div>
-        </div>
-        <!-- Table -->
-        <div class="overflow-x-auto rounded-lg bg-white shadow">
-          <table class="w-full table-auto text-left text-gray-800">
-            <thead class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
-              <tr>
-                <th class="py-3 px-6">No</th>
-                <th class="py-3 px-6">Nama Fasilitas</th>
-                <th class="py-3 px-6 text-center">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="fasilitasTableBody" class="divide-y divide-gray-100 text-sm">
 
-            </tbody>
-          </table>
-        </div>
+            <!-- Tambah Fasilitas Button -->
+            <button
+                type="button"
+                onclick="openModalTambahFasilitas()"
+                class="bg-teal-800 text-white rounded-full px-6 py-2 text-sm font-semibold hover:bg-teal-900 transition-colors whitespace-nowrap"
+            >
+                Tambah Fasilitas
+            </button>
+            </div>
 
-        <div id="modalOverlayTambahFasilitas" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible transition-all duration-300 ease-out">
+            <div class="overflow-x-auto max-w-full rounded-lg bg-white shadow">
+            <table class="min-w-full table-fixed divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                <tr>
+                    <th class="py-3 px-6 whitespace-nowrap text-left text-sm font-semibold text-gray-400 uppercase tracking-wider">No</th>
+                    <th class="py-3 px-6 whitespace-nowrap text-left text-sm font-semibold text-gray-400 uppercase tracking-wider">Nama Fasilitas</th>
+                    <th class="py-3 px-6 whitespace-nowrap text-center text-sm font-semibold text-gray-400 uppercase tracking-wider">Aksi</th>
+                </tr>
+                </thead>
+                <tbody id="fasilitasTableBody" class="divide-y divide-gray-200 text-sm">
+                <!-- Data here -->
+                </tbody>
+            </table>
+            </div>
+
+
+
+            <!-- Modals -->
+            <div id="modalOverlayTambahFasilitas" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible transition-all duration-300 ease-out">
             @include('admin.daftar-referensi.tambah-fasilitas')
-        </div>
+            </div>
 
-        <div id="modalOverlayUpdateFasilitas" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible transition-all duration-300 ease-out">
+            <div id="modalOverlayUpdateFasilitas" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible transition-all duration-300 ease-out">
             @include('admin.daftar-referensi.update-fasilitas')
-        </div>
+            </div>
+
 @endsection
 
 @section('js')
@@ -201,8 +234,8 @@
                 Swal.fire({
                     toast: true,
                     position: 'bottom-end',
-                    icon: 'info',
-                    title: 'Input dibatalkan',
+                    icon: 'success',
+                    title: 'Berhasil Membatlkan',
                     showConfirmButton: false,
                     timer: 2000,
                     timerProgressBar: true

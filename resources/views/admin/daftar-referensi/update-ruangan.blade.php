@@ -127,7 +127,7 @@
         <button
             type="button"
             onclick="batalForm()"
-            class="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+            class="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors"
         >
             Batal
         </button>
@@ -304,10 +304,9 @@
             text: "Semua data yang telah diisi akan hilang.",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
             confirmButtonText: 'Ya, batalkan',
-            cancelButtonText: 'Kembali'
+            cancelButtonText: 'Kembali',
+            reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
                 // Reset form
@@ -366,7 +365,7 @@
                     icon: 'success',
                     title: 'Berhasil Membatalkan',
                     showConfirmButton: false,
-                    timer: 4000,
+                    timer: 1500,
                     timerProgressBar: true
                 });
             }

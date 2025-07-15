@@ -412,49 +412,119 @@
     }
 
     // DETAIL MODAL FUNCTIONS
-    function openModalDetail(id) {
-        const data = peminjamanData.find(p => p.id === id);
-        if (!data) return;
+    // function openModalDetail(id) {
+    //     const data = peminjamanData.find(p => p.id === id);
+    //     if (!data) return;
 
-        document.getElementById('modal_nomor_surat').innerText = `: ${data.nomor_surat}`;
-        document.getElementById('modal_asal_surat').innerText = `: ${data.asal_surat}`;
-        document.getElementById('modal_nama_peminjam').innerText = `: ${data.nama_peminjam}`;
-        document.getElementById('modal_jumlah_ruangan').innerText = `: ${data.jumlah_ruangan}`;
-        document.getElementById('modal_jumlah_pc').innerText = `: ${data.jumlah_pc}`;
-        document.getElementById('modal_lama_peminjam').innerText = `: ${data.lama_hari} hari`;
-        const statusElement = document.getElementById('modal_status');
-        statusElement.innerText = data.status ?? 'Menunggu';
-        // Reset semua class warna sebelumnya
-        statusElement.className = 'inline-flex px-2 py-1 text-sm font-medium rounded-full ' + getStatusClasses(data.status);
-        const lampiranLink = document.getElementById('modal_lampiran_link');
-        if (data.lampiran) {
-            lampiranLink.href = `/storage/lampiran-peminjaman/${data.lampiran}`;
-            lampiranLink.classList.remove('hidden');
-        } else {
-            lampiranLink.href = `/storage/lampiran-peminjaman/`;
+    //     document.getElementById('modal_nomor_surat').innerText = `: ${data.nomor_surat}`;
+    //     document.getElementById('modal_asal_surat').innerText = `: ${data.asal_surat}`;
+    //     document.getElementById('modal_nama_peminjam').innerText = `: ${data.nama_peminjam}`;
+    //     document.getElementById('modal_jumlah_ruangan').innerText = `: ${data.jumlah_ruangan}`;
+    //     document.getElementById('modal_jumlah_pc').innerText = `: ${data.jumlah_pc}`;
+    //     document.getElementById('modal_lama_peminjam').innerText = `: ${data.lama_hari} hari`;
+    //     const statusElement = document.getElementById('modal_status');
+    //     statusElement.innerText = data.status ?? 'Menunggu';
+    //     // Reset semua class warna sebelumnya
+    //     statusElement.className = 'inline-flex px-2 py-1 text-sm font-medium rounded-full ' + getStatusClasses(data.status);
+    //     const lampiranLink = document.getElementById('modal_lampiran_link');
+    //     if (data.lampiran) {
+    //         lampiranLink.href = `/storage/lampiran-peminjaman/${data.lampiran}`;
+    //         lampiranLink.classList.remove('hidden');
+    //     } else {
+    //         lampiranLink.href = `/storage/lampiran-peminjaman/`;
+    //     }
+
+    //     // Render tanggal
+    //     const container = document.getElementById('modal_tanggal_peminjam');
+    //     container.innerHTML = '';
+    //     data.tanggal_formatted.forEach(tgl => {
+    //         const div = document.createElement('div');
+    //         div.innerText = `- ${tgl}`;
+    //         container.appendChild(div);
+    //     });
+
+    //     // Tampilkan modal detail
+    //     const modal = document.querySelector('#modalOverlayDetail .bg-white');
+    //     modalOverlayDetail.classList.remove('opacity-0', 'invisible');
+    //     modalOverlayDetail.classList.add('opacity-100', 'visible');
+
+    //     setTimeout(() => {
+    //         modal.classList.remove('scale-75', '-translate-y-12');
+    //         modal.classList.add('scale-100', 'translate-y-0');
+    //     }, 10);
+
+    //     document.body.style.overflow = 'hidden';
+    // }
+
+    async function openModalDetail(id) {
+        try {
+            // Panggil endpoint DETAIL yang BENAR (tidak pakai query ?id=... di list JSON)
+            const response = await fetch(`/admin/peminjaman/json/${id}`);
+            const json = await response.json();
+
+            if (json.status !== 'success' || !json.data) {
+                alert('Data tidak ditemukan!');
+                return;
+            }
+
+            const data = json.data;
+
+            // Isi elemen detail
+            document.getElementById('modal_nomor_surat').innerText = `: ${data.nomor_surat || '-'}`;
+            document.getElementById('modal_asal_surat').innerText = `: ${data.asal_surat || '-'}`;
+            document.getElementById('modal_nama_peminjam').innerText = `: ${data.nama_peminjam || '-'}`;
+            document.getElementById('modal_jumlah_ruangan').innerText = `: ${data.jumlah_ruangan || '-'}`;
+            document.getElementById('modal_jumlah_pc').innerText = `: ${data.jumlah_pc || '-'}`;
+            document.getElementById('modal_lama_peminjam').innerText = `: ${data.lama_hari || 0} hari`;
+
+            // Status & kelas warna
+            const statusElement = document.getElementById('modal_status');
+            statusElement.innerText = data.status || 'Menunggu';
+            statusElement.className = `inline-flex px-2 py-1 text-sm font-medium rounded-full ${getStatusClasses(data.status)}`;
+
+            // Lampiran link
+            const lampiranLink = document.getElementById('modal_lampiran_link');
+            if (data.lampiran_url) {
+                lampiranLink.href = data.lampiran_url;
+                lampiranLink.classList.remove('hidden');
+            } else {
+                lampiranLink.href = '#';
+                lampiranLink.classList.add('hidden');
+            }
+
+            // Render tanggal
+            const container = document.getElementById('modal_tanggal_peminjam');
+            container.innerHTML = '';
+            if (data.tanggal_formatted && data.tanggal_formatted.length > 0) {
+                data.tanggal_formatted.forEach(tgl => {
+                    const div = document.createElement('div');
+                    div.innerText = `- ${tgl}`;
+                    container.appendChild(div);
+                });
+            } else {
+                container.innerHTML = '<div>-</div>';
+            }
+
+            // Tampilkan modal
+            const modalOverlayDetail = document.getElementById('modalOverlayDetail');
+            const modal = modalOverlayDetail.querySelector('.bg-white');
+
+            modalOverlayDetail.classList.remove('opacity-0', 'invisible');
+            modalOverlayDetail.classList.add('opacity-100', 'visible');
+
+            setTimeout(() => {
+                modal.classList.remove('scale-75', '-translate-y-12');
+                modal.classList.add('scale-100', 'translate-y-0');
+            }, 10);
+
+            document.body.style.overflow = 'hidden';
+
+        } catch (error) {
+            console.error('Gagal mengambil data detail:', error);
+            alert('Terjadi kesalahan mengambil data.');
         }
-
-        // Render tanggal
-        const container = document.getElementById('modal_tanggal_peminjam');
-        container.innerHTML = '';
-        data.tanggal_formatted.forEach(tgl => {
-            const div = document.createElement('div');
-            div.innerText = `- ${tgl}`;
-            container.appendChild(div);
-        });
-
-        // Tampilkan modal detail
-        const modal = document.querySelector('#modalOverlayDetail .bg-white');
-        modalOverlayDetail.classList.remove('opacity-0', 'invisible');
-        modalOverlayDetail.classList.add('opacity-100', 'visible');
-
-        setTimeout(() => {
-            modal.classList.remove('scale-75', '-translate-y-12');
-            modal.classList.add('scale-100', 'translate-y-0');
-        }, 10);
-
-        document.body.style.overflow = 'hidden';
     }
+
 
     function closeModalDetail() {
         const modal = document.querySelector('#modalOverlayDetail .bg-white');
@@ -774,6 +844,33 @@
         }
     }
 
+    function batalUpdate() {
+    Swal.fire({
+        title: 'Yakin ingin membatalkan?',
+        text: "Semua perubahan yang sudah diisi akan hilang.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, batalkan',
+        cancelButtonText: 'Kembali',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+        closeModalUpdate(); // Panggil function tutup modal di sini
+        Swal.fire({
+        toast: true,
+        position: 'bottom-end',
+        icon: 'success',
+        title: 'Berhasil Membatalkan',
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true
+        });
+
+        }
+    });
+    }
+
+
     function deletePeminjaman(id) {
         Swal.fire({
             title: 'Yakin ingin menghapus?',
@@ -886,4 +983,17 @@
     </script>
 @endif
 
+@if(session('batalSuccess'))
+    <script>
+        Swal.fire({
+            toast: true,
+            position: 'bottom-end',
+            icon: 'success',
+            title: '{{ session('batalSuccess') }}',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true
+        });
+        </script>
+    @endif
 @endsection

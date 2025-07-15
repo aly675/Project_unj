@@ -129,14 +129,14 @@
       <div class="flex justify-end gap-3 pt-6">
         <button
           type="button"
-          onclick="closeModalUpdate()"
-          class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md transition"
+          onclick="batalUpdate()"
+          class="bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors px-6 py-2 rounded-md"
         >
           Batal
         </button>
         <button
           type="submit"
-          class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-md transition"
+          class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-md"
         >
           Simpan
         </button>

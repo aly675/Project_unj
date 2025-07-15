@@ -156,7 +156,7 @@
         <button
           type="button"
           onclick="batalForm()"
-          class="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+          class="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors"
         >
           Batal
         </button>
@@ -252,9 +252,16 @@
         const newFasilitas = document.createElement('div');
         newFasilitas.className = 'fasilitas-item flex items-center space-x-3 mb-3';
         newFasilitas.innerHTML = `
-            <select name="fasilitas[]" class="w-64 px-3 py-2 border border-gray-300 rounded-md">
+            <div class="relative w-64 inline-block">
+            <select name="fasilitas[]" class="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
                 ${options}
             </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                 </div>
+            </div>
             <input type="number" name="jumlah[]" value="1" min="1" class="w-16 px-3 py-2 border border-gray-300 rounded-md text-center" />
             <button type="button" onclick="hapusFasilitas(this)" class="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors">Hapus</button>
         `;
@@ -345,10 +352,9 @@
             text: "Semua data yang telah diisi akan hilang.",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
             confirmButtonText: 'Ya, batalkan',
-            cancelButtonText: 'Kembali'
+            cancelButtonText: 'Kembali',
+            reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
                 // Reset form

@@ -31,8 +31,10 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('admin/dashboard-peminjaman-json', [AdminController::class, 'dashboard_peminjaman_table_json'])->name('admin.dashboard-peminjaman-json');
 
     Route::prefix('/peminjaman')->group( function(){
+        Route::get('/batal', [AdminController::class, 'batal_peminjaman'])->name('admin.peminjaman-batal');
         Route::get('/admin/peminjaman/json', [AdminController::class, 'peminjaman_json'])->name('admin.peminjaman-json');
-        Route::get("", [AdminController::class, "peminjaman_page"])->name(name: "admin.peminjaman-page");
+        Route::get('/json/{id}', [AdminController::class, 'peminjaman_json_detail'])->name('admin.peminjaman-json-detail');
+        Route::get("", [AdminController::class, "peminjaman_page"])->name("admin.peminjaman-page");
         Route::get("/tambah-peminjaman", [AdminController::class, "tambah_peminjaman_page"])->name("admin.tambah-peminjaman-page");
         Route::delete('/delete/{id}', [AdminController::class, 'delete_peminjaman'])->name('admin.delete-pinjaman-ruangan');
         Route::post("/tambah-peminjaman/submit", [AdminController::class, "buatSurat"])->name("admin.tambah-peminjaman");
