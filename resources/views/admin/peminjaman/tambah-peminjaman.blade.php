@@ -269,7 +269,7 @@
     function handleCancel() {
         Swal.fire({
             title: 'Batalkan Form?',
-            text: 'Data yang telah diisi akan hilang.',
+            text: 'Data yang sudah diisi akan hilang.',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Ya, batalkan!',

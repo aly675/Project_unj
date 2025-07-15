@@ -1,3 +1,12 @@
+<style>
+    .swal-toast-fixed-width {
+        min-width: 320px;   /* Lebar minimum cukup panjang */
+        max-width: 100%;    /* Jangan melebihi layar */
+        white-space: nowrap;
+        overflow: hidden;   /* Hilangkan scroll */
+        }
+
+</style>
 <!-- Modal Container -->
 <div
   id="modalUpdate"
@@ -42,7 +51,7 @@
       <div class="flex justify-end space-x-3 pt-4">
         <button
           type="button"
-          onclick="closeModalUpdateFasilitas()"
+          onclick="cancelledModalEditFasilitas()"
           class="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors"
         >
           Batal
@@ -106,4 +115,44 @@
             });
         });
     }
+
+        function cancelledModalEditFasilitas() {
+        Swal.fire({
+            title: 'Batalkan perubahan?',
+            text: 'Semua perubahan yang sudah diisi akan hilang.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, batalkan',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+            const modal = document.querySelector('#modalOverlayUpdateFasilitas .bg-white');
+            const overlay = document.getElementById('modalOverlayUpdateFasilitas');
+
+            modal.classList.remove('scale-100', 'translate-y-0');
+            modal.classList.add('scale-75', '-translate-y-12');
+
+            setTimeout(() => {
+                overlay.classList.remove('opacity-100', 'visible');
+                overlay.classList.add('opacity-0', 'invisible');
+            }, 200);
+
+            document.body.style.overflow = 'auto';
+
+            Swal.fire({
+                toast: true,
+                position: 'bottom-end',
+                icon: 'success',
+                title: 'Perubahan telah dibatalkan.',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                customClass: {
+                popup: 'swal-toast-fixed-width'
+                }
+            });
+            }
+        });
+        }
 </script>

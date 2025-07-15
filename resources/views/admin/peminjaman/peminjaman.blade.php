@@ -25,6 +25,13 @@
             background-color: #6ee7b7;
             transform: translateY(1px);
         }
+
+        .swal-toast-fixed-width {
+        min-width: 320px;   /* Lebar minimum cukup panjang */
+        max-width: 100%;    /* Jangan melebihi layar */
+        white-space: nowrap;
+        overflow: hidden;   /* Hilangkan scroll */
+        }
     </style>
 @endsection
 
@@ -846,7 +853,7 @@
 
     function batalUpdate() {
     Swal.fire({
-        title: 'Yakin ingin membatalkan?',
+        title: 'Batalkan Perubahan?',
         text: "Semua perubahan yang sudah diisi akan hilang.",
         icon: 'warning',
         showCancelButton: true,
@@ -860,10 +867,13 @@
         toast: true,
         position: 'bottom-end',
         icon: 'success',
-        title: 'Berhasil Membatalkan',
+        title: 'Perubahan telah dibatalkan.',
         showConfirmButton: false,
         timer: 1500,
-        timerProgressBar: true
+        timerProgressBar: true,
+        customClass: {
+        popup: 'swal-toast-fixed-width'
+        }
         });
 
         }

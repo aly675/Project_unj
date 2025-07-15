@@ -456,6 +456,11 @@ class AdminController extends Controller
         return response()->json(['messageDeleteSuccess' => 'Ruangan berhasil dihapus.']);
     }
 
+    public function batal_ruangan()
+    {
+        return redirect()->route('admin.daftar-referensi-page')->with('successBatal','Form Ruangan telah dibatalkan.');
+    }
+
 
     //Daftar Fasilitas
 

@@ -1,3 +1,12 @@
+<style>
+.swal-toast-fixed-width {
+  min-width: 320px;   /* Lebar minimum cukup panjang */
+  max-width: 100%;    /* Jangan melebihi layar */
+  white-space: nowrap;
+  overflow: hidden;   /* Hilangkan scroll */
+}
+</style>
+
 <form class="space-y-6" id="roomForm">
     @csrf
     <div>
@@ -300,8 +309,8 @@
     // Batal form
     function batalForm() {
         Swal.fire({
-            title: 'Yakin ingin membatalkan?',
-            text: "Semua data yang telah diisi akan hilang.",
+            title: 'Batalkan Perubahan?',
+            text: "Semua perubahan yang sudah diisi akan hilang.",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Ya, batalkan',
@@ -363,10 +372,13 @@
                     toast: true,
                     position: 'bottom-end',
                     icon: 'success',
-                    title: 'Berhasil Membatalkan',
+                    title: 'Perubahan telah dibatalkan.',
                     showConfirmButton: false,
                     timer: 1500,
-                    timerProgressBar: true
+                    timerProgressBar: true,
+                    customClass: {
+                    popup: 'swal-toast-fixed-width'
+                }
                 });
             }
         });

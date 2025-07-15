@@ -345,11 +345,10 @@
             document.getElementById('previewImg').src = '';
         }
 
-    // Batal form
-    function batalForm() {
+        function batalForm() {
         Swal.fire({
-            title: 'Yakin ingin membatalkan?',
-            text: "Semua data yang telah diisi akan hilang.",
+            title: 'Batalkan Form?',
+            text: 'Data yang sudah diisi akan hilang.',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Ya, batalkan',
@@ -357,38 +356,11 @@
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                // Reset form
-                document.getElementById('roomForm').reset();
-
-                // Reset preview gambar
-                removeImage();
-
-                // Reset fasilitas ke kondisi awal (hanya 1 fasilitas)
-                const container = document.getElementById('fasilitasContainer');
-                const fasilitasItems = container.querySelectorAll('.fasilitas-item');
-
-                // Hapus semua fasilitas kecuali yang pertama
-                for (let i = 1; i < fasilitasItems.length; i++) {
-                    fasilitasItems[i].remove();
-                }
-
-                // Reset nilai fasilitas pertama
-                const firstFasilitas = container.querySelector('.fasilitas-item');
-                firstFasilitas.querySelector('select').selectedIndex = 0;
-                firstFasilitas.querySelector('input[type="number"]').value = 1;
-
-                    Swal.fire({
-                        title: 'Berhasil!',
-                        text: 'Form telah dibatalkan.',
-                        icon: 'success',
-                        timer: 1500, // lama animasi, bisa disesuaikan
-                        showConfirmButton: false
-                    }).then(() => {
-                        window.location.href = "{{ route('admin.daftar-referensi-page') }}";
-                    });
+                window.location.href = "{{ route('admin.ruangan-batal') }}";
             }
         });
     }
+
 
 </script>
 @endsection

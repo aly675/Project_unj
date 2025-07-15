@@ -44,6 +44,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     });
 
     Route::prefix('daftar-referensi')->group( function(){
+        Route::get('/batal', [AdminController::class, 'batal_ruangan'])->name('admin.ruangan-batal');
         Route::get("", [AdminController::class, "daftar_referensi_page"])->name("admin.daftar-referensi-page");
         Route::get("/tambah-ruangan", [AdminController::class, "tambah_ruangan_page"])->name("admin.tambah-ruangan-page");
         Route::post("/tambah-peminjaman/submit", [AdminController::class, "tambahRuangan"])->name("tambah.ruangan");

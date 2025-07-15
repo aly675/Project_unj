@@ -461,6 +461,21 @@
     </script>
 @endif
 
+@if(session('successBatal'))
+    <script>
+        Swal.fire({
+            toast: true,
+            position: 'bottom-end',
+            icon: 'success',
+            title: '{{ session('successBatal') }}',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+        });
+    </script>
+@endif
+
+
 
 
 @endsection
