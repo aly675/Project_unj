@@ -827,7 +827,7 @@
 
             Swal.fire({
                 icon: 'success',
-                title: 'Data berhasil diperbarui!',
+                title: 'Data berhasil diperbarui.',
                 toast: true,
                 position: 'bottom-end',
                 timer: 3000,
@@ -917,7 +917,7 @@
                         toast: true,
                         position: 'bottom-end',
                         icon: 'success',
-                        title: 'Data berhasil dihapus',
+                        title: 'Data berhasil dihapus.',
                         showConfirmButton: false,
                         timer: 3000,
                         timerProgressBar: true,

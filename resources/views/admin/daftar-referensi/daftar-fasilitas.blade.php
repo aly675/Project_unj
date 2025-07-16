@@ -59,7 +59,7 @@
             </div>
 
             <div class="overflow-x-auto max-w-full rounded-lg bg-white shadow">
-            <table class="min-w-full table-fixed divide-y divide-gray-200">
+            <table class="min-w-full table-fixed divide-gray-200">
                 <thead class="bg-gray-50">
                 <tr>
                     <th class="py-3 px-6 whitespace-nowrap text-left text-sm font-semibold text-gray-400 uppercase tracking-wider">No</th>
@@ -235,7 +235,7 @@
                     toast: true,
                     position: 'bottom-end',
                     icon: 'success',
-                    title: 'Berhasil Membatlkan',
+                    title: 'Form berhasil dibatalkan.',
                     showConfirmButton: false,
                     timer: 2000,
                     timerProgressBar: true

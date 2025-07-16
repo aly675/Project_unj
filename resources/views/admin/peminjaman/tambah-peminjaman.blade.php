@@ -88,7 +88,7 @@
         min="1"
         value="1"
         readonly
-        class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 cursor-not-allowed"
       />
     </div>
 
@@ -281,8 +281,6 @@
             }
         });
     }
-
-
 
     function handleSubmit(event) {
         event.preventDefault();

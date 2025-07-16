@@ -313,9 +313,8 @@ class AdminController extends Controller
 
     public function batal_peminjaman()
     {
-        return redirect()->route('admin.peminjaman-page')->with('batalSuccess', 'Berhasil Membatalkan');
+        return redirect()->route('admin.peminjaman-page')->with('batalSuccess', 'Form berhasil dibatalkan.');
     }
-
 
 
             // Daftar Referensi//
@@ -458,7 +457,7 @@ class AdminController extends Controller
 
     public function batal_ruangan()
     {
-        return redirect()->route('admin.daftar-referensi-page')->with('successBatal','Form Ruangan telah dibatalkan.');
+        return redirect()->route('admin.daftar-referensi-page')->with('successBatal','Form berhasil dibatalkan.');
     }
 
 

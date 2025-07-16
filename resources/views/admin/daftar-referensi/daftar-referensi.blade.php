@@ -40,7 +40,7 @@
                     type="text"
                     name="search"
                     placeholder="Cari ruangan..."
-                    class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm text-gray-700"
+                    class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm text-gray-700 appearance-none"
                 >
                 <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
@@ -303,9 +303,16 @@
         });
 
         div.innerHTML = `
-            <select name="fasilitas[]" class="w-64 px-3 py-2 pr-8 border border-gray-300 rounded-md">
+            <div class="relative w-64 inline-block">
+            <select name="fasilitas[]" class="appearance-none w-64 px-3 py-2 pr-8 border border-gray-300 rounded-md">
                 ${options}
             </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                    </div>
+            </div>
             <input type="number" value="1" min="1" name="jumlah[]" class="w-16 px-3 py-2 border border-gray-300 rounded-md text-center" />
             <button type="button" onclick="hapusFasilitas(this)" class="px-3 py-2 bg-red-500 text-white rounded-md">Hapus</button>
         `;
