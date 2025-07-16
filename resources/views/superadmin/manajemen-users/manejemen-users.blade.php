@@ -32,8 +32,31 @@
 
 @section('main')
 
+                <h1 class="text-2xl font-bold text-gray-900 mb-4 sm:mb-0">Manajemen Pengguna</h1>
+
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-                    <h1 class="text-2xl font-bold text-gray-900 mb-4 sm:mb-0">Manajemen Pengguna</h1>
+                    <div class="flex gap-4">
+                        <div class="relative">
+                            <input type="text" placeholder="Search" class="pl-8 pr-4 py-2 border rounded-lg text-sm w-64">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 absolute left-2.5 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm text-gray-500">Sort by:</span>
+                            <select class="border border-gray-300 rounded px-2 py-1 text-sm">
+                                <option>10</option>
+                                <option>25</option>
+                                <option>50</option> 
+                            </select>
+                            <button class="flex items-center gap-1 text-sm">
+                            Newest
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                            </button>
+                        </div>
+                    </div>
                     <a href="{{route('superadmin.tambah-user-page')}}" class="bg-teal-custom hover:bg-teal-800 bg-teal-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
                         Tambah Data
                     </a>
@@ -53,59 +76,7 @@
                                     <th class="text-left py-4 px-6 font-medium text-gray-700 uppercase text-xs tracking-wider">Action</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-200">
-                                @foreach ($users as $data)
-                                <tr class="hover:bg-gray-50" id="user-row-{{ $data->id }}">
-                                    <td class="py-4 px-6">
-                                        <div class="flex items-center space-x-3">
-                                            <div class="w-10 h-10 rounded-full overflow-hidden">
-                                                <img
-                                                    src="{{$data->image ? asset('storage/' . $data->image) : asset('assets/images/icon/none-profile-icon.svg') }}"
-                                                    alt="Foto Profil"
-                                                    class="object-cover w-full h-full"
-                                                >
-                                            </div>
-                                            <span class="font-medium text-gray-900">{{ $data->name }}</span>
-                                        </div>
-                                    </td>
-
-                                    <td class="py-4 px-6 text-gray-600">{{$data->email}}</td>
-                                    <td class="py-4 px-6 text-gray-600">{{$data->role}}</td>
-                                    <td class="py-4 px-6">
-                                        <label class="relative inline-flex items-center cursor-pointer">
-                                           <input
-                                            type="checkbox"
-                                            class="sr-only toggle-status peer"
-                                            data-id="{{ $data->id }}"
-                                            {{ $data->status === 'aktif' ? 'checked' : '' }}
-                                        >
-                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full
-                                                peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px]
-                                                after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-custom">
-                                            </div>
-                                        <span class="status-text ml-3 text-sm font-medium {{ $data->status === 'aktif' ? 'text-teal-custom' : 'text-red-500' }}">
-                                            {{ $data->status === 'aktif' ? 'ON' : 'OFF' }}
-                                        </span>
-                                        </label>
-                                    </td>
-                                    <td class="py-4 px-6">
-                                            <button onclick="bukaModalRuangan(this)"
-                                                data-user='@json($data)'
-                                                class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
-                                                <i data-lucide="edit" class="w-4 h-4"></i>
-                                            </button>
-                                            <button
-                                            type="button"
-                                            class="btn-delete-user p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                            data-id="{{ $data->id }}"
-                                            data-url="{{ route('superadmin.delete-user', $data->id) }}"
-                                        >
-                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
+                            <tbody id="user-table-body"></tbody>
                         </table>
                     </div>
 
@@ -163,79 +134,184 @@
 
 @section('js')
    <script>
-      // Initialize Lucide icons
         lucide.createIcons();
 
-        // Toggle switch functionality
-    //   document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-    //         checkbox.addEventListener('change', function () {
-    //             const statusText = this.parentElement.querySelector('.status-text');
-    //             console.log(statusText);
-    //             if (statusText) {
-    //                 if (this.checked) {
-    //                     statusText.textContent = 'ON';
-    //                     statusText.className = 'status-text ml-3 text-sm font-medium text-teal-custom';
-    //                 } else {
-    //                     statusText.textContent = 'OFF';
-    //                     statusText.className = 'status-text ml-3 text-sm font-medium text-red-500';
-    //                 }
-    //             }
-    //         });
-    //     });
+        function showToast(icon, title) {
+            Swal.fire({
+                toast: true,
+                position: 'bottom-end',
+                icon: icon,
+                title: title,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        }
 
-        document.querySelectorAll('.toggle-status').forEach(checkbox => {
-            checkbox.addEventListener('change', function (e) {
-                const userId = this.getAttribute('data-id');
-                const statusText = this.parentElement.querySelector('.status-text');
-                const isChecked = this.checked;
+        const userTableBody = document.getElementById('user-table-body');
+        const userJsonUrl = "{{ route('superadmin.users-json') }}";
+        let currentPage = 1;
+        let perPage = 10;
 
-                // Tahan perubahan UI dulu
-                this.checked = !isChecked;
+        function fetchUsers() {
+            fetch(`${userJsonUrl}?page=${currentPage}&perPage=${perPage}`)
+                .then(response => response.json())
+                .then(data => {
+                    userTableBody.innerHTML = '';
+                    data.data.forEach(user => {
+                        const tr = document.createElement('tr');
+                        tr.className = 'hover:bg-gray-50';
+                        tr.id = `user-row-${user.id}`;
 
-                // SweetAlert konfirmasi
-                Swal.fire({
-                    title: 'Konfirmasi',
-                    text: 'Apakah Anda yakin ingin mengubah status user ini?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, ubah!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Jalankan fetch setelah dikonfirmasi
-                        fetch("{{ route('superadmin.toggle-status') }}", {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({ id: userId })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                statusText.textContent = data.status;
-                                statusText.className = `status-text ml-3 text-sm font-medium ${data.class}`;
-                                checkbox.checked = data.status === 'ON'; // Pastikan toggle sesuai data terbaru
-                                Swal.fire('Berhasil', 'Status user berhasil diubah.', 'success');
-                            } else {
-                                Swal.fire('Gagal', 'Gagal mengubah status.', 'error');
-                            }
-                        })
-                        .catch(() => {
-                            Swal.fire('Error', 'Terjadi kesalahan server.', 'error');
-                        });
-                    }
+                        tr.innerHTML = `
+                            <td class="py-4 px-6">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-full overflow-hidden">
+                                        <img src="${user.image ? '/storage/' + user.image : '/assets/images/icon/none-profile-icon.svg'}" alt="Foto Profil" class="object-cover w-full h-full">
+                                    </div>
+                                    <span class="font-medium text-gray-900">${user.name}</span>
+                                </div>
+                            </td>
+                            <td class="py-4 px-6 text-gray-600">${user.email}</td>
+                            <td class="py-4 px-6 text-gray-600">${user.role}</td>
+                            <td class="py-4 px-6">
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        class="sr-only toggle-status peer"
+                                        data-id="${user.id}"
+                                        ${user.status === 'aktif' ? 'checked' : ''}
+                                    >
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full
+                                            peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px]
+                                            after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-custom">
+                                    </div>
+                                    <span class="status-text ml-3 text-sm font-medium ${user.status === 'aktif' ? 'text-teal-custom' : 'text-red-500'}">
+                                        ${user.status === 'aktif' ? 'ON' : 'OFF'}
+                                    </span>
+                                </label>
+                            </td>
+                            <td class="py-4 px-6">
+                                <button onclick="bukaModalRuangan(this)"
+                                    data-user='${JSON.stringify(user)}'
+                                    class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                                    <img src="/assets/images/icon/action-edit-icon.svg" alt="Edit action icon"/>
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn-delete-user p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                    data-id="${user.id}"
+                                    data-url="/superadmin/manajemen-users/delete/user/${user.id}"
+                                >
+                                    <img src="/assets/images/icon/action-delete-icon.svg" alt="Delete action icon"/>
+                                </button>
+                            </td>
+                        `;
+                        userTableBody.appendChild(tr);
+                    });
+                    attachToggleStatusListeners();
+                })
+                .catch(error => console.error('Error fetching users:', error));
+        }
+
+        // Inisialisasi fetch saat halaman load
+        document.addEventListener('DOMContentLoaded', fetchUsers);
+
+        function attachToggleStatusListeners() {
+            document.querySelectorAll('.toggle-status').forEach(checkbox => {
+                checkbox.addEventListener('change', function (e) {
+                    const userId = this.getAttribute('data-id');
+                    const statusText = this.parentElement.querySelector('.status-text');
+                    const isChecked = this.checked;
+
+                    // Tahan perubahan UI dulu
+                    this.checked = !isChecked;
+
+                    Swal.fire({
+                        title: 'Konfirmasi',
+                        text: 'Apakah Anda yakin ingin mengubah status user ini?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, ubah!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch("{{ route('superadmin.toggle-status') }}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({ id: userId })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    statusText.textContent = data.status;
+                                    statusText.className = `status-text ml-3 text-sm font-medium ${data.class}`;
+                                    this.checked = data.status === 'ON';
+                                    showToast('success', 'Status user berhasil diubah');
+                                } else {
+                                    showToast('error', 'Gagal Mengubah Status');
+                                }
+                                })
+                                .catch(() => {
+                                    showToast('error', 'Terjadi kesalahan server');
+                                });
+                        }
+                    });
                 });
             });
-        });
+        }
 
-        document.querySelectorAll('.btn-delete-user').forEach(button => {
-            button.addEventListener('click', function () {
-                const userId = this.getAttribute('data-id');
-                const deleteUrl = this.getAttribute('data-url');
+        // document.querySelectorAll('.btn-delete-user').forEach(button => {
+        //     button.addEventListener('click', function () {
+        //         const userId = this.getAttribute('data-id');
+        //         const deleteUrl = this.getAttribute('data-url');
+        //         const row = document.getElementById(`user-row-${userId}`);
+
+        //         Swal.fire({
+        //             title: 'Yakin mau hapus?',
+        //             text: 'Data user akan dihapus permanen!',
+        //             icon: 'warning',
+        //             showCancelButton: true,
+        //             confirmButtonColor: '#e3342f',
+        //             cancelButtonColor: '#6c757d',
+        //             confirmButtonText: 'Ya, hapus!',
+        //             cancelButtonText: 'Batal'
+        //         }).then((result) => {
+        //             if (result.isConfirmed) {
+        //                 fetch(deleteUrl, {
+        //                     method: 'DELETE',
+        //                     headers: {
+        //                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        //                         'Content-Type': 'application/json'
+        //                     }
+        //                 })
+        //                 .then(res => res.json())
+        //                 .then(data => {
+        //                     if (data.success) {
+        //                         row.remove(); // Hapus baris user
+        //                         Swal.fire('Dihapus!', 'User berhasil dihapus.', 'success');
+        //                     } else {
+        //                         Swal.fire('Gagal', 'Terjadi kesalahan saat menghapus.', 'error');
+        //                     }
+        //                 })
+        //                 .catch(() => {
+        //                     Swal.fire('Error', 'Server tidak merespons.', 'error');
+        //                 });
+        //             }
+        //         });
+        //     });
+        // });
+
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.btn-delete-user')) {
+                const button = e.target.closest('.btn-delete-user');
+                const userId = button.getAttribute('data-id');
+                const deleteUrl = button.getAttribute('data-url');
                 const row = document.getElementById(`user-row-${userId}`);
 
                 Swal.fire({
@@ -259,19 +335,20 @@
                         .then(res => res.json())
                         .then(data => {
                             if (data.success) {
-                                row.remove(); // Hapus baris user
-                                Swal.fire('Dihapus!', 'User berhasil dihapus.', 'success');
+                                row.remove();
+                                showToast('success', 'User Berhasil Dihapus');
                             } else {
-                                Swal.fire('Gagal', 'Terjadi kesalahan saat menghapus.', 'error');
+                                showToast('error', 'Gagal Mengahapus User');
                             }
                         })
                         .catch(() => {
-                            Swal.fire('Error', 'Server tidak merespons.', 'error');
+                            showToast('error', 'Server Tidak Merespons');
                         });
                     }
                 });
-            });
+            }
         });
+
 
 
     function bukaModalRuangan(button) {
@@ -303,14 +380,14 @@
         // contoh manual:
         document.getElementById('modal-edit-user').classList.remove('hidden');
     }
-            function tutupModalRuangan() {
-                const modal = document.getElementById('modal-edit-user');
-                modal.classList.remove('opacity-100', 'scale-100', 'bg-opacity-50');
-                modal.classList.add('opacity-0', 'scale-95', 'bg-opacity-0');
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                }, 300); // sesuai dengan durasi transition
-            }
+        function tutupModalRuangan() {
+            const modal = document.getElementById('modal-edit-user');
+            modal.classList.remove('opacity-100', 'scale-100', 'bg-opacity-50');
+            modal.classList.add('opacity-0', 'scale-95', 'bg-opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300); // sesuai dengan durasi transition
+        }
 
 
    </script>

@@ -16,40 +16,42 @@ class SuperAdminController extends Controller
         return view('superadmin.dashboard', compact('users', 'totalUsers', 'activeUsers', 'nonActiveUsers'));
     }
 
-public function store(Request $request)
-{
-    $validate = $request->validate([
-        "email" => "required|email|unique:users,email",
-        "name" => "required|unique:users,name",
-        "password" => "required|min:6",
-        "role" => "required",
-        "image" => "nullable|image|mimes:jpeg,png,jpg,gif|max:2048"
-    ]);
+    public function store(Request $request)
+    {
+        $validate = $request->validate([
+            "email" => "required|email|unique:users,email",
+            "name" => "required|unique:users,name",
+            "password" => "required|min:6",
+            "role" => "required",
+            "image" => "nullable|image|mimes:jpeg,png,jpg,gif|max:2048"
+        ]);
 
-    $user = new User();
-    $user->email = $request->email;
-    $user->name = $request->name;
-    $user->password = bcrypt($request->password);
-    $user->role = $request->role;
-    $user->status = $request->status ?? 'aktif';
+        $user = new User();
+        $user->email = $request->email;
+        $user->name = $request->name;
+        $user->password = bcrypt($request->password);
+        $user->role = $request->role;
+        $user->status = $request->status ?? 'aktif';
 
-    // Simpan gambar ke storage/app/public/users
-    if ($request->hasFile('image')) {
-        $imagePath = $request->file('image')->store('users', 'public'); // folder 'users' di dalam 'storage/app/public'
-        $user->image = $imagePath; // simpan path relatif seperti 'users/namafile.jpg'
+        // Simpan gambar ke storage/app/public/users
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('users', 'public'); // folder 'users' di dalam 'storage/app/public'
+            $user->image = $imagePath; // simpan path relatif seperti 'users/namafile.jpg'
+        }
+
+        $user->save();
+
+        return redirect()->route("superadmin.manejemen-users-page")->with("success", "Data Berhasil Ditambahkan");
     }
 
-    $user->save();
 
-    return redirect()->route("superadmin.manejemen-users-page")->with("success", "Data Berhasil Ditambahkan");
-}
+    public function show($id)
+    {
+    $data = User::findOrFail($id);
 
-
-    public function show($id){
-        $data = User::findOrFail($id);
-
-        return response()->json($data);
+    return response()->json($data);
     }
+
     public function edit($id)
     {
         $user = User::findOrFail($id);
@@ -90,11 +92,6 @@ public function store(Request $request)
 
     public function destroy($id)
     {
-        // $user = User::findOrFail($id);
-        // $user->delete();
-
-        // return redirect()->back()->with("success", "Data berhasil dihapus");
-
         $user = User::findOrFail($id);
         $user->delete();
 
@@ -125,6 +122,27 @@ public function store(Request $request)
             'status' => $user->status === 'aktif' ? 'ON' : 'OFF',
             'class'  => $user->status === 'aktif' ? 'text-teal-custom' : 'text-red-500'
         ]);
+    }
+
+    public function users_json(Request $request)
+    {
+        $query = User::query();
+
+        // Optional: filter search
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                ->orWhere('email', 'like', "%$search%")
+                ->orWhere('role', 'like', "%$search%");
+            });
+        }
+
+        // Optional: pagination
+        $perPage = $request->perPage ?? 10;
+        $users = $query->latest()->paginate($perPage);
+
+        return response()->json($users);
     }
 
 }

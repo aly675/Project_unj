@@ -83,6 +83,20 @@
 
 
         <script>
+
+                // Reusable toast
+                function showToast(icon, title) {
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom-end',
+                        icon: icon,
+                        title: title,
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
+                }
+
                 function confirmCancel() {
                     Swal.fire({
                         title: 'Yakin ingin membatalkan?',
@@ -95,28 +109,12 @@
                         cancelButtonText: 'Kembali'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            // Contoh aksi: redirect atau reset form
-                            // window.location.href = '/admin/dashboard-page'; // redirect
-                            // atau reset form tertentu:
-                            // document.getElementById('form-id').reset();
-                            window.location.href = "{{ route('superadmin.manejemen-users-page') }}";
-
-                            // Jika hanya ingin notifikasi saja:
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Dibatalkan',
-                                text: 'Aksi berhasil dibatalkan',
-                                timer: 2000,
-                                showConfirmButton: false
-                            });
-
-                            // Contoh redirect setelah sukses
-                            setTimeout(() => {
-                                window.history.back(); // atau ubah ke route tujuan
-                            }, 1500);
+                            tutupModalRuangan();
+                            showToast('info', 'Perubahan dibatalkan');
                         }
                     });
                 }
+
 
                 // Preview gambar ketika file dipilih
                 function previewImage(input) {
@@ -157,40 +155,49 @@
                 }
 
                 document.getElementById('form-user').addEventListener('submit', function (e) {
-                e.preventDefault();
+                    e.preventDefault();
 
-                const form = e.target;
-                const id = form.dataset.id;
-                const formData = new FormData(form);
+                    const form = e.target;
+                    const id = form.dataset.id;
+                    const formData = new FormData(form);
 
-                const updateUrl = `{{ route('superadmin.update-submit', ':id') }}`.replace(':id', id);
+                    const updateUrl = `{{ route('superadmin.update-submit', ':id') }}`.replace(':id', id);
 
-                fetch(updateUrl, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
-                    }
-                }).then(async response => {
-                    if (!response.ok) {
-                        const text = await response.text();
-                        try {
-                            const error = JSON.parse(text);
-                            alert('Gagal update: ' + JSON.stringify(error.errors ?? error.message ?? error));
-                        } catch (e) {
-                            console.error('Gagal parsing JSON:', text);
-                            alert('Gagal update: response server bukan JSON.');
+                    fetch(updateUrl, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json'
                         }
-                    } else {
-                        const data = await response.json();
-                        alert(data.message);
-                        window.location.reload();
-                    }
-                }).catch(err => {
-                    console.error(err);
-                    alert('Terjadi kesalahan.');
+                    })
+                    .then(async response => {
+                        if (!response.ok) {
+                            const text = await response.text();
+                            try {
+                                const error = JSON.parse(text);
+                                console.error('Gagal update:', error);
+                                showToast('error', error.message || 'Gagal update user');
+                            } catch (e) {
+                                console.error('Gagal parsing JSON:', text);
+                                showToast('error', 'Response server bukan JSON');
+                            }
+                        } else {
+                            const data = await response.json();
+                            showToast('success', data.message || 'User berhasil diperbarui');
+
+                            // Jika kamu ingin langsung update row di tabel secara live,
+                            // fetch ulang data JSON dan re-render tabel,
+                            // atau ubah langsung baris user yang sedang diedit jika ingin real-time update.
+                            tutupModalRuangan();
+                            fetchUsers(); // Pastikan fetchUsers() sudah kamu buat untuk load ulang tabel
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        showToast('error', 'Terjadi kesalahan koneksi');
+                    });
                 });
-            });
+
 
 </script>
