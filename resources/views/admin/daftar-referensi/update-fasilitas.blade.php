@@ -122,8 +122,10 @@
             text: 'Semua perubahan yang sudah diisi akan hilang.',
             icon: 'warning',
             showCancelButton: true,
+            confirmButtonColor: '#6c757d',   // Abu-abu → batal isi data
+            cancelButtonColor: '#3085d6',    // Biru terang → kembali
             confirmButtonText: 'Ya, batalkan',
-            cancelButtonText: 'Batal',
+            cancelButtonText: 'Kembali',
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {

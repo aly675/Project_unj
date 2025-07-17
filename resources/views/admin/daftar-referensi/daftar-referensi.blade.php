@@ -400,6 +400,8 @@
             text: 'Data ruangan yang dihapus tidak dapat dikembalikan.',
             icon: 'warning',
             showCancelButton: true,
+            confirmButtonColor: '#e3342f',
+            cancelButtonColor: '#6c757d',
             confirmButtonText: 'Ya, hapus',
             cancelButtonText: 'Batal',
             reverseButtons: true

@@ -272,8 +272,10 @@
             text: 'Data yang sudah diisi akan hilang.',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Ya, batalkan!',
-            cancelButtonText: 'Batal',
+            confirmButtonColor: '#6c757d', // Tombol batal: abu-abu
+            cancelButtonColor: '#3085d6',  // Tombol kembali: biru muda
+            confirmButtonText: 'Ya, batalkan',
+            cancelButtonText: 'Kembali',
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
