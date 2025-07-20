@@ -69,14 +69,12 @@
   <div class="fasilitas-item flex items-center space-x-3 mb-2">
     <div class="relative w-64">
       <select
-        name="fasilitas[]"
-        class="appearance-none truncate px-3 py-2 pr-10 border border-gray-300 rounded-md w-full
-               focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+        name="fasilitas[]" class="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
         @foreach($fasilitas as $item)
           <option value="{{ $item->id }}">{{ $item->nama }}</option>
         @endforeach
       </select>
-      <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
         <svg class="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
         </svg>

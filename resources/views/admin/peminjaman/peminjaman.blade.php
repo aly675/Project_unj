@@ -827,7 +827,7 @@
 
             Swal.fire({
                 icon: 'success',
-                title: 'Data berhasil diperbarui!',
+                title: 'Data berhasil diperbarui.',
                 toast: true,
                 position: 'bottom-end',
                 timer: 3000,
@@ -856,6 +856,8 @@
         title: 'Batalkan Perubahan?',
         text: "Semua perubahan yang sudah diisi akan hilang.",
         icon: 'warning',
+        confirmButtonColor: '#6c757d', // Tombol batal: abu-abu
+        cancelButtonColor: '#3085d6',  // Tombol kembali: biru muda
         showCancelButton: true,
         confirmButtonText: 'Ya, batalkan',
         cancelButtonText: 'Kembali',
@@ -884,13 +886,14 @@
     function deletePeminjaman(id) {
         Swal.fire({
             title: 'Yakin ingin menghapus?',
-            text: "Data akan terhapus permanen.",
+            text: "Data yang dihapus tidak dapat dikembalikan.",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Batal'
+            confirmButtonColor: '#e3342f',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, hapus',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
                 fetch(`/admin/peminjaman/delete/${id}`, {
@@ -917,7 +920,7 @@
                         toast: true,
                         position: 'bottom-end',
                         icon: 'success',
-                        title: 'Data berhasil dihapus',
+                        title: 'Data berhasil dihapus.',
                         showConfirmButton: false,
                         timer: 3000,
                         timerProgressBar: true,

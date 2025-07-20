@@ -88,7 +88,7 @@
         min="1"
         value="1"
         readonly
-        class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 cursor-not-allowed"
       />
     </div>
 
@@ -272,8 +272,10 @@
             text: 'Data yang sudah diisi akan hilang.',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Ya, batalkan!',
-            cancelButtonText: 'Batal',
+            confirmButtonColor: '#6c757d', // Tombol batal: abu-abu
+            cancelButtonColor: '#3085d6',  // Tombol kembali: biru muda
+            confirmButtonText: 'Ya, batalkan',
+            cancelButtonText: 'Kembali',
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
@@ -281,8 +283,6 @@
             }
         });
     }
-
-
 
     function handleSubmit(event) {
         event.preventDefault();
