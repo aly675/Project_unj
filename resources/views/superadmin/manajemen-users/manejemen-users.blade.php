@@ -37,24 +37,19 @@
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
                     <div class="flex gap-4">
                         <div class="relative">
-                            <input type="text" placeholder="Search" class="pl-8 pr-4 py-2 border rounded-lg text-sm w-64">
+                            <input type="text" id="search-input" placeholder="Search" class="pl-8 pr-4 py-2 border rounded-lg text-sm w-64">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 absolute left-2.5 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="text-sm text-gray-500">Sort by:</span>
-                            <select class="border border-gray-300 rounded px-2 py-1 text-sm">
-                                <option>10</option>
-                                <option>25</option>
-                                <option>50</option> 
+                            <select id="sort-select" class="border border-gray-300 rounded px-2 py-1 text-sm">
+                                <option value="oldest">Oldest</option>
+                                <option value="newest">Newest</option>
+                                <option value="a-z">A - Z</option>
+                                <option value="z-a">Z - A</option>
                             </select>
-                            <button class="flex items-center gap-1 text-sm">
-                            Newest
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                            </button>
                         </div>
                     </div>
                     <a href="{{route('superadmin.tambah-user-page')}}" class="bg-teal-custom hover:bg-teal-800 bg-teal-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
@@ -84,23 +79,18 @@
                     <div class="bg-white px-6 py-4 border-t flex flex-col sm:flex-row sm:items-center sm:justify-between">
                         <div class="flex items-center space-x-2 mb-4 sm:mb-0">
                             <span class="text-sm text-gray-600">Showing</span>
-                            <select class="border border-gray-300 rounded px-2 py-1 text-sm">
-                                <option>10</option>
-                                <option>25</option>
-                                <option>50</option>
+                            <select id="perPage-select" class="border border-gray-300 rounded px-2 py-1 text-sm">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
                             </select>
-                            <span class="text-sm text-gray-600">of 50</span>
+                            <span class="text-sm text-gray-600">of {{$userCount}}</span>
                         </div>
 
-                        <div class="flex items-center space-x-1">
+                        <div id="pagination-container" class="flex items-center space-x-1">
                             <button class="p-2 text-gray-400 hover:text-gray-600 disabled:opacity-50" disabled>
                                 <i data-lucide="chevron-left" class="w-4 h-4"></i>
                             </button>
-                            <button class="px-3 py-1 bg-teal-custom text-white rounded text-sm">1</button>
-                            <button class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-sm">2</button>
-                            <button class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-sm">3</button>
-                            <button class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-sm">4</button>
-                            <button class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-sm">5</button>
                             <button class="p-2 text-gray-600 hover:text-gray-800">
                                 <i data-lucide="chevron-right" class="w-4 h-4"></i>
                             </button>
@@ -150,11 +140,26 @@
 
         const userTableBody = document.getElementById('user-table-body');
         const userJsonUrl = "{{ route('superadmin.users-json') }}";
+        const searchInput = document.getElementById('search-input');
+        const sortSelect = document.getElementById('sort-select');
+        const perPageSelect = document.getElementById('perPage-select');
+        const paginationContainer = document.getElementById('pagination-container');
         let currentPage = 1;
         let perPage = 10;
 
         function fetchUsers() {
-            fetch(`${userJsonUrl}?page=${currentPage}&perPage=${perPage}`)
+            const search = searchInput.value;
+            const sort = sortSelect.value;
+            const perPage = perPageSelect.value;
+
+            const params = new URLSearchParams({
+                page: currentPage,
+                search,
+                sort,
+                perPage
+            });
+
+            fetch(`${userJsonUrl}?${params.toString()}`)
                 .then(response => response.json())
                 .then(data => {
                     userTableBody.innerHTML = '';
@@ -210,12 +215,112 @@
                         userTableBody.appendChild(tr);
                     });
                     attachToggleStatusListeners();
+                    renderPagination(data); // panggil di sini
+                    attachDeleteListeners(); // tambahkan jika perlu delete listener
+
                 })
                 .catch(error => console.error('Error fetching users:', error));
         }
 
+        function renderPagination(data) {
+            const paginationContainer = document.getElementById('pagination-container');
+            paginationContainer.innerHTML = '';
+
+            const current = data.current_page;
+            const last = data.last_page;
+
+            const createButton = (label, page, disabled = false, active = false) => {
+                const button = document.createElement('button');
+                button.textContent = label;
+                button.className = `border border-gray-200 rounded px-2 py-1 text-sm
+                    ${active ? 'bg-[#0d5c5c] text-white' : 'hover:bg-gray-100'}
+                    ${disabled ? 'text-gray-400 cursor-not-allowed' : ''}`;
+                button.disabled = disabled;
+                if (!disabled) {
+                    button.addEventListener('click', () => {
+                        currentPage = page;
+                        fetchUsers();
+                    });
+                }
+                return button;
+            };
+
+            // Previous
+            paginationContainer.appendChild(createButton('<', current - 1, current === 1));
+
+            // Selalu tampilkan halaman 1
+            paginationContainer.appendChild(createButton(1, 1, false, current === 1));
+
+            let start = current - 2;
+            let end = current + 2;
+
+            if (start <= 2) {
+                start = 2;
+                end = 5;
+            }
+            if (end >= last - 1) {
+                end = last - 1;
+                start = last - 4;
+                if (start < 2) start = 2;
+            }
+
+            if (start > 2) {
+                const dots = document.createElement('span');
+                dots.textContent = '...';
+                dots.className = 'px-2 text-gray-500';
+                paginationContainer.appendChild(dots);
+            }
+
+            for (let i = start; i <= end; i++) {
+                if (i > 1 && i < last) {
+                    paginationContainer.appendChild(createButton(i, i, false, i === current));
+                }
+            }
+
+            if (end < last - 1) {
+                const dots = document.createElement('span');
+                dots.textContent = '...';
+                dots.className = 'px-2 text-gray-500';
+                paginationContainer.appendChild(dots);
+            }
+
+            // Selalu tampilkan halaman terakhir jika last > 1
+            if (last > 1) {
+                paginationContainer.appendChild(createButton(last, last, false, current === last));
+            }
+
+            // Next
+            paginationContainer.appendChild(createButton('>', current + 1, current === last));
+        }
+
+
+        searchInput.addEventListener('input', debounce(() => {
+            currentPage = 1;
+            fetchUsers();
+        }, 300));
+
+        sortSelect.addEventListener('change', () => {
+            currentPage = 1;
+            fetchUsers();
+        });
+
+        perPageSelect.addEventListener('change', () => {
+            currentPage = 1;
+            fetchUsers();
+        });
+
         // Inisialisasi fetch saat halaman load
         document.addEventListener('DOMContentLoaded', fetchUsers);
+
+        function debounce(func, delay) {
+            let timeoutId;
+            return function(...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
 
         function attachToggleStatusListeners() {
             document.querySelectorAll('.toggle-status').forEach(checkbox => {
@@ -266,46 +371,6 @@
             });
         }
 
-        // document.querySelectorAll('.btn-delete-user').forEach(button => {
-        //     button.addEventListener('click', function () {
-        //         const userId = this.getAttribute('data-id');
-        //         const deleteUrl = this.getAttribute('data-url');
-        //         const row = document.getElementById(`user-row-${userId}`);
-
-        //         Swal.fire({
-        //             title: 'Yakin mau hapus?',
-        //             text: 'Data user akan dihapus permanen!',
-        //             icon: 'warning',
-        //             showCancelButton: true,
-        //             confirmButtonColor: '#e3342f',
-        //             cancelButtonColor: '#6c757d',
-        //             confirmButtonText: 'Ya, hapus!',
-        //             cancelButtonText: 'Batal'
-        //         }).then((result) => {
-        //             if (result.isConfirmed) {
-        //                 fetch(deleteUrl, {
-        //                     method: 'DELETE',
-        //                     headers: {
-        //                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        //                         'Content-Type': 'application/json'
-        //                     }
-        //                 })
-        //                 .then(res => res.json())
-        //                 .then(data => {
-        //                     if (data.success) {
-        //                         row.remove(); // Hapus baris user
-        //                         Swal.fire('Dihapus!', 'User berhasil dihapus.', 'success');
-        //                     } else {
-        //                         Swal.fire('Gagal', 'Terjadi kesalahan saat menghapus.', 'error');
-        //                     }
-        //                 })
-        //                 .catch(() => {
-        //                     Swal.fire('Error', 'Server tidak merespons.', 'error');
-        //                 });
-        //             }
-        //         });
-        //     });
-        // });
 
         document.addEventListener('click', function (e) {
             if (e.target.closest('.btn-delete-user')) {

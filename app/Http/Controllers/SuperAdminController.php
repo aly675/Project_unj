@@ -9,12 +9,86 @@ class SuperAdminController extends Controller
 {
     public function dashboard()
     {
-        $users = User::all(); // Menampilkan semua user ke dashboard
+        $users = User::all();
         $totalUsers = $users->count();
         $activeUsers = $users->where('status', 'aktif')->count();
         $nonActiveUsers = $users->where('status', 'non-aktif')->count();
         return view('superadmin.dashboard', compact('users', 'totalUsers', 'activeUsers', 'nonActiveUsers'));
     }
+
+    // Jika ingin API JSON untuk fetch tanpa reload (ajax) nanti:
+    public function stats_json()
+    {
+        $data = [
+            'totalRoles' => 4,
+            'totalUsers' => User::count(),
+            'activeUsers' => User::where('status', 'aktif')->count(),
+            'nonActiveUsers' => User::where('status', 'non-aktif')->count(),
+        ];
+
+        return response()->json($data);
+    }
+
+    public function latestUsersJson(Request $request)
+    {
+        $query = User::query();
+
+        // Search filter
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                ->orWhere('email', 'like', "%$search%")
+                ->orWhere('role', 'like', "%$search%");
+            });
+        }
+
+        // Sort filter
+        if ($request->has('sortBy') && $request->sortBy != '') {
+            $sortBy = $request->sortBy;
+            switch ($sortBy) {
+                case 'oldest':
+                    $query->oldest();
+                    break;
+                case 'newest':
+                    $query->latest();
+                    break;
+                case 'a-z':
+                    $query->orderBy('name', 'asc');
+                    break;
+                case 'z-a':
+                    $query->orderBy('name', 'desc');
+                    break;
+                case 'aktif':
+                    $query->where('status', 'aktif');
+                    break;
+                case 'non-aktif':
+                    $query->where('status', 'non-aktif');
+                    break;
+                default:
+                    $query->latest();
+            }
+        } else {
+            $query->latest();
+        }
+
+        // Pagination
+        $perPage = $request->perPage ?? 5;
+        $users = $query->paginate($perPage);
+
+        // Kirimkan JSON response dengan structure rapi
+        return response()->json([
+            'data' => $users->items(),
+            'current_page' => $users->currentPage(),
+            'last_page' => $users->lastPage(),
+            'per_page' => $users->perPage(),
+            'total' => $users->total(),
+            'from' => $users->firstItem(),
+            'to' => $users->lastItem(),
+        ]);
+    }
+
+
 
     public function store(Request $request)
     {
@@ -101,7 +175,8 @@ class SuperAdminController extends Controller
     public function manejemen_users_page()
     {
         $users = User::all(); // Menampilkan semua user ke dashboard
-        return view('superadmin.manajemen-users.manejemen-users', compact('users'));
+        $userCount = $users->count();
+        return view('superadmin.manajemen-users.manejemen-users', compact('users', 'userCount'));
     }
 
     public function tambah_user_page()
@@ -128,21 +203,45 @@ class SuperAdminController extends Controller
     {
         $query = User::query();
 
-        // Optional: filter search
+        // Search filter
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%$search%")
-                ->orWhere('email', 'like', "%$search%")
-                ->orWhere('role', 'like', "%$search%");
+                    ->orWhere('email', 'like', "%$search%")
+                    ->orWhere('role', 'like', "%$search%");
             });
         }
 
-        // Optional: pagination
+        // Sort handling
+        if ($request->has('sort')) {
+            switch ($request->sort) {
+                case 'newest':
+                    $query->orderBy('created_at', 'desc');
+                    break;
+                case 'oldest':
+                    $query->orderBy('created_at', 'asc');
+                    break;
+                case 'a-z':
+                    $query->orderBy('name', 'asc');
+                    break;
+                case 'z-a':
+                    $query->orderBy('name', 'desc');
+                    break;
+                default:
+                    $query->latest();
+                    break;
+            }
+        } else {
+            $query->latest();
+        }
+
         $perPage = $request->perPage ?? 10;
-        $users = $query->latest()->paginate($perPage);
+        $users = $query->paginate($perPage);
 
         return response()->json($users);
     }
+
+
 
 }

@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-                $users = [
+        $users = [
             [
                 'name' => 'admin',
                 'email' => 'admin@unj.ac.id',
@@ -52,5 +52,9 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ]);
         }
+
+         // Membuat 50 user dummy
+        User::factory()->count(500)->create();
+
     }
 }
