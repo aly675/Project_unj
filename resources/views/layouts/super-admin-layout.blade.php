@@ -11,7 +11,7 @@
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   </script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet"/>
   <style>
    body {
       font-family: 'Poppins', sans-serif;
@@ -36,26 +36,34 @@
  <body class="bg-gray-100 min-h-screen flex">
   <!-- Sidebar -->
      <aside id="sidebar" class="bg-teal-800 w-64 transition-all duration-300 ease-in-out min-h-screen flex flex-col">
-      <div class="flex items-center gap-3 px-6 py-8 border-b border-teal-700">
+      <div class="flex items-center gap-3 px-6 py-7 border-b border-teal-700">
         <img alt="logo unj" class="w-8 h-8" src="{{asset('assets/images/icon/logo-unj.svg')}}">
         <div id="sidebar-labels">
-          <h1 class="text-white font-extrabold text-sm uppercase leading-none">PUSTIKOM</h1>
-          <p class="text-teal-300 text-[10px] mt-1 leading-tight">UNIVERSITAS NEGERI JAKARTA</p>
+          <h1 class="text-white font-bold text-sm uppercase leading-none tracking-wider">PUSTIKOM</h1>
+          <p class="text-white text-[0.625rem] mt-1 leading-tight tracking-wider">UNIVERSITAS NEGERI JAKARTA</p>
         </div>
       </div>
 
-      <nav class="flex flex-col mt-6 text-teal-300 text-sm font-medium">
-        <a class="flex items-center gap-3 px-7 py-3 hover:text-white transition-colors
-         {{ request()->routeIs('superadmin.dashboard-page') ? 'bg-teal-700 text-white font-semibold' : '' }}"
+      <nav id="sidebar" class="flex flex-col mt-6 text-white/70 text-sm space-y-1 group">
+        <a class="flex hover:bg-teal-700 items-center gap-3 px-7 py-6 hover:text-white transition-colors
+         {{ request()->routeIs('superadmin.dashboard-page') ? 'bg-teal-700 text-white' : '' }}"
           href="{{route('superadmin.dashboard-page')}}">
-          <img alt="" src="{{asset('assets/images/icon/home-icon.svg')}}" class="w-5 h-5"/>
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0 -translate-y-0.5" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
+          <path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
+        </svg>
+
           <span class="sidebar-text">Dashboard</span>
         </a>
-        <a class="flex items-center gap-3 px-7 py-3 hover:text-white transition-colors
-         {{ request()->routeIs('superadmin.manejemen-users-page') ? 'bg-teal-700 text-white font-semibold' : '' }}"
+
+        <a class="flex hover:bg-teal-700 items-center gap-3 px-7 py-6 hover:text-white transition-colors
+         {{ request()->routeIs('superadmin.manejemen-users-page') ? 'bg-teal-700 text-white' : '' }}"
           href="{{route('superadmin.manejemen-users-page')}}">
-          <img alt="" src="{{asset('assets/images/icon/menejemen-icon.svg')}}" class="w-5 h-5"/>
-          <span class="sidebar-text">Manejemen User</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0 translate-x-0.5" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8.5 4.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0ZM10 13c.552 0 1.01-.452.9-.994a5.002 5.002 0 0 0-9.802 0c-.109.542.35.994.902.994h8ZM12.5 3.5a.75.75 0 0 1 .75.75v1h1a.75.75 0 0 1 0 1.5h-1v1a.75.75 0 0 1-1.5 0v-1h-1a.75.75 0 0 1 0-1.5h1v-1a.75.75 0 0 1 .75-.75Z" />
+         </svg>
+
+          <span class="sidebar-text">Manajemen Pengguna</span>
         </a>
       </nav>
     </aside>
@@ -63,9 +71,9 @@
   <!-- Main content -->
   <div class="flex-1 flex flex-col">
    <!-- Header -->
-   <header class="flex justify-between items-center bg-white px-6 py-4 border-b border-gray-200">
-    <div class="flex items-center gap-2 text-gray-400 text-sm font-normal">
-     <img alt="" onclick="toggleSidebar()" class="fas text-base" src="{{asset('assets/images/icon/sidebar-icon.svg')}}">
+   <header class="flex justify-between items-center bg-white px-6 py-3 border-b border-gray-200">
+   <div class="flex items-center gap-1.5 text-gray-400 text-sm md:text-base">
+        <img alt="Toggle Sidebar" onclick="toggleSidebar()" class="fas text-base" src="{{ asset('assets/images/icon/sidebar-icon.svg') }}">
            {{-- Super Admin --}}
         <span class="{{ request()->routeIs('superadmin.dashboard-page') ? 'text-gray-900 font-semibold' : '' }}">
             <a href="{{ route('superadmin.dashboard-page') }}">Super Admin</a>
