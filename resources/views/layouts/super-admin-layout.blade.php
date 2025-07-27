@@ -74,14 +74,15 @@
    <header class="flex justify-between items-center bg-white px-6 py-3 border-b border-gray-200">
    <div class="flex items-center gap-1.5 text-gray-400 text-sm md:text-base">
         <img alt="Toggle Sidebar" onclick="toggleSidebar()" class="fas text-base" src="{{ asset('assets/images/icon/sidebar-icon.svg') }}">
-           {{-- Super Admin --}}
-        <span class="{{ request()->routeIs('superadmin.dashboard-page') ? 'text-gray-900 font-semibold' : '' }}">
+
+        {{-- Super Admin --}}
+        <span class="ml-2 {{ request()->routeIs('superadmin.dashboard-page') ? 'text-gray-700 font-medium' : '' }}">
             <a href="{{ route('superadmin.dashboard-page') }}">Super Admin</a>
         </span>
 
         {{-- Dashboard --}}
         @if(request()->routeIs('superadmin.dashboard-page'))
-            <span class="text-gray-900 font-semibold">/ Dashboard</span>
+            <span class="text-gray-700 font-medium">/ Dashboard</span>
         @endif
 
         {{-- Manejemen Users --}}
@@ -89,15 +90,16 @@
             request()->routeIs('superadmin.manejemen-users-page') ||
             request()->routeIs('superadmin.tambah-user-page')
         )
-            <span class="text-gray-900 font-semibold">/</span>
-            <span class="{{ request()->routeIs('superadmin.manejemen-users-page') ? 'text-gray-900 font-semibold' : '' }}">
-                <a href="{{ route('superadmin.manejemen-users-page') }}">Manejemen Users</a>
+            <span class="text-gray-400">/</span>
+            <span class="{{ request()->routeIs('superadmin.manejemen-users-page') ? 'text-gray-700 font-medium' : '' }}">
+                <a href="{{ route('superadmin.manejemen-users-page') }}">Manajemen User</a>
             </span>
         @endif
 
         {{-- Tambah / Update User --}}
         @if(request()->routeIs('superadmin.tambah-user-page'))
-            <span class="text-gray-900 font-semibold">/ Tambah Peminjaman</span>
+            <span class="text-gray-400">/</span>
+            <span class="text-gray-700 font-medium">Tambah Peminjaman</span>
         @endif
 
     </div>
