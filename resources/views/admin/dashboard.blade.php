@@ -55,7 +55,7 @@
           <input
             type="text"
             placeholder="Search"
-            class="pl-10 pr-4 py-2 appearance-none px-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent"
+            class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 appearance-none"
           />
         </div>
 
@@ -301,7 +301,7 @@
     searchInput.addEventListener('input', debounce(() => {
         currentPage = 1;
         fetchDashboardTable();
-    }, 300));
+    }, 500));
 
     if (statusSelect) {
         statusSelect.addEventListener('change', () => {

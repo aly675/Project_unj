@@ -76,6 +76,8 @@ Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(func
 
 Route::prefix('kepala-upt')->middleware( ['auth', 'role:kepalaupt'])->group(function () {
     Route::get("/", [KepalaUptController::class, "dashboard"])->name("kepalaupt.dashboard-page");
+    Route::get('/dashboard-summary', [KepalaUptController::class, 'getSummary'])->name('kepalaupt.dashboard-summary-json');
+    Route::get('/surat-peminjaman', [KepalaUptController::class, 'getSuratList'])->name('kepalaupt.dashboard-surat-peminjaman-json');
     Route::prefix('pengajuan-surat')->group( function(){
         Route::get('', [KepalaUptController::class, 'pengajuan_surat_page'])->name('kepalaupt.pengajuan-surat-page');
         Route::post('/{id}/terima', [KepalaUptController::class, 'terima'])->name('pengajuan.terima');

@@ -14,6 +14,66 @@ class KepalaUptController extends Controller
         return view('kepalaUpt.dashboard');
     }
 
+    public function getSummary()
+    {
+        return response()->json([
+            'total' => peminjaman::count(),
+            'diterima' => peminjaman::where('status', 'Diterima')->count(),
+            'ditolak' => peminjaman::where('status', 'Ditolak')->count(),
+            'menunggu' => peminjaman::where('status', 'Menunggu Persetujuan')->count(),
+        ]);
+    }
+
+    public function getSuratList(Request $request)
+    {
+        $query = peminjaman::query();
+
+        // Search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nomor_surat', 'like', "%$search%")
+                    ->orWhere('nama_peminjam', 'like', "%$search%")
+                    ->orWhere('asal_surat', 'like', "%$search%");
+            });
+        }
+
+        // Filter status
+        if ($request->filled('status') && $request->status != 'all') {
+            $query->where('status', $request->status);
+        }
+
+        // Sort
+        switch ($request->sort_by) {
+            case 'oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'a-z':
+                $query->orderBy('nama_peminjam', 'asc');
+                break;
+            case 'z-a':
+                $query->orderBy('nama_peminjam', 'desc');
+                break;
+            default: // newest
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        // Pagination
+        $perPage = $request->input('per_page', 10);
+        $page = $request->input('page', 1);
+        $data = $query->paginate($perPage, ['*'], 'page', $page);
+
+        // Convert string json ke array
+        $data->getCollection()->transform(function ($item) {
+            $item->tanggal_peminjaman = json_decode($item->tanggal_peminjaman, true);
+            return $item;
+        });
+
+        return response()->json($data);
+    }
+
+
     public function pengajuan_surat_page()
     {
         $peminjamans = peminjaman::all();

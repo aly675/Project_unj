@@ -21,6 +21,7 @@ class Peminjaman extends Model
         'jumlah_pc',
         'lampiran',
         'status', // jika kamu nanti tambah status seperti Pending / Approved
+        'alesan'
     ];
 
     // Otomatis konversi kolom JSON jadi array saat diakses

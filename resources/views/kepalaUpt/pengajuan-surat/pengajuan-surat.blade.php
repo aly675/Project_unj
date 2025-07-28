@@ -63,7 +63,27 @@
 @endsection
 
 @section('main')
-<h1 class="text-2xl font-semibold text-gray-900 mb-6">Pengajuan Surat</h1>
+
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+                    <h1 class="flex text-2xl mr-5 font-semibold text-gray-900">Pengajuan Surat</h1>
+                    <div class="flex gap-4">
+                        <div class="relative">
+                            <input type="text" id="search-input" placeholder="Search" class="pl-8 pr-4 py-2 border rounded-lg text-sm w-64">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 absolute left-2.5 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm text-gray-500">Sort by Status:</span>
+                            <select id="sort-select" class="border border-gray-300 rounded px-2 py-1 text-sm">
+                                <option value="diterima">All</option>
+                                <option value="diterima">Diterima</option>
+                                <option value="ditolak">Ditolak</option>
+                                <option value="menunggu-persetujuan">Menunggu Persetujuan</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
 <!-- Table -->
 <div class="bg-white rounded-lg shadow overflow-hidden">
@@ -87,10 +107,12 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span @class([
                             'inline-flex px-2 py-1 text-xs font-medium rounded-full',
-                            'bg-green-100 text-green-800' => $data->status === 'Menunggu Verifikasi',
+                            'bg-green-100 text-green-800' => $data->status === 'Diterima' || 'Menunggu Verifikasi',
                             'bg-red-100 text-red-800' => $data->status === 'Ditolak',
-                            'bg-yellow-100 text-yellow-800' => !in_array($data->status, ['Menunggu Verifikasi', 'Ditolak']),
-                        ])>
+                            'bg-yellow-100 text-yellow-800' => $data->status === 'Menunggu Persetujuan',
+                            ])
+                            @class(['p-4', 'font-bold' => true])
+                            >
                             {{-- {{ $data->status === 'Menunggu Verifikasi' ? 'Disetujui' : $data->status }} --}}
                             @if($data->status === 'Ditolak')
                                 Ditolak
@@ -113,7 +135,9 @@
     </div>
 </div>
 
+{{-- Detail Surat --}}
 @include('kepalaUpt.pengajuan-surat.detail-surat')
+
 @endsection
 
 @section('js')
