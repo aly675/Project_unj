@@ -107,14 +107,18 @@ class KepalaUptController extends Controller
         return response()->json(['success' => true, 'message' => 'Pengajuan disetujui.']);
     }
 
-    public function tolak($id)
+    public function tolak(Request $request, $id)
     {
+        $request->validate([
+        'alasan' => 'required|string|max:255',
+    ]);
+
         $pengajuan = Peminjaman::findOrFail($id);
         $pengajuan->status = 'Ditolak';
+        $pengajuan->alesan = $request->alasan;
         $pengajuan->save();
 
         return response()->json(['success' => true, 'message' => 'Pengajuan ditolak.']);
     }
-
 
 }

@@ -1,4 +1,3 @@
-
 <!-- Modal Overlay - PERBAIKAN ID DISINI -->
 <div
     id="modalOverlayDetail"
@@ -73,9 +72,36 @@
                 Surat Pengajuan
             </a>
             <div class="flex gap-3">
-                <button id="tolakBtn" class="bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 px-5 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">Tolak</button>
+               <button class="tolak-btn bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 px-5 rounded-md">Tolak</button>
                 <button id="terimaBtn" class="bg-teal-700 hover:bg-teal-800 text-white font-medium py-2.5 px-5 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">Terima</button>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Modal Alasan Penolakan -->
+<div
+  id="modalAlasan"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible transition-all duration-300"
+>
+  <div class="bg-white rounded-xl w-full max-w-md mx-4 p-6 shadow-2xl transform scale-90 transition-all duration-300">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg font-semibold text-gray-800">Alasan Penolakan</h2>
+      <button onclick="closeModalAlasan()" class="text-gray-500 hover:text-gray-800">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <form id="formAlasanTolak" onsubmit="submitAlasanTolak(event)">
+      <div class="mb-4">
+        <label for="alasan" class="block text-sm font-medium text-gray-700 mb-1">Tulis alasan penolakan</label>
+        <textarea id="alasan" name="alasan" rows="4" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"></textarea>
+      </div>
+      <div class="flex justify-end gap-2">
+        <button type="button" onclick="closeModalAlasan()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">Batal</button>
+        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Kirim</button>
+      </div>
+    </form>
+  </div>
 </div>

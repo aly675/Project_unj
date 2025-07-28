@@ -142,232 +142,269 @@
 
 @section('js')
 <script>
-    // Data dari Laravel
+        // ID peminjaman yang sedang dipilih// Variabel global untuk menyimpan ID pengajuan yang sedang dipilih
     let selectedId = null;
+
+    // Baris ini mengasumsikan Anda melewatkan data 'peminjamans' dari controller Laravel Anda
+    // ke view Blade sebagai array JSON.
     const peminjamanData = @json($peminjamans);
 
-    console.log('Data peminjaman:', peminjamanData); // Debug: lihat data
-
-    // Fungsi untuk membuka modal
+    /**
+     * Membuka modal detail dengan data untuk ID pengajuan yang diberikan.
+     * @param {number} id - ID peminjaman (pengajuan).
+     */
     function openModal(id) {
         selectedId = id;
-        console.log('openModal dipanggil dengan ID:', id);
 
-        // Cek apakah modal overlay ada
-        const modalOverlay = document.getElementById('modalOverlayDetail');
-        console.log('Modal overlay ditemukan:', modalOverlay);
-
-        if (!modalOverlay) {
-            console.error('Modal overlay tidak ditemukan!');
-            alert('Error: Modal overlay tidak ditemukan!');
-            return;
-        }
-
-        // Cari data berdasarkan ID
+        // Cari data untuk ID yang dipilih
         const data = peminjamanData.find(p => p.id === id);
         if (!data) {
-            console.warn('Data tidak ditemukan untuk ID:', id);
-            alert('Data tidak ditemukan untuk ID: ' + id);
+            alert("Data tidak ditemukan!");
             return;
         }
 
-        console.log('Data ditemukan:', data);
+        // Dapatkan elemen modal
+        const modalOverlay = document.getElementById("modalOverlayDetail");
+        const modal = modalOverlay.querySelector(".bg-white");
+        const statusEl = document.getElementById("modal_status");
+        const tanggalEl = document.getElementById("modal_tanggal_peminjam");
+        const suratBtn = document.getElementById("suratBtn");
+        const modalBody = modal.querySelector(".px-6.py-6.space-y-4"); // Dapatkan badan modal untuk konten dinamis
 
-        // Isi field di modal dengan pengecekan element
-        const nomorSuratEl = document.getElementById('modal_nomor_surat');
-        const asalSuratEl = document.getElementById('modal_asal_surat');
-        const namaPeminjamEl = document.getElementById('modal_nama_peminjam');
-        const lamaPeminjamEl = document.getElementById('modal_lama_peminjam');
-        const statusEl = document.getElementById('modal_status');
-        const tanggalEl = document.getElementById('modal_tanggal_peminjam');
-        const suratBtn = document.getElementById('suratBtn');
+        // Isi konten modal
+        document.getElementById("modal_nomor_surat").innerText = `: ${data.nomor_surat}`;
+        document.getElementById("modal_asal_surat").innerText = `: ${data.asal_surat}`;
+        document.getElementById("modal_nama_peminjam").innerText = `: ${data.nama_peminjam}`;
+        document.getElementById("modal_lama_peminjam").innerText = `: ${data.lama_hari} hari`;
 
-        // Isi data dengan pengecekan
-        if (nomorSuratEl) {
-            nomorSuratEl.innerText = `: ${data.nomor_surat || 'Tidak tersedia'}`;
-        }
-        if (asalSuratEl) {
-            asalSuratEl.innerText = `: ${data.asal_surat || 'Tidak tersedia'}`;
-        }
-        if (namaPeminjamEl) {
-            namaPeminjamEl.innerText = `: ${data.nama_peminjam || 'Tidak tersedia'}`;
-        }
-        if (lamaPeminjamEl) {
-            lamaPeminjamEl.innerText = `: ${data.lama_hari || 0} hari`;
-        }
+        // Atur teks status dan styling
+        statusEl.innerText = data.status;
+        statusEl.className = "inline-flex px-2 py-1 text-sm font-medium rounded-full"; // Reset kelas
 
-        // Status dengan warna dinamis
-        if (statusEl) {
-            statusEl.innerText = data.status || 'Menunggu';
-            statusEl.className = 'inline-flex px-2 py-1 text-sm font-medium rounded-full';
-
-            if (data.status === 'Disetujui') {
-                statusEl.classList.add('bg-green-100', 'text-green-800');
-            } else if (data.status === 'Ditolak') {
-                statusEl.classList.add('bg-red-100', 'text-red-800');
-            } else {
-                statusEl.classList.add('bg-yellow-100', 'text-yellow-800');
-            }
+        // Terapkan kelas spesifik status
+        if (data.status === "Disetujui") {
+            statusEl.classList.add("bg-green-100", "text-green-800");
+        } else if (data.status === "Ditolak") {
+            statusEl.classList.add("bg-red-100", "text-red-800");
+        } else {
+            statusEl.classList.add("bg-yellow-100", "text-yellow-800");
         }
 
-        // Tanggal peminjaman
-        if (tanggalEl) {
-            tanggalEl.innerHTML = '';
-            if (data.tanggal_formatted && Array.isArray(data.tanggal_formatted)) {
-                data.tanggal_formatted.forEach(tgl => {
-                    const div = document.createElement('div');
-                    div.innerText = `- ${tgl}`;
-                    tanggalEl.appendChild(div);
-                });
-            } else {
-                const div = document.createElement('div');
-                div.innerText = '- Tanggal tidak tersedia';
-                tanggalEl.appendChild(div);
-            }
+        // --- Tampilan dinamis "Alasan Ditolak" ---
+        // Hapus div 'alasan' yang mungkin sudah ada dari pembukaan modal sebelumnya
+        const existingAlasanDiv = modalBody.querySelector('.alasan-ditolak-container');
+        if (existingAlasanDiv) {
+            existingAlasanDiv.remove();
         }
 
-        // Tombol download lampiran
-        if (suratBtn && data.lampiran) {
-            suratBtn.href = `/storage/${data.lampiran}`;
+        // Tambahkan 'Alasan Ditolak' jika statusnya 'Ditolak' dan alasan ada
+        if (data.status === "Ditolak" && data.alasan_penolakan) {
+            const alasanContainer = document.createElement("div");
+            alasanContainer.classList.add("flex", "flex-col", "sm:flex-row", "sm:items-start", "alasan-ditolak-container"); // Tambahkan kelas untuk memudahkan penghapusan
+            alasanContainer.innerHTML = `
+                <span class="font-medium text-gray-700 sm:min-w-[140px] sm:mr-4 mb-1 sm:mb-0">Alasan Ditolak</span>
+                <span class="text-red-700 font-semibold">: ${data.alasan_penolakan}</span>
+            `;
+            // Sisipkan tepat sebelum bagian "Tanggal Peminjam"
+            tanggalEl.parentElement.parentElement.insertAdjacentElement("beforebegin", alasanContainer);
         }
+        // --- Akhir Tampilan dinamis "Alasan Ditolak" ---
 
-        // Tampilkan modal
-        const modal = modalOverlay.querySelector('.bg-white');
 
-        modalOverlay.classList.remove('opacity-0', 'invisible');
-        modalOverlay.classList.add('opacity-100', 'visible');
-
-        setTimeout(() => {
-            if (modal) {
-                modal.classList.remove('scale-75', '-translate-y-12');
-                modal.classList.add('scale-100', 'translate-y-0');
-            }
-        }, 10);
-
-        document.body.style.overflow = 'hidden';
-
-        console.log('Modal berhasil ditampilkan');
-    }
-
-    // Fungsi untuk menutup modal
-    function closeModalDetail() {
-        console.log('closeModalDetail dipanggil');
-
-        const modalOverlay = document.getElementById('modalOverlayDetail');
-        const modal = modalOverlay ? modalOverlay.querySelector('.bg-white') : null;
-
-        if (modal) {
-            modal.classList.remove('scale-100', 'translate-y-0');
-            modal.classList.add('scale-75', '-translate-y-12');
-        }
-
-        setTimeout(() => {
-            if (modalOverlay) {
-                modalOverlay.classList.remove('opacity-100', 'visible');
-                modalOverlay.classList.add('opacity-0', 'invisible');
-            }
-        }, 200);
-
-        document.body.style.overflow = 'auto';
-    }
-
-    // Tombol Terima
-    document.addEventListener('DOMContentLoaded', function() {
-        const terimaBtn = document.getElementById('terimaBtn');
-        const tolakBtn = document.getElementById('tolakBtn');
-
-            terimaBtn.addEventListener('click', function () {
-                if (confirm('Apakah Anda yakin ingin menerima pengajuan ini?')) {
-                    const originalText = this.textContent;
-                    this.innerHTML = `...spinner...`;
-                    this.disabled = true;
-
-                            fetch(`/kepala-upt/pengajuan-surat/${selectedId}/terima`, {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                                    'Content-Type': 'application/json',
-                                },
-                            })
-
-                    .then(res => res.json())
-                    .then(res => {
-                        alert(res.message);
-                        this.innerHTML = originalText;
-                        this.disabled = false;
-                        closeModalDetail();
-                        location.reload(); // reload untuk update status di tabel
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        alert('Gagal menyetujui pengajuan.');
-                        this.innerHTML = originalText;
-                        this.disabled = false;
-                    });
-                }
+        // Isi Tanggal Peminjam
+        tanggalEl.innerHTML = ""; // Bersihkan tanggal sebelumnya
+        if (Array.isArray(data.tanggal_formatted)) {
+            data.tanggal_formatted.forEach(tgl => {
+                const el = document.createElement("div");
+                el.innerText = `- ${tgl}`;
+                tanggalEl.appendChild(el);
             });
+        }
 
+        // Atur tautan untuk surat pengajuan
+        suratBtn.href = `/storage/${data.lampiran}`;
 
-        // Tombol Tolak
-                tolakBtn.addEventListener('click', function () {
-                    if (confirm('Apakah Anda yakin ingin menolak pengajuan ini?')) {
-                        const originalText = this.textContent;
-                        this.innerHTML = `...spinner...`;
-                        this.disabled = true;
+        // Tampilkan overlay modal dan terapkan animasi masuk
+        modalOverlay.classList.remove("opacity-0", "invisible");
+        modalOverlay.classList.add("opacity-100", "visible");
 
-                            fetch(`/kepala-upt/pengajuan-surat/${selectedId}/tolak`, {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                                    'Content-Type': 'application/json',
-                                },
-                            })
+        setTimeout(() => {
+            modal.classList.remove("scale-75", "-translate-y-12");
+            modal.classList.add("scale-100", "translate-y-0");
+        }, 10); // Penundaan kecil untuk animasi yang lebih mulus
 
-                        .then(res => res.json())
-                        .then(res => {
-                            alert(res.message);
-                            this.innerHTML = originalText;
-                            this.disabled = false;
-                            closeModalDetail();
-                            location.reload(); // reload halaman agar tabel update
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            alert('Gagal menolak pengajuan.');
-                            this.innerHTML = originalText;
-                            this.disabled = false;
-                        });
-                    }
-                });
+        // Nonaktifkan scroll body saat modal terbuka
+        document.body.style.overflow = "hidden";
+    }
 
+    /**
+     * Menutup modal detail.
+     */
+    function closeModalDetail() {
+        const modalOverlay = document.getElementById("modalOverlayDetail");
+        const modal = modalOverlay.querySelector(".bg-white");
+
+        // Terapkan animasi keluar
+        modal.classList.remove("scale-100", "translate-y-0");
+        modal.classList.add("scale-75", "-translate-y-12");
+
+        setTimeout(() => {
+            // Sembunyikan overlay modal setelah animasi selesai
+            modalOverlay.classList.remove("opacity-100", "visible");
+            modalOverlay.classList.add("opacity-0", "invisible");
+            // Aktifkan kembali scroll body
+            document.body.style.overflow = "auto";
+        }, 200); // Sesuaikan dengan durasi transisi CSS
+    }
+
+    /**
+     * Membuka modal alasan penolakan.
+     */
+    function openModalAlasan() {
+        const modal = document.getElementById("modalAlasan");
+        modal.classList.remove("opacity-0", "invisible");
+        modal.classList.add("opacity-100", "visible");
+    }
+
+    /**
+     * Menutup modal alasan penolakan.
+     */
+    function closeModalAlasan() {
+        const modal = document.getElementById("modalAlasan");
+        modal.classList.remove("opacity-100", "visible");
+        modal.classList.add("opacity-0", "invisible");
+        document.getElementById("alasan").value = ''; // Kosongkan textarea saat ditutup
+    }
+
+    /**
+     * Menangani pengiriman alasan penolakan.
+     * Mengirim permintaan AJAX ke backend.
+     * @param {Event} e - Event submit.
+     */
+    function submitAlasanTolak(e) {
+        e.preventDefault(); // Mencegah pengiriman formulir default
+
+        const alasan = document.getElementById("alasan").value.trim();
+        if (!alasan) {
+            alert("Alasan penolakan wajib diisi.");
+            return;
+        }
+
+        const submitBtn = document.querySelector("#formAlasanTolak button[type='submit']");
+        submitBtn.disabled = true; // Nonaktifkan tombol untuk mencegah pengiriman ganda
+        submitBtn.innerText = "Mengirim..."; // Ubah teks tombol
+
+        const urlTolak = `/kepala-upt/pengajuan-surat/${selectedId}/tolak`;
+        // Kirim permintaan POST ke backend
+        fetch(urlTolak,  {
+                method: "POST",
+                headers: {
+                    // Dapatkan token CSRF dari meta tag (default Laravel)
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                    "Content-Type": "application/json" // Menunjukkan bahwa body adalah JSON
+                },
+                body: JSON.stringify({ alasan: alasan }) // Kirim alasan sebagai JSON
+            })
+        .then(res => {
+            if (!res.ok) {
+                // Jika respons tidak OK (misalnya, 400, 500), parse pesan kesalahan
+                return res.json().then(err => Promise.reject(err));
+            }
+            return res.json();
+        })
+        .then(res => {
+            alert(res.message || "Pengajuan berhasil ditolak.");
+            closeModalAlasan(); // Tutup modal penolakan
+            closeModalDetail(); // Tutup modal detail
+            location.reload(); // Muat ulang halaman untuk mencerminkan perubahan
+        })
+        .catch(err => {
+            console.error("Error menolak pengajuan:", err);
+            alert(err.message || "Terjadi kesalahan saat menolak. Silakan coba lagi.");
+        })
+        .finally(() => {
+            submitBtn.disabled = false; // Aktifkan kembali tombol
+            submitBtn.innerText = "Kirim"; // Kembalikan teks tombol
+        });
+    }
+
+    // Event listener untuk interaksi modal setelah DOM sepenuhnya dimuat
+    document.addEventListener("DOMContentLoaded", () => {
+        // Event listener untuk tombol "Tolak" di dalam modal detail
+        // Catatan: Kelas 'tolak-btn' ada pada tombol di footer modal.
+        document.querySelectorAll(".tolak-btn").forEach(btn => {
+            btn.addEventListener("click", openModalAlasan);
+        });
+
+        // Event listener untuk tombol "Kirim" di formulir alasan penolakan
+        document.getElementById("formAlasanTolak").addEventListener("submit", submitAlasanTolak);
+
+        // Event listener untuk tombol "Terima" di dalam modal detail
+        document.getElementById("terimaBtn").addEventListener("click", () => {
+            if (!confirm("Yakin ingin menyetujui pengajuan ini?")) {
+                return;
+            }
+
+            const btn = document.getElementById("terimaBtn");
+            btn.disabled = true;
+            btn.innerText = "Menyetujui...";
+
+            urlTerima = `/kepala-upt/pengajuan-surat/${selectedId}/terima`
+            fetch(urlTerima,  {
+                    method: "POST",
+                    headers: {
+                        // Dapatkan token CSRF dari meta tag (default Laravel)
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                        "Content-Type": "application/json" // Menunjukkan bahwa body adalah JSON
+                    },
+                    body: JSON.stringify({ alasan: alasan }) // Kirim alasan sebagai JSON
+                })
+            .then(res => {
+                if (!res.ok) {
+                    return res.json().then(err => Promise.reject(err));
+                }
+                return res.json();
+            })
+            .then(res => {
+                alert(res.message || "Berhasil menyetujui.");
+                closeModalDetail();
+                location.reload();
+            })
+            .catch(err => {
+                console.error("Error menyetujui pengajuan:", err);
+                alert(err.message || "Terjadi kesalahan saat menyetujui. Silakan coba lagi.");
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerText = "Terima";
+            });
+        });
     });
 
-    // Tutup modal dengan klik luar
-    document.addEventListener('click', function(e) {
-        const modalOverlay = document.getElementById('modalOverlayDetail');
-        if (e.target === modalOverlay) {
-            closeModalDetail();
+    // Event listener global untuk menutup modal dengan tombol ESC atau klik di luar
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+            if (document.getElementById("modalOverlayDetail").classList.contains("visible")) {
+                closeModalDetail();
+            }
+            if (document.getElementById("modalAlasan").classList.contains("visible")) {
+                closeModalAlasan();
+            }
         }
     });
 
-    // Tutup modal dengan ESC
-    document.addEventListener('keydown', function (e) {
-        const modalOverlay = document.getElementById('modalOverlayDetail');
-        if (e.key === 'Escape' && modalOverlay && modalOverlay.classList.contains('visible')) {
+    document.addEventListener("click", function (e) {
+        const overlayDetail = document.getElementById("modalOverlayDetail");
+        const overlayAlasan = document.getElementById("modalAlasan");
+
+        // Jika yang diklik adalah overlay modal detail itu sendiri (bukan elemen anaknya)
+        if (e.target === overlayDetail && overlayDetail.classList.contains("visible")) {
             closeModalDetail();
         }
+        // Jika yang diklik adalah overlay modal alasan penolakan itu sendiri (bukan elemen anaknya)
+        if (e.target === overlayAlasan && overlayAlasan.classList.contains("visible")) {
+            closeModalAlasan();
+        }
     });
-
-    const statusEl = document.getElementById('modal_status');
-statusEl.innerText = data.status || 'Menunggu';
-statusEl.className = 'inline-flex px-2 py-1 text-sm font-medium rounded-full';
-
-if (data.status === 'diterima') {
-    statusEl.classList.add('bg-green-100', 'text-green-800');
-} else if (data.status === 'ditolak') {
-    statusEl.classList.add('bg-red-100', 'text-red-800');
-} else {
-    statusEl.classList.add('bg-yellow-100', 'text-yellow-800');
-}
 </script>
 @endsection
