@@ -54,15 +54,26 @@
                         </span>
                     </td>
                     <td class="p-3 text-center">
+                        @php
+                            $tanggalArray = json_decode($pengajuan->tanggal_peminjaman, true);
+                            $tanggalMulai = \Carbon\Carbon::parse($tanggalArray[0])->translatedFormat('d F Y');
+                            $tanggalAkhir = \Carbon\Carbon::parse(end($tanggalArray))->translatedFormat('d F Y');
+                        @endphp
                         <button
                             onclick="openModalVerifikasi(this)"
                             data-id="{{ $pengajuan->id }}"
+                            data-nomor="{{ $pengajuan->nomor_surat }}"
+                            data-nama="{{ $pengajuan->nama_peminjam }}"
                             data-tanggal='@json(json_decode($pengajuan->tanggal_peminjaman))'
+                            data-tanggal-teks="{{ $tanggalMulai === $tanggalAkhir ? $tanggalMulai : $tanggalMulai . ' - ' . $tanggalAkhir }}"
+                           data-lama="{{ count(json_decode($pengajuan->tanggal_peminjaman, true)) }} Hari"
                             data-jumlah-ruangan="{{ $pengajuan->jumlah_ruangan }}"
+                            data-jumlah-pc="{{ $pengajuan->jumlah_pc }}"
                             class="bg-[#007D6E] hover:bg-[#00685D] text-white px-4 py-1 rounded-md text-sm shadow-sm"
                         >
                             Verifikasi
                         </button>
+
                     </td>
                 </tr>
             @endforeach
@@ -90,69 +101,85 @@
         }
     });
 
-    function openModalVerifikasi(button) {
-        const peminjamenId = button.getAttribute('data-id');
-        const jumlahRuangan = parseInt(button.getAttribute('data-jumlah-ruangan'));
-        const tanggalPeminjaman = JSON.parse(button.getAttribute('data-tanggal'));
+function openModalVerifikasi(button) {
+    const peminjamenId = button.getAttribute('data-id');
+    const nomorSurat = button.getAttribute('data-nomor');
+    const namaPeminjam = button.getAttribute('data-nama');
+    const tanggalText = button.getAttribute('data-tanggal-teks');
+    const lama = button.getAttribute('data-lama');
+    const jumlahRuangan = parseInt(button.getAttribute('data-jumlah-ruangan'));
+    const jumlahPC = button.getAttribute('data-jumlah-pc');
+    const tanggalPeminjaman = JSON.parse(button.getAttribute('data-tanggal'));
 
-        maxTerpilih = jumlahRuangan;
-        document.getElementById('peminjamen_id_input').value = peminjamenId;
+    maxTerpilih = jumlahRuangan;
+    document.getElementById('peminjamen_id_input').value = peminjamenId;
 
-        const modal = modalOverlayVerifikasi.querySelector('.bg-white');
-        modalOverlayVerifikasi.classList.remove('opacity-0', 'invisible');
-        modalOverlayVerifikasi.classList.add('opacity-100', 'visible');
+    // ISI DATA DINAMIS DI MODAL
+    document.querySelector("#modalOverlayVerifikasi .grid").innerHTML = `
+        <div><strong>Nomor Surat:</strong> ${nomorSurat}</div>
+        <div><strong>Nama Peminjam:</strong> ${namaPeminjam}</div>
+        <div><strong>Tanggal Peminjaman:</strong> ${tanggalText}</div>
+        <div><strong>Lama Peminjaman:</strong> ${lama}</div>
+        <div><strong>Jumlah Ruang Dipinjam:</strong> ${jumlahRuangan} Ruangan</div>
+        <div><strong>Jumlah PC Dipinjam:</strong> ${jumlahPC} PC</div>
+    `;
 
-        setTimeout(() => {
-            modal.classList.remove('scale-75', '-translate-y-12');
-            modal.classList.add('scale-100', 'translate-y-0');
-        }, 10);
-        document.body.style.overflow = 'hidden';
+    // MODAL ANIMASI
+    const modal = modalOverlayVerifikasi.querySelector('.bg-white');
+    modalOverlayVerifikasi.classList.remove('opacity-0', 'invisible');
+    modalOverlayVerifikasi.classList.add('opacity-100', 'visible');
+    setTimeout(() => {
+        modal.classList.remove('scale-75', '-translate-y-12');
+        modal.classList.add('scale-100', 'translate-y-0');
+    }, 10);
+    document.body.style.overflow = 'hidden';
 
-        const container = document.getElementById("ruangan-list");
-        container.innerHTML = '';
-        const ruanganTerpakai = new Set();
+    // RUANGAN
+    const container = document.getElementById("ruangan-list");
+    container.innerHTML = '';
+    const ruanganTerpakai = new Set();
 
-        tanggalPeminjaman.forEach(tgl => {
-            if (ruanganDipakaiPerTanggal[tgl]) {
-                ruanganDipakaiPerTanggal[tgl].forEach(id => ruanganTerpakai.add(id));
-            }
-        });
+    tanggalPeminjaman.forEach(tgl => {
+        if (ruanganDipakaiPerTanggal[tgl]) {
+            ruanganDipakaiPerTanggal[tgl].forEach(id => ruanganTerpakai.add(id));
+        }
+    });
 
-        ruangans.forEach((r) => {
-            const sedangDipakai = ruanganTerpakai.has(r.id);
+    ruangans.forEach((r) => {
+        const sedangDipakai = ruanganTerpakai.has(r.id);
+        const label = document.createElement("label");
+        label.className = "relative flex flex-col justify-between border rounded-xl p-5 bg-white shadow-sm transition-all " +
+            (!sedangDipakai ? "cursor-pointer hover:shadow-md hover:border-[#007D6E]" : "opacity-60 cursor-not-allowed bg-gray-100");
 
-            const label = document.createElement("label");
-            label.className = "relative flex flex-col justify-between border rounded-xl p-5 bg-white shadow-sm transition-all " +
-                (!sedangDipakai ? "cursor-pointer hover:shadow-md hover:border-[#007D6E]" : "opacity-60 cursor-not-allowed bg-gray-100");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.name = "ruangan_id[]";
+        checkbox.value = r.id;
+        checkbox.disabled = sedangDipakai;
+        checkbox.className = "mt-1";
 
-            const checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.name = "ruangan_id[]";
-            checkbox.value = r.id;
-            checkbox.disabled = sedangDipakai;
-            checkbox.className = "mt-1";
-
-            label.innerHTML = `
-                <div class="flex items-start gap-4">
-                    <div class="mt-1"></div>
-                    <div class="flex-1">
-                        <h3 class="text-base font-semibold mb-2 ${!sedangDipakai ? "text-gray-800" : "text-gray-500"}">${r.nama}</h3>
-                        <ul class="text-sm ${!sedangDipakai ? "text-gray-600" : "text-gray-400"} list-disc list-inside leading-relaxed">
-                            <li>${r.pc} PC</li>
-                        </ul>
-                    </div>
+        label.innerHTML = `
+            <div class="flex items-start gap-4">
+                <div class="mt-1"></div>
+                <div class="flex-1">
+                    <h3 class="text-base font-semibold mb-2 ${!sedangDipakai ? "text-gray-800" : "text-gray-500"}">${r.nama}</h3>
+                    <ul class="text-sm ${!sedangDipakai ? "text-gray-600" : "text-gray-400"} list-disc list-inside leading-relaxed">
+                        <li>${r.pc} PC</li>
+                    </ul>
                 </div>
-                <div class="flex justify-between items-center mt-4">
-                    ${sedangDipakai
-                        ? `<div class="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium">Sedang Digunakan</div>`
-                        : `<span class="text-xs text-green-600 font-medium">Tersedia</span>`}
-                </div>
-            `;
+            </div>
+            <div class="flex justify-between items-center mt-4">
+                ${sedangDipakai
+                    ? `<div class="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium">Sedang Digunakan</div>`
+                    : `<span class="text-xs text-green-600 font-medium">Tersedia</span>`}
+            </div>
+        `;
 
-            label.querySelector(".mt-1").replaceWith(checkbox);
-            container.appendChild(label);
-        });
-    }
+        label.querySelector(".mt-1").replaceWith(checkbox);
+        container.appendChild(label);
+    });
+}
+
 
     function closeModalVerifikasi() {
         const modal = modalOverlayVerifikasi.querySelector('.bg-white');

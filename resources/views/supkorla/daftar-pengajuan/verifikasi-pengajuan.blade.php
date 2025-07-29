@@ -14,12 +14,6 @@
 
         <div class="bg-[#F9FAFB] rounded-xl p-4 border border-gray-200 mb-6">
             <div class="grid gap-2 text-sm text-gray-700">
-            <div><strong>Nomor Surat:</strong> 77</div>
-            <div><strong>Nama Peminjam:</strong> Bubuubu</div>
-            <div><strong>Tanggal Peminjaman:</strong> 20 Juni 2025</div>
-            <div><strong>Lama Peminjaman:</strong> 1 Hari</div>
-            <div><strong>Jumlah Ruang Dipinjam:</strong> 1 Ruangan</div>
-            <div><strong>Jumlah PC Dipinjam:</strong> <span id="jumlah-pc">-</span></div>
             </div>
         </div>
 
