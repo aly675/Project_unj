@@ -132,6 +132,24 @@
                 @endforeach
             </tbody>
         </table>
+        <div class="px-6 py-4 border-t border-gray-200">
+            <div class="flex items-center justify-end">
+                <div class="flex items-center space-x-2">
+                    <button class="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="px-3 py-1 text-sm bg-teal-600 text-white rounded">1</button>
+                    <button class="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">2</button>
+                    <button class="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">3</button>
+                    <button class="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">4</button>
+                    <span class="px-3 py-1 text-sm text-gray-500">...</span>
+                    <button class="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">40</button>
+                    <button class="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

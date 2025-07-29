@@ -18,7 +18,7 @@ class KepalaUptController extends Controller
     {
         return response()->json([
             'total' => peminjaman::count(),
-            'diterima' => peminjaman::where('status', 'Diterima')->count(),
+            'diterima' => peminjaman::whereIn('status', ['Diterima', 'Menunggu Verifikasi'])->count(),
             'ditolak' => peminjaman::where('status', 'Ditolak')->count(),
             'menunggu' => peminjaman::where('status', 'Menunggu Persetujuan')->count(),
         ]);

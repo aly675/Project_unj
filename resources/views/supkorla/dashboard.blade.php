@@ -17,19 +17,19 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
                         <h3 class="text-sm font-medium text-gray-600 mb-2">Total Surat Masuk</h3>
-                        <p class="text-3xl font-bold text-gray-900">15</p>
+                        <p id="total-surat" class="text-3xl font-bold text-gray-900">0</p>
                     </div>
                     <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
                         <h3 class="text-sm font-medium text-gray-600 mb-2">Menunggu Persetujuan</h3>
-                        <p class="text-3xl font-bold text-gray-900">15</p>
+                        <p id="menunggu-persetujuan" class="text-3xl font-bold text-gray-900">0</p>
                     </div>
                     <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-                        <h3 class="text-sm font-medium text-gray-600 mb-2">Surat Disetujui</h3>
-                        <p class="text-3xl font-bold text-gray-900">15</p>
+                        <h3 class="text-sm font-medium text-gray-600 mb-2">Menunggu Verifikasi</h3>
+                        <p id="menunggu-verifikasi" class="text-3xl font-bold text-gray-900">0</p>
                     </div>
                     <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-                        <h3 class="text-sm font-medium text-gray-600 mb-2">Surat Ditolak</h3>
-                        <p class="text-3xl font-bold text-gray-900">15</p>
+                        <h3 class="text-sm font-medium text-gray-600 mb-2">Surat Diverifikasi</h3>
+                        <p id="surat-diverifikasi" class="text-3xl font-bold text-gray-900">0</p>
                     </div>
                 </div>
 
@@ -48,10 +48,29 @@
                                     <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <span class="text-sm text-gray-600">Sort by:</span>
-                                    <select class="border border-gray-300 rounded px-3 py-2 text-sm">
+                                    <span class="text-xs text-gray-600">Sort by:</span>
+                                    <select class="border border-gray-300 rounded px-3 py-2 text-xs">
                                         <option>Newest</option>
                                         <option>Oldest</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-xs text-gray-600">Status :</span>
+                                    <select class="border border-gray-300 rounded px-3 py-2 text-xs">
+                                        <option>All</option>
+                                        <option>Menunggu Persetujuan</option>
+                                        <option>Menunggu Verifikasi</option>
+                                        <option>Sudah Diverifikasi</option>
+                                        <option>Ditolak</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <select class="border border-gray-300 rounded px-3 py-2 text-xs">
+                                        <option>5</option>
+                                        <option>10</option>
+                                        <option>25</option>
+                                        <option>50</option>
+                                        <option>100</option>
                                     </select>
                                 </div>
                             </div>
@@ -64,74 +83,42 @@
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Peminjam</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Peminjam</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ruangan</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lama Peminjam</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Ruangan</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Jane Cooper</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">6 April 2023</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">R.201</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10 Hari</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Disetujui</span>
+                                        <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Sudah Diverifikasi</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Floyd Miles</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Yahoo</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">(205) 555-0100</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10 Hari</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">9</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span class="px-3 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">Ditolak</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ronald Richards</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Adobe</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">(302) 555-0107</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10 Hari</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-3 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">Ditolak</span>
+                                        <span class="px-3 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">Menunggu Verifikasi</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Marvin McKinney</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Tesla</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">(252) 555-0126</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10 Hari</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Disetujui</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Jerome Bell</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Google</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">(629) 555-0129</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Disetujui</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Kathryn Murphy</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Microsoft</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">(406) 555-0120</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Disetujui</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Jacob Jones</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Yahoo</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">(208) 555-0112</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Disetujui</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Kristin Watson</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Facebook</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">(704) 555-0127</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-3 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">Ditolak</span>
+                                        <span class="px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">Menunggu Persetujuan</span>
                                     </td>
                                 </tr>
                             </tbody>
@@ -162,5 +149,20 @@
 @endsection
 
 @section('js')
+<script>
 
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('{{ route('supkorla.dashboard-summary-json') }}')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('total-surat').textContent = data.total;
+                document.getElementById('menunggu-persetujuan').textContent = data.menungguPersetujuan;
+                document.getElementById('menunggu-verifikasi').textContent = data.menungguVerifikasi;
+                document.getElementById('surat-diverifikasi').textContent = data.diterima;
+            })
+            .catch(error => {
+                console.error('Gagal ambil data summary:', error);
+            });
+    });
+</script>
 @endsection

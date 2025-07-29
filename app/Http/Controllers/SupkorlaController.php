@@ -15,27 +15,32 @@ class SupkorlaController extends Controller
         return view('supkorla.dashboard');
     }
 
+    public function getSummary()
+    {
+        return response()->json([
+            'total' => peminjaman::count(),
+            'diterima' => peminjaman::where('status', 'Diterima')->count(),
+            'menungguPersetujuan' => peminjaman::where('status', 'Menunggu Persetujuan')->count(),
+            'menungguVerifikasi' => peminjaman::where('status', 'Menunggu Verifikasi')->count(),
+        ]);
+    }
 
-        public function daftar_pengajuan_page()
-        {
-            $pengajuans = Peminjaman::where('status', 'Menunggu Verifikasi')->get();
-            $ruangans = Ruangan::all();
-
-            // Ambil semua ruangan yang sedang digunakan di tanggal mana pun
-            $verifikasiList = VerifikasiRuangan::with('peminjaman')->get();
-
-            // Mapping: [tanggal_string => [ruangan_id]]
-            $ruanganDipakaiPerTanggal = [];
-
-            foreach ($verifikasiList as $verif) {
-                $tanggalArray = json_decode($verif->peminjaman->tanggal_peminjaman);
-                foreach ($tanggalArray as $tgl) {
-                    $ruanganDipakaiPerTanggal[$tgl][] = $verif->ruangan_id;
-                }
+    public function daftar_pengajuan_page()
+    {
+        $pengajuans = Peminjaman::where('status', 'Menunggu Verifikasi')->get();
+        $ruangans = Ruangan::all();
+        // Ambil semua ruangan yang sedang digunakan di tanggal mana pun
+        $verifikasiList = VerifikasiRuangan::with('peminjaman')->get();
+        // Mapping: [tanggal_string => [ruangan_id]]
+        $ruanganDipakaiPerTanggal = [];
+        foreach ($verifikasiList as $verif) {
+            $tanggalArray = json_decode($verif->peminjaman->tanggal_peminjaman);
+            foreach ($tanggalArray as $tgl) {
+                $ruanganDipakaiPerTanggal[$tgl][] = $verif->ruangan_id;
             }
-
-            return view('supkorla.daftar-pengajuan.daftar-pengajuan', compact('pengajuans', 'ruangans', 'ruanganDipakaiPerTanggal'));
         }
+        return view('supkorla.daftar-pengajuan.daftar-pengajuan', compact('pengajuans', 'ruangans', 'ruanganDipakaiPerTanggal'));
+    }
 
     public function daftar_ruangan_page()
     {
