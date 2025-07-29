@@ -2,49 +2,27 @@
 
 @section('title', 'Dashboard')
 
-@section('style')
-    <style>
-    .chart-container {
-      position: relative;
-      height: 200px;
-      width: 100%;
-    }
-
-    .chart-line {
-      fill: none;
-      stroke: #333;
-      stroke-width: 2;
-    }
-
-    .chart-line-secondary {
-      fill: none;
-      stroke: #ccc;
-      stroke-width: 1.5;
-      stroke-dasharray: 4;
-    }
-    </style>
-@endsection
-
 @section('main')
-        <h1 class="text-2xl font-semibold mb-6">Ringkasan</h1>
+
+        <h1 class="text-2xl font-semibold text-gray-900 mb-6">Ringkasan</h1>
 
         <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            <div class="bg-blue-100 rounded-lg p-4">
-                <div class="text-sm text-gray-600">Total Role</div>
-                <div class="text-2xl font-bold" id="total-roles">0</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h3 class="text-sm font-medium text-gray-500 mb-2">Total Role</h3>
+                <p class="text-3xl font-bold text-gray-900" id="total-roles">0</p>
             </div>
-            <div class="bg-blue-100 rounded-lg p-4">
-              <div class="text-sm text-gray-600">Total User</div>
-              <div class="text-2xl font-bold" id="total-users">0</div>
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+              <h3 class="text-sm font-medium text-gray-500 mb-2">Total User</h3>
+              <p class="text-3xl font-bold text-gray-900" id="total-users">0</p>
             </div>
-          <div class="bg-blue-100 rounded-lg p-4">
-            <div class="text-sm text-gray-600">Pengguna Aktif</div>
-            <div class="text-2xl font-bold" id="active-users">0</div>
+          <div class="bg-white p-6 rounded-lg shadow-sm">
+            <h3 class="text-sm font-medium text-gray-500 mb-2">Pengguna Aktif</h3>
+            <p class="text-3xl font-bold text-gray-900" id="active-users">0</p>
           </div>
-          <div class="bg-blue-100 rounded-lg p-4">
-            <div class="text-sm text-gray-600">Pengguna Nonaktif</div>
-            <div class="text-2xl font-bold" id="nonactive-users">0</div>
+          <div class="bg-white p-6 rounded-lg shadow-sm">
+            <h3 class="text-sm font-medium text-gray-500 mb-2">Pengguna Nonaktif</h3>
+            <p class="text-3xl font-bold text-gray-900" id="nonactive-users">0</p>
           </div>
         </div>
 
@@ -58,7 +36,7 @@
 
             <div class="flex gap-4">
               <div class="relative">
-                <input type="text" id="dashboard-search-input" placeholder="Search" class="pl-8 pr-4 py-2 border rounded-lg text-sm w-64">
+                <input type="text" id="dashboard-search-input" placeholder="Search" class="pl-8 pr-4 py-2 border rounded-lg text-sm w-64 mt-0">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 absolute left-2.5 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
