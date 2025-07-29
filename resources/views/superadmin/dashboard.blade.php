@@ -49,6 +49,10 @@
                         <option value="newest">Newest</option>
                         <option value="a-z">A - Z</option>
                         <option value="z-a">Z - A</option>
+                    </select>
+                    <span class="text-sm text-gray-500">Status :</span>
+                    <select id="dashboard-status-select" class="appearance-none px-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent">
+                        <option value="all">All</option>
                         <option value="aktif">Aktif</option>
                         <option value="non-aktif">Non-aktif</option>
                     </select>
@@ -108,6 +112,7 @@
         const dashboardUsersTableBody = document.getElementById('dashboard-users-table-body');
         const dashboardSearchInput = document.getElementById('dashboard-search-input');
         const dashboardSortSelect = document.getElementById('dashboard-sort-select');
+        const dashboardStatusSelect = document.getElementById('dashboard-status-select');
         const dashboardPaginationContainer = document.getElementById('dashboard-pagination-container');
         const dashboardShowingData = document.getElementById('dashboard-showing-data');
         const dashboardPerPageSelect = document.getElementById('dashboard-per-page-select');
@@ -116,6 +121,7 @@
         let dashboardCurrentPage = 1;
         let dashboardPerPage = 10;
         let dashboardSearchTerm = '';
+        let dashboardStatusFilter = 'all';
         let dashboardSortBy = 'newest';
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -131,12 +137,12 @@
         });
 
         function fetchDashboardUsers() {
-            let url = `${dashboardUserJsonUrl}?page=${dashboardCurrentPage}&perPage=${dashboardPerPage}&search=${dashboardSearchTerm}&sortBy=${dashboardSortBy}`;
+            let url = `${dashboardUserJsonUrl}?page=${dashboardCurrentPage}&perPage=${dashboardPerPage}&search=${dashboardSearchTerm}&sortBy=${dashboardSortBy}&status=${dashboardStatusFilter}`;
 
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
+                    // console.log(data);
                     renderDashboardUsers(data);
                     renderDashboardPagination(data);
                     renderDashboardShowingData(data);
@@ -263,7 +269,13 @@
 
         dashboardSortSelect.addEventListener('change', () => {
             dashboardSortBy = dashboardSortSelect.value;
-            dashboardCurrentPage = 1; // reset page saat sort
+            dashboardCurrentPage = 1;
+            fetchDashboardUsers();
+        });
+
+        dashboardStatusSelect.addEventListener('change', () => {
+            dashboardStatusFilter = dashboardStatusSelect.value;
+            dashboardCurrentPage = 1;
             fetchDashboardUsers();
         });
 

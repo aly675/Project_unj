@@ -32,6 +32,7 @@ class SuperAdminController extends Controller
     public function latestUsersJson(Request $request)
     {
         $query = User::query();
+        $status = $request->query('status', 'all');
 
         // Search filter
         if ($request->has('search') && $request->search != '') {
@@ -41,6 +42,10 @@ class SuperAdminController extends Controller
                 ->orWhere('email', 'like', "%$search%")
                 ->orWhere('role', 'like', "%$search%");
             });
+        }
+
+        if ($status !== 'all') {
+        $query->where('status', $status === 'aktif' ? 'aktif' : 'non-aktif');
         }
 
         // Sort filter
@@ -58,12 +63,6 @@ class SuperAdminController extends Controller
                     break;
                 case 'z-a':
                     $query->orderBy('name', 'desc');
-                    break;
-                case 'aktif':
-                    $query->where('status', 'aktif');
-                    break;
-                case 'non-aktif':
-                    $query->where('status', 'non-aktif');
                     break;
                 default:
                     $query->latest();
