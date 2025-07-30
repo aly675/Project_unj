@@ -4,7 +4,7 @@
   <meta content="width=device-width, initial-scale=1" name="viewport"/>
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>
-   SuperAdmin | @yield('title')
+   Super Admin | @yield('title')
   </title>
   <link rel="icon" href="{{asset('assets/images/logo_unj.svg')}}">
   <script src="https://cdn.tailwindcss.com">

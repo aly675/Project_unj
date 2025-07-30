@@ -177,7 +177,7 @@
                     <td class="px-6 py-4 text-sm text-gray-500">${user.role}</td>
                     <td class="px-6 py-4 text-sm text-gray-500">${user.email}</td>
                     <td class="px-6 py-4">
-                        <span class="px-3 py-1 ${user.status === 'aktif' ? 'text-green-800 bg-green-100' : 'text-red-800 bg-red-100'} rounded-md text-xs">${user.status}</span>
+                        <span class="px-3 py-1 ${user.status === 'aktif' ? 'text-green-800 bg-green-100' : 'text-red-800 bg-red-100'} font-medium rounded-full text-xs">${user.status.charAt(0).toUpperCase() + user.status.slice(1)}</span>
                     </td>
                 `;
                 dashboardUsersTableBody.appendChild(tr);
@@ -203,9 +203,9 @@
             const createButton = (label, page, disabled = false, active = false) => {
                 const button = document.createElement('button');
                 button.textContent = label;
-                button.className = `border border-gray-200 rounded px-2 py-1 text-sm
-                    ${active ? 'bg-[#0d5c5c] text-white' : 'hover:bg-gray-100'}
-                    ${disabled ? 'text-gray-400 cursor-not-allowed' : ''}`;
+                button.className = `rounded px-3 py-1 text-sm
+                    ${active ? 'bg-[#0d5c5c] text-white' : 'text-gray-500 hover:text-gray-700'}
+                    ${disabled ? 'cursor-not-allowed opacity-50' : ''}`;
                 button.disabled = disabled;
                 if (!disabled) {
                     button.addEventListener('click', () => {
