@@ -27,81 +27,98 @@
         </div>
 
         <!-- User Table -->
-        <div class="bg-white rounded-lg p-6 shadow-sm">
-          <div class="flex justify-between items-center mb-6">
+        <div class="bg-white rounded-lg shadow-sm">
+            <div class="p-6 border-b">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
             <div>
-              <h2 class="text-lg font-semibold">Daftar Pengguna</h2>
-              <div class="text-sm text-green-500">Pengguna Aktif</div>
+              <h2 class="text-lg font-semibold text-gray-900">Daftar Pengguna</h2>
+              <div class="text-sm text-green-500 mt-1">Pengguna Aktif</div>
             </div>
 
-            <div class="flex gap-4">
+            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
               <div class="relative">
-                <input type="text" id="dashboard-search-input" placeholder="Search" class="pl-8 pr-4 py-2 border rounded-lg text-sm w-64 mt-0">
+                <input type="text" id="dashboard-search-input" placeholder="Search" class="pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 appearance-none text-sm w-64 mt-0">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 absolute left-2.5 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
 
-                <div class="flex items-center gap-2">
-                    <span class="text-sm text-gray-500">Sort by:</span>
-                    <select id="dashboard-sort-select" class="appearance-none px-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent">
-                        <option value="oldest">Oldest</option>
-                        <option value="newest">Newest</option>
-                        <option value="a-z">A - Z</option>
-                        <option value="z-a">Z - A</option>
-                    </select>
-                    <span class="text-sm text-gray-500">Status :</span>
-                    <select id="dashboard-status-select" class="appearance-none px-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent">
-                        <option value="all">All</option>
-                        <option value="aktif">Aktif</option>
-                        <option value="non-aktif">Non-aktif</option>
-                    </select>
-                    <select
-                        id="dashboard-per-page-select"
-                        class="appearance-none px-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent"
-                    >
-                        <option value="5">5</option>
-                        <option value="10" selected>10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                    </select>
-                </div>
+
+            <!-- Sort Select -->
+            <div class="relative">
+                <select id="dashboard-sort-select"
+                class="appearance-none px-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm">
+                <option selected disabled>Pilih Urutan</option>
+                <option value="newest">Data Terbaru</option>
+                <option value="oldest">Data Terlama</option>
+                <option value="a-z">A - Z</option>
+                <option value="z-a">Z - A</option>
+                </select>
+                <svg class="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
             </div>
+
+            <!-- Status Select -->
+            <div class="relative">
+                <select id="dashboard-status-select"
+                class="appearance-none px-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm">
+                <option value="all">Status: All</option>
+                <option value="aktif">Aktif</option>
+                <option value="non-aktif">Non-aktif</option>
+                </select>
+                <svg class="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </div>
+
+            <!-- Per Page Select -->
+            <div class="relative">
+                <select id="dashboard-per-page-select"
+                class="appearance-none px-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                </select>
+                <svg class="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+           </div>
           </div>
 
           <div class="overflow-x-auto">
             <table class="w-full">
-              <thead>
-                <tr class="text-left text-sm text-gray-500 border-b">
-                  <th class="pb-3 font-medium">Nama</th>
-                  <th class="pb-3 font-medium">Role</th>
-                  <th class="pb-3 font-medium">Email</th>
-                  <th class="pb-3 font-medium">Status</th>
+              <thead class="bg-gray-50">
+                <tr class="border-b">
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
-              <tbody id="dashboard-users-table-body"></tbody>
+              <tbody id="dashboard-users-table-body" class="bg-white divide-y divide-gray-200">
+              </tbody>
+              <tfoot class="bg-gray-50">
+                <tr>
+                    <td colspan="4" class="px-6 py-4 border-t border-gray-200 rounded-b-lg">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+                        <p id="dashboard-showing-data" class="text-sm text-gray-500">
+                        Showing data 0 to 0 of 0 entries
+                        </p>
+                        <div id="dashboard-pagination-container" class="flex items-center space-x-2">
+                        <!-- Pagination buttons -->
+                        </div>
+                    </div>
+                    </td>
+                </tr>
+            </tfoot>
             </table>
-          </div>
-
-          <div class="flex justify-between items-center mt-6">
-            <div id="dashboard-showing-data" class="text-sm text-gray-500">
-              Showing data 0 to 0 of 0K entries
-            </div>
-
-            <div id="dashboard-pagination-container" class="flex gap-2">
-              <button class="w-8 h-8 flex items-center justify-center rounded-md border">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <button class="w-8 h-8 flex items-center justify-center rounded-md bg-teal-700 text-white">1</button>
-              <button class="w-8 h-8 flex items-center justify-center rounded-md border">...</button>
-              <button class="w-8 h-8 flex items-center justify-center rounded-md border">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
           </div>
         </div>
 @endsection
@@ -155,12 +172,11 @@
             dashboardUsersTableBody.innerHTML = '';
             data.data.forEach(user => {
                 const tr = document.createElement('tr');
-                tr.className = 'border-b';
                 tr.innerHTML = `
-                    <td class="py-4">${user.name}</td>
-                    <td class="py-4">${user.role}</td>
-                    <td class="py-4">${user.email}</td>
-                    <td class="py-4">
+                    <td class="px-6 py-4 text-sm text-gray-900">${user.name}</td>
+                    <td class="px-6 py-4 text-sm text-gray-500">${user.role}</td>
+                    <td class="px-6 py-4 text-sm text-gray-500">${user.email}</td>
+                    <td class="px-6 py-4">
                         <span class="px-3 py-1 ${user.status === 'aktif' ? 'text-green-800 bg-green-100' : 'text-red-800 bg-red-100'} rounded-md text-xs">${user.status}</span>
                     </td>
                 `;
