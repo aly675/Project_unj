@@ -89,9 +89,10 @@ Route::prefix('kepala-upt')->middleware( ['auth', 'role:kepalaupt'])->group(func
     });
 });
 
-Route::prefix( 'supkorla')->middleware(['auth', 'role:supkorla'])->group(function () {
+Route::prefix('supkorla')->middleware(['auth', 'role:supkorla'])->group(function () {
     Route::get("/", [SupkorlaController::class, "dashboard"])->name("supkorla.dashboard-page");
     Route::get('dashboard-summary/json', [SupkorlaController::class, 'getSummary'])->name('supkorla.dashboard-summary-json');
+    Route::get('dashboard-data-table/json', [SupkorlaController::class, 'getDataSupkorlaDashboard'])->name('supkorla.dashboard-data-table-json');
 
     Route::prefix('daftar-pengajuan-surat')->group( function(){
         Route::get('/', [SupkorlaController::class, 'daftar_pengajuan_page'])->name('supkorla.daftar-pengajuan-surat-page');
