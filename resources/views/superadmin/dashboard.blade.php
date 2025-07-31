@@ -28,7 +28,7 @@
 
         <!-- User Table -->
         <div class="bg-white rounded-lg shadow-sm">
-            <div class="p-6 border-b">
+            <div class="p-6">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
             <div>
               <h2 class="text-lg font-semibold text-gray-900">Daftar Pengguna</h2>
@@ -94,7 +94,7 @@
 
           <div class="overflow-x-auto">
             <table class="w-full">
-              <thead class="bg-gray-50">
+              <thead">
                 <tr class="border-b">
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>

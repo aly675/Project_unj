@@ -32,27 +32,31 @@
 
 @section('main')
 
-                <h1 class="text-2xl font-bold text-gray-900 mb-4 sm:mb-0">Manajemen Pengguna</h1>
+                <h1 class="text-2xl font-semibold text-gray-900 mb-6">Manajemen Pengguna</h1>
 
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-                    <div class="flex gap-4">
-                        <div class="relative">
-                            <input type="text" id="search-input" placeholder="Search" class="pl-8 pr-4 py-2 border rounded-lg text-sm w-64">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 absolute left-2.5 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4 ">
+                    <div class="flex gap-3 flex-1 max-w-md">
+                        <div class="relative flex-1">
+                            <input type="text" id="search-input" placeholder="Search..." class="w-full border border-gray-300 rounded-lg py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:border-transparent">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-sm text-gray-500">Sort by:</span>
-                            <select id="sort-select" class="border border-gray-300 rounded px-2 py-1 text-sm">
-                                <option value="oldest">Oldest</option>
-                                <option value="newest">Newest</option>
+                        <div class="relative">
+                            <select id="sort-select" class="appearance-none px-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm">
+                                <option selected disabled>Pilih Urutan</option>
+                                <option value="newest">Data Terbaru</option>
+                                <option value="oldest">Data Terlama</option>
                                 <option value="a-z">A - Z</option>
                                 <option value="z-a">Z - A</option>
                             </select>
+                            <svg class="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
                         </div>
                     </div>
-                    <a href="{{route('superadmin.tambah-user-page')}}" class="bg-teal-custom hover:bg-teal-800 bg-teal-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                    <a href="{{route('superadmin.tambah-user-page')}}" class="bg-teal-800 text-white rounded-full px-6 py-2 text-sm hover:bg-teal-900 transition-colors whitespace-nowrap">
                         Tambah Data
                     </a>
                 </div>
@@ -60,41 +64,49 @@
                 <!-- Table Container -->
                 <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
                     <!-- Desktop Table -->
-                    <div class="hidden lg:block overflow-x-auto">
-                        <table class="w-full">
+                    <div class="overflow-x-auto max-w-full bg-white rounded-lg shadow">
+                        <table class="min-w-full table-fixed divide-gray-200">
                             <thead class="bg-gray-50 border-b">
                                 <tr>
-                                    <th class="text-left py-4 px-6 font-medium text-gray-700 uppercase text-xs tracking-wider">Nama</th>
-                                    <th class="text-left py-4 px-6 font-medium text-gray-700 uppercase text-xs tracking-wider">Email</th>
-                                    <th class="text-left py-4 px-6 font-medium text-gray-700 uppercase text-xs tracking-wider">Role</th>
-                                    <th class="text-left py-4 px-6 font-medium text-gray-700 uppercase text-xs tracking-wider">Status</th>
-                                    <th class="text-left py-4 px-6 font-medium text-gray-700 uppercase text-xs tracking-wider">Action</th>
+                                    <th class="pl-6 py-4 text-left text-sm text-gray-400 uppercase tracking-wider w-1/5" scope="col">Nama</th>
+                                    <th class="px-4 py-4 text-left text-sm text-gray-400 uppercase tracking-wider w-1/4" scope="col">Email</th>
+                                    <th class="px-4 py-4 text-left text-sm text-gray-400 uppercase tracking-wider w-1/5" scope="col">Role</th>
+                                    <th class="px-4 py-4 text-left text-sm text-gray-400 uppercase tracking-wider w-1/5" scope="col">Status</th>
+                                    <th class="px-4 py-4 text-left text-sm text-gray-400 uppercase tracking-wider w-1/5" scope="col">Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="user-table-body"></tbody>
+                            <tbody id="user-table-body" class="divide-y divide-gray-200"></tbody>
                         </table>
                     </div>
 
                     <!-- Pagination -->
-                    <div class="bg-white px-6 py-4 border-t flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                        <div class="flex items-center space-x-2 mb-4 sm:mb-0">
-                            <span class="text-sm text-gray-600">Showing</span>
-                            <select id="perPage-select" class="border border-gray-300 rounded px-2 py-1 text-sm">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between text-sm text-gray-500 px-7 pb-5 pt-4 border-t border-gray-200 font-light">
+                        <div class="mb-3 md:mb-0 flex items-center gap-1">
+                            <span>Showing</span>
+                            <div class="relative">
+                            <select id="perPage-select" class="appearance-none border border-gray-200 rounded px-2 pr-8 py-1 text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent">
                                 <option value="10">10</option>
                                 <option value="25">25</option>
                                 <option value="50">50</option>
                             </select>
+                            <svg
+                            class="w-4 h-4 text-gray-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            >
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                            </div>
                             <span class="text-sm text-gray-600">of {{$userCount}}</span>
                         </div>
-
-                        <div id="pagination-container" class="flex items-center space-x-1">
-                            <button class="p-2 text-gray-400 hover:text-gray-600 disabled:opacity-50" disabled>
-                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
-                            </button>
-                            <button class="p-2 text-gray-600 hover:text-gray-800">
-                                <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                            </button>
-                        </div>
+                        <nav
+                        id="pagination-container"
+                        class="flex items-center gap-1 select-none"
+                        role="navigation"
+                        aria-label="Pagination Navigation"
+                        ></nav>
                     </div>
                 </div>
 
@@ -169,17 +181,17 @@
                         tr.id = `user-row-${user.id}`;
 
                         tr.innerHTML = `
-                            <td class="py-4 px-6">
+                            <td class="pl-6 py-4">
                                 <div class="flex items-center space-x-3">
-                                    <div class="w-10 h-10 rounded-full overflow-hidden">
+                                    <div class="w-8 h-8 rounded-full overflow-hidden">
                                         <img src="${user.image ? '/storage/' + user.image : '/assets/images/icon/none-profile-icon.svg'}" alt="Foto Profil" class="object-cover w-full h-full">
                                     </div>
-                                    <span class="font-medium text-gray-900">${user.name}</span>
+                                    <span class="py-4 text-sm text-gray-700 font-normal">${user.name}</span>
                                 </div>
                             </td>
-                            <td class="py-4 px-6 text-gray-600">${user.email}</td>
-                            <td class="py-4 px-6 text-gray-600">${user.role}</td>
-                            <td class="py-4 px-6">
+                            <td class="px-4 py-4 text-sm text-gray-700 font-normal">${user.email}</td>
+                            <td class="px-4 py-4 text-sm text-gray-700 font-normal">${user.role}</td>
+                            <td class="py-4 px-4">
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <input
                                         type="checkbox"
@@ -196,15 +208,15 @@
                                     </span>
                                 </label>
                             </td>
-                            <td class="py-4 px-6">
+                            <td class="py-4 px-4">
                                 <button onclick="bukaModalRuangan(this)"
                                     data-user='${JSON.stringify(user)}'
-                                    class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                                    class="text-blue-600 hover:bg-blue-50 rounded-lg">
                                     <img src="/assets/images/icon/action-edit-icon.svg" alt="Edit action icon"/>
                                 </button>
                                 <button
                                     type="button"
-                                    class="btn-delete-user p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                    class="btn-delete-user p-1 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                     data-id="${user.id}"
                                     data-url="/superadmin/manajemen-users/delete/user/${user.id}"
                                 >

@@ -49,7 +49,7 @@
 
             <div class="ml-auto">
                 <a href="{{ route('admin.tambah-ruangan-page') }}"
-                class="bg-teal-800 text-white rounded-full px-6 py-2 text-[15px] font-semibold hover:bg-teal-900 transition-colors whitespace-nowrap">
+                class="bg-teal-800 text-white rounded-full px-6 py-2 text-sm hover:bg-teal-900 transition-colors whitespace-nowrap">
                     Tambah Data
                 </a>
             </div>

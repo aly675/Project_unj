@@ -54,7 +54,7 @@
             <button
                 type="button"
                 onclick="openModalTambahFasilitas()"
-                class="bg-teal-800 text-white rounded-full px-6 py-2 text-sm font-semibold hover:bg-teal-900 transition-colors whitespace-nowrap"
+                class="bg-teal-800 text-white rounded-full px-6 py-2 text-sm hover:bg-teal-900 transition-colors whitespace-nowrap"
             >
                 Tambah Fasilitas
             </button>
@@ -62,7 +62,7 @@
 
             <div class="overflow-x-auto max-w-full rounded-lg bg-white shadow">
             <table class="min-w-full table-fixed divide-gray-200">
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-50 border-b">
                 <tr>
                     <th class="py-3 px-6 whitespace-nowrap text-left text-sm font-semibold text-gray-400 uppercase tracking-wider">No</th>
                     <th class="py-3 px-6 whitespace-nowrap text-left text-sm font-semibold text-gray-400 uppercase tracking-wider">Nama Fasilitas</th>
@@ -126,7 +126,7 @@
                     data.forEach((fasilitas, index) => {
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
-                            <td class="px-6 py-4 text-sm text-gray-700">${index + 1}</td>
+                            <td class="px-8 py-4 text-sm text-gray-700">${index + 1}</td>
                             <td class="px-6 py-4 text-sm text-gray-700">${fasilitas.nama}</td>
                             <td class="py-3 px-6 text-center flex justify-center gap-4">
                                 <button onclick="openModalUpdateFasilitas(${fasilitas.id}, '${fasilitas.nama}')">

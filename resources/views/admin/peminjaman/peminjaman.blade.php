@@ -38,7 +38,7 @@
 @section('main')
 
 
-    <h2 class="text-gray-900 font-semibold text-2xl mb-6">Peminjaman</h2>
+    <h1 class="text-2xl font-semibold text-gray-900 mb-6">Peminjaman</h1>
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
       <div class="flex gap-3 flex-1 max-w-md">
         <div class="relative flex-1">
@@ -52,9 +52,9 @@
          </svg>
         </div>
 
-        <div class="relative w-48">
+        <div class="relative">
             <select
-            class="w-full border border-gray-300 rounded-lg py-2 pl-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:border-transparent appearance-none"
+            class="appearance-none px-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:border-transparent text-sm"
             >
             <option>Status : All</option>
             <option>Menunggu Persetujuan</option>
@@ -76,11 +76,12 @@
       </div>
       <a
         href="{{route('admin.tambah-peminjaman-page')}}"
-        class="bg-teal-800 text-white rounded-full px-6 py-2 text-sm font-semibold hover:bg-teal-900 transition-colors whitespace-nowrap">
+        class="bg-teal-800 text-white rounded-full px-6 py-2 text-sm hover:bg-teal-900 transition-colors whitespace-nowrap">
         Tambah Data
       </a>
     </div>
-    <div class="overflow-x-auto max-w-full bg-white rounded-lg shadow">
+    <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+     <div class="overflow-x-auto max-w-full bg-white rounded-lg shadow">
       <table class="min-w-full table-fixed divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>
@@ -91,37 +92,37 @@
               NO
             </th>
             <th
-              class="px-6 py-3 text-left text-sm font-semibold text-gray-400 uppercase tracking-wider"
+              class="px-6 py-3 text-left text-sm text-gray-400 uppercase tracking-wider"
               scope="col"
             >
               NOMOR SURAT
             </th>
             <th
-              class="px-6 py-3 text-left text-sm font-semibold text-gray-400 uppercase tracking-wider"
+              class="px-6 py-3 text-left text-sm text-gray-400 uppercase tracking-wider"
               scope="col"
             >
               ASAL SURAT
             </th>
             <th
-              class="px-6 py-3 text-left text-sm font-semibold text-gray-400 uppercase tracking-wider"
+              class="px-6 py-3 text-left text-sm text-gray-400 uppercase tracking-wider"
               scope="col"
             >
               NAMA PEMINJAM
             </th>
             <th
-              class="px-6 py-3 text-left text-sm font-semibold text-gray-400 uppercase tracking-wider"
+              class="px-6 py-3 text-left text-sm text-gray-400 uppercase tracking-wider"
               scope="col"
             >
               LAMA PEMINJAM
             </th>
             <th
-              class="px-6 py-3 text-left text-sm font-semibold text-gray-400 uppercase tracking-wider"
+              class="px-6 py-3 text-left text-sm text-gray-400 uppercase tracking-wider"
               scope="col"
             >
               STATUS
             </th>
             <th
-              class="px-6 py-3 text-left text-sm font-semibold text-gray-400 uppercase tracking-wider"
+              class="px-6 py-3 text-left text-sm text-gray-400 uppercase tracking-wider"
               scope="col"
             >
               ACTION
@@ -166,6 +167,7 @@
         ></nav>
       </div>
     </div>
+ </div>
 
     <div id="modalOverlayDetail" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible transition-all duration-300 ease-out">
         @include('admin.peminjaman.detail-peminjaman')
@@ -212,7 +214,7 @@
                     peminjamans.forEach((peminjaman, index) => {
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">${index + 1}</td>
+                            <td class="px-8 py-4 whitespace-nowrap text-sm text-gray-700 font-normal">${index + 1}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-normal">${peminjaman.nomor_surat}</td>
                             <td class="px-6 py-4 text-sm text-gray-700 font-normal">${peminjaman.asal_surat}</td>
                             <td class="px-6 py-4 text-sm text-gray-700 font-normal">${peminjaman.nama_peminjam}</td>
