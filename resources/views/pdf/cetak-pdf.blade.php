@@ -77,11 +77,16 @@
             <li>Jumlah Ruang: {{$data->jumlah_ruangan}}</li>
             <li>Jumlah PC: {{$data->jumlah_pc}}</li>
         </ul>
-        <p>Surat Anda telah <strong>DITERIMA</strong>. Anda telah diberikan izin untuk menggunakan ruang-ruang di UPT TIK.</p>
-        <p>Selanjutnya, berikut rincian ruang yang telah disetujui untuk penggunaan:</p>
+        @if ($data->status === 'Diterima')
+            <p>Surat Anda telah <strong>DITERIMA</strong>. Anda telah diberikan izin untuk menggunakan ruang-ruang di UPT TIK.</p>
+            <p>Selanjutnya, berikut rincian tanggal yang telah disetujui untuk penggunaan:</p>
+        @elseif ($data->status === 'Ditolak')
+            <p>Surat Anda telah <strong>DITOLAK</strong>.</p>
+            <p>Alasan penolakan: <strong>{{ $data->alesan ?? 'Tidak ada alasan yang diberikan.' }}</strong></p>
+            <p>Selanjutnya, berikut rincian tanggal yang telah ditolak untuk penggunaan:</p>
+        @endif
         <ul>
-            <li>01 Juli 2025</li>
-            <li>02 Juli 2025</li>
+            <li>{{ $tanggalFormatted }}</li>
         </ul>
         <p>Demikianlah konfirmasi dari kami. Jika Anda memiliki pertanyaan lebih lanjut atau membutuhkan bantuan, jangan ragu untuk menghubungi kami melalui nomor kontak yang tertera di bawah.</p>
     </main>

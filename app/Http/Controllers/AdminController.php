@@ -178,8 +178,12 @@ class AdminController extends Controller
 
     public function cetak($id)
     {
-        $data = peminjaman::findOrFail($id);
-        $pdf = Pdf::loadView('pdf/cetak-pdf', compact('data'));
+        $data = Peminjaman::findOrFail($id);
+
+        // Panggil method yang tadi dibuat untuk memformat tanggal
+        $tanggalFormatted = $data->formatTanggal();
+
+        $pdf = Pdf::loadView('pdf/cetak-pdf', compact('data', 'tanggalFormatted')); // <-- Tambahkan variabel baru
 
         $safeFilename = str_replace(['/', '\\'], '-', $data->nomor_surat) . '.pdf';
 

@@ -54,7 +54,7 @@ class UserSeeder extends Seeder
         }
 
          // Membuat 50 user dummy
-        User::factory()->count(100)->create();
+        // User::factory()->count(100)->create();
 
     }
 }
