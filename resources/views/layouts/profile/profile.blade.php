@@ -1,7 +1,7 @@
 @php
     switch ($profile->role) {
         case 'superadmin':
-            $layout = 'layouts.superadmin-layout';
+            $layout = 'layouts.super-admin-layout';
             break;
         case 'admin':
             $layout = 'layouts.admin-layout';
