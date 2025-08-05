@@ -23,11 +23,11 @@
   Form Input Surat Peminjaman
 </h1>
 
-<div class="bg-white rounded-lg shadow-sm pt-1 px-6 pb-6">
+<div class="bg-white rounded-lg shadow-sm border pt-1 px-6 pb-6">
   <form
     id="formPeminjaman"
     onsubmit="handleSubmit(event)"
-    class="space-y-6"
+    class="space-y-5"
     method="POST"
     action="{{ route('admin.tambah-peminjaman') }}"
     enctype="multipart/form-data"
@@ -36,7 +36,7 @@
 
     <!-- Nomor Surat -->
     <div>
-      <label for="nomor-surat" class="text-sm font-medium text-gray-700 mb-2 block">
+      <label for="nomor-surat" class="block text-sm font-medium text-gray-700 mb-1">
         Nomor Surat
       </label>
       <input
@@ -50,7 +50,7 @@
 
     <!-- Asal Surat -->
     <div>
-      <label for="asal-surat" class="text-sm font-medium text-gray-700 mb-2 block">
+      <label for="asal-surat" class="block text-sm font-medium text-gray-700 mb-1">
         Asal Surat
       </label>
       <input
@@ -64,7 +64,7 @@
 
     <!-- Nama Peminjam -->
     <div>
-      <label for="nama-peminjam" class="text-sm font-medium text-gray-700 mb-2 block">
+      <label for="nama-peminjam" class="block text-sm font-medium text-gray-700 mb-1">
         Nama Peminjam
       </label>
       <input
@@ -78,7 +78,7 @@
 
     <!-- Jumlah Hari -->
     <div>
-      <label class="text-sm font-medium text-gray-700 mb-2 block">
+      <label class="block text-sm font-medium text-gray-700 mb-1">
         Jumlah Hari
       </label>
       <input
@@ -106,7 +106,7 @@
 
     <!-- Jumlah Ruangan -->
     <div>
-      <label for="jumlah-ruangan" class="text-sm font-medium text-gray-700 mb-2 block">
+      <label for="jumlah-ruangan" class="block text-sm font-medium text-gray-700 mb-1">
         Jumlah Ruangan
       </label>
       <input
@@ -122,7 +122,7 @@
 
     <!-- Jumlah PC -->
     <div>
-      <label for="jumlah-pc" class="text-sm font-medium text-gray-700 mb-2 block">
+      <label for="jumlah-pc" class="block text-sm font-medium text-gray-700 mb-1">
         Jumlah PC
       </label>
       <input
@@ -138,7 +138,7 @@
 
     <!-- Lampiran -->
     <div>
-      <label for="lampiran" class="text-sm font-medium text-gray-700 mb-2 block">
+      <label for="lampiran" class="block text-sm font-medium text-gray-700 mb-1">
         Lampiran
       </label>
       <input
@@ -147,7 +147,7 @@
         type="file"
         accept=".pdf"
         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500
-        file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+      file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
       />
       <p class="text-xs text-gray-500 mt-1">
         Format file yang diperbolehkan hanya PDF dengan ukuran maksimum 2 MB
@@ -155,7 +155,7 @@
     </div>
 
     <!-- Action Buttons -->
-    <div class="flex justify-end space-x-3 pt-6">
+    <div class="flex justify-end space-x-3 pt-5">
       <button
         type="button"
         onclick="handleCancel()"

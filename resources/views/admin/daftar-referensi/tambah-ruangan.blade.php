@@ -124,7 +124,7 @@
                 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
         />
         <p class="text-xs text-gray-500 mt-1">
-        Format file: *.jpeg, *.jpg, *.png (maks 2 MB)
+        Format file yang diperbolehkan: *.jpeg, *.jpg, *.png (maks 2 MB)
         </p>
 
 
