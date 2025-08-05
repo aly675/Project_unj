@@ -240,7 +240,7 @@
         }
 
         // Atur tautan untuk surat pengajuan
-        suratBtn.href = `/storage/${data.lampiran}`;
+        suratBtn.href = `/storage/lampiran-peminjaman/${data.lampiran}`;
 
         // Tampilkan overlay modal dan terapkan animasi masuk
         modalOverlay.classList.remove("opacity-0", "invisible");

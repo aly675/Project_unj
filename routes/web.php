@@ -11,6 +11,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/profile', function(){
+    return view('layouts.profile.profile');
+});
+
 Route::fallback(function () {
     return view('errors.404'); // pakai view kamu sendiri
 })->middleware(['web', 'auth']); // ini penting!
