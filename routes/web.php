@@ -1,15 +1,17 @@
 <?php
 
-use App\Http\Controllers\AdminController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\IndexController;
+use App\Http\Controllers\SupkorlaController;
 use App\Http\Controllers\KepalaUptController;
 use App\Http\Controllers\SuperAdminController;
-use App\Http\Controllers\SupkorlaController;
-use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/data-ruangan', [IndexController::class, 'data_ruangan_json'])->name('data.json');
 
 Route::get('/profile', function(){
     return view('layouts.profile.profile');

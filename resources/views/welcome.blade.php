@@ -212,157 +212,12 @@
         <h2 class="text-3xl font-bold text-gray-800 mb-3">Daftar Ruangan</h2>
         <p class="text-gray-600 max-w-2xl mx-auto">Temukan ruangan yang sesuai kebutuhan kegiatan akademik Anda</p>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          <!-- Ruang 1 -->
-          <div class="room-card flex flex-col h-full bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="relative overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Lab Komputer 1" class="room-image w-full" />
-              <span class="status-badge bg-[#d0ebeb] text-[#006569]"> <i class="fas fa-check-circle mr-1"></i> Tersedia </span>
-            </div>
-            <div class="p-6 flex-grow">
-              <div class="flex justify-between items-start mb-3">
-                <div>
-                  <h4 class="text-xl font-bold text-gray-800 mb-1">Lab Komputer 1</h4>
-                  <div class="flex items-center text-sm text-gray-500 mb-2"><i class="fas fa-map-marker-alt mr-2 text-[#006569]"></i> Gedung A, Lantai 2</div>
-                </div>
-                <div class="bg-[#d0ebeb] text-[#006569] px-3 py-1 rounded-lg text-sm font-bold"><i class="fas fa-user-friends mr-1"></i> 30</div>
-              </div>
-              <p class="text-gray-600 mb-4">Ruangan dengan 30 unit komputer terbaru untuk praktikum dan pelatihan.</p>
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="facility-tag"><i class="fas fa-desktop"></i> 30 PC</span>
-                <span class="facility-tag"><i class="fas fa-snowflake"></i> AC</span>
-                <span class="facility-tag"><i class="fas fa-video"></i> Proyektor</span>
-                <span class="facility-tag"><i class="fas fa-wifi"></i> WiFi</span>
-              </div>
-              <div class="mt-auto pt-3 border-t border-gray-100 text-sm text-gray-500"><i class="fas fa-clock mr-2 text-[#006569]"></i> Senin-Jumat: 08.00-21.00 | Sabtu: 09.00-17.00</div>
-            </div>
-          </div>
-
-          <!-- Ruang 2 -->
-          <div class="room-card flex flex-col h-full bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="relative overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Ruang Rapat" class="room-image" />
-              <span class="status-badge bg-red-100 text-red-700"> <i class="fas fa-times-circle mr-1"></i> Terpakai </span>
-            </div>
-            <div class="p-6 flex-grow">
-              <div class="flex justify-between items-start mb-3">
-                <div>
-                  <h4 class="text-xl font-bold text-gray-800 mb-1">Ruang Rapat</h4>
-                  <div class="flex items-center text-sm text-gray-500 mb-2"><i class="fas fa-map-marker-alt mr-2 text-[#006569]"></i> Gedung B, Lantai 1</div>
-                </div>
-                <div class="bg-[#d0ebeb] text-[#006569] px-3 py-1 rounded-lg text-sm font-bold"><i class="fas fa-user-friends mr-1"></i> 20</div>
-              </div>
-              <p class="text-gray-600 mb-4">Ruang rapat eksekutif dengan fasilitas presentasi lengkap untuk pertemuan penting.</p>
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="facility-tag"><i class="fas fa-tv"></i> LCD TV 65"</span>
-                <span class="facility-tag"><i class="fas fa-microphone"></i> Sound System</span>
-                <span class="facility-tag"><i class="fas fa-video"></i> Konferensi Video</span>
-                <span class="facility-tag"><i class="fas fa-coffee"></i> Coffee Maker</span>
-              </div>
-              <div class="mt-auto pt-3 border-t border-gray-100 text-sm text-gray-500"><i class="fas fa-clock mr-2 text-[#006569]"></i> Senin-Jumat: 08.00-21.00 | Sabtu: 09.00-17.00</div>
-            </div>
-          </div>
-
-          <!-- Ruang 3 -->
-          <div class="room-card flex flex-col h-full bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="relative overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Auditorium" class="room-image" />
-              <span class="status-badge bg-[#d0ebeb] text-[#006569]"> <i class="fas fa-check-circle mr-1"></i> Tersedia </span>
-            </div>
-            <div class="p-6 flex-grow">
-              <div class="flex justify-between items-start mb-3">
-                <div>
-                  <h4 class="text-xl font-bold text-gray-800 mb-1">Auditorium</h4>
-                  <div class="flex items-center text-sm text-gray-500 mb-2"><i class="fas fa-map-marker-alt mr-2 text-[#006569]"></i> Gedung Utama, Lantai 3</div>
-                </div>
-                <div class="bg-[#d0ebeb] text-[#006569] px-3 py-1 rounded-lg text-sm font-bold"><i class="fas fa-user-friends mr-1"></i> 100</div>
-              </div>
-              <p class="text-gray-600 mb-4">Auditorium modern dengan kapasitas besar untuk seminar, workshop, dan acara kampus.</p>
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="facility-tag"><i class="fas fa-microphone-alt"></i> Sound System</span>
-                <span class="facility-tag"><i class="fas fa-projector"></i> Proyektor HD</span>
-                <span class="facility-tag"><i class="fas fa-couch"></i> Panggung</span>
-                <span class="facility-tag"><i class="fas fa-snowflake"></i> AC Sentral</span>
-              </div>
-              <div class="mt-auto pt-3 border-t border-gray-100 text-sm text-gray-500"><i class="fas fa-clock mr-2 text-[#006569]"></i> Senin-Jumat: 08.00-21.00 | Sabtu: 09.00-17.00</div>
-            </div>
-          </div>
-
-          <!-- Ruang 4 -->
-          <div class="room-card flex flex-col h-full bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="relative overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Lab Komputer 2" class="room-image" />
-              <span class="status-badge bg-[#d0ebeb] text-[#006569]"> <i class="fas fa-check-circle mr-1"></i> Tersedia </span>
-            </div>
-            <div class="p-6 flex-grow">
-              <div class="flex justify-between items-start mb-3">
-                <div>
-                  <h4 class="text-xl font-bold text-gray-800 mb-1">Lab Komputer 2</h4>
-                  <div class="flex items-center text-sm text-gray-500 mb-2"><i class="fas fa-map-marker-alt mr-2 text-[#006569]"></i> Gedung A, Lantai 2</div>
-                </div>
-                <div class="bg-[#d0ebeb] text-[#006569] px-3 py-1 rounded-lg text-sm font-bold"><i class="fas fa-user-friends mr-1"></i> 25</div>
-              </div>
-              <p class="text-gray-600 mb-4">Ruangan dengan spesifikasi tinggi untuk pemrograman dan desain grafis.</p>
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="facility-tag"><i class="fas fa-desktop"></i> 25 PC</span>
-                <span class="facility-tag"><i class="fas fa-microchip"></i> i7/16GB RAM</span>
-                <span class="facility-tag"><i class="fas fa-projector"></i> Proyektor</span>
-                <span class="facility-tag"><i class="fas fa-print"></i> Printer</span>
-              </div>
-              <div class="mt-auto pt-3 border-t border-gray-100 text-sm text-gray-500"><i class="fas fa-clock mr-2 text-[#006569]"></i> Senin-Jumat: 08.00-21.00 | Sabtu: 09.00-17.00</div>
-            </div>
-          </div>
-
-          <!-- Ruang 5 -->
-          <div class="room-card flex flex-col h-full bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="relative overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Studio Multimedia" class="room-image" />
-              <span class="status-badge bg-yellow-100 text-yellow-700"> <i class="fas fa-tools mr-1"></i> Perawatan </span>
-            </div>
-            <div class="p-6 flex-grow">
-              <div class="flex justify-between items-start mb-3">
-                <div>
-                  <h4 class="text-xl font-bold text-gray-800 mb-1">Studio Multimedia</h4>
-                  <div class="flex items-center text-sm text-gray-500 mb-2"><i class="fas fa-map-marker-alt mr-2 text-[#006569]"></i> Gedung C, Lantai 1</div>
-                </div>
-                <div class="bg-[#d0ebeb] text-[#006569] px-3 py-1 rounded-lg text-sm font-bold"><i class="fas fa-user-friends mr-1"></i> 10</div>
-              </div>
-              <p class="text-gray-600 mb-4">Studio lengkap untuk produksi konten video, audio, dan fotografi.</p>
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="facility-tag"><i class="fas fa-video"></i> Kamera Profesional</span>
-                <span class="facility-tag"><i class="fas fa-lightbulb"></i> Lighting Setup</span>
-                <span class="facility-tag"><i class="fas fa-headphones"></i> Ruang Audio</span>
-                <span class="facility-tag"><i class="fas fa-laptop"></i> Editing Station</span>
-              </div>
-              <div class="mt-auto pt-3 border-t border-gray-100 text-sm text-gray-500"><i class="fas fa-clock mr-2 text-[#006569]"></i> Khusus dengan perjanjian</div>
-            </div>
-          </div>
-
-          <!-- Ruang 6 -->
-          <div class="room-card flex flex-col h-full bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="relative overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Ruang Kelas Digital" class="room-image" />
-              <span class="status-badge bg-[#d0ebeb] text-[#006569]"> <i class="fas fa-check-circle mr-1"></i> Tersedia </span>
-            </div>
-            <div class="p-6 flex-grow">
-              <div class="flex justify-between items-start mb-3">
-                <div>
-                  <h4 class="text-xl font-bold text-gray-800 mb-1">Ruang Kelas Digital</h4>
-                  <div class="flex items-center text-sm text-gray-500 mb-2"><i class="fas fa-map-marker-alt mr-2 text-[#006569]"></i> Gedung A, Lantai 1</div>
-                </div>
-                <div class="bg-[#d0ebeb] text-[#006569] px-3 py-1 rounded-lg text-sm font-bold"><i class="fas fa-user-friends mr-1"></i> 40</div>
-              </div>
-              <p class="text-gray-600 mb-4">Ruang kelas modern dengan teknologi pembelajaran terintegrasi.</p>
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="facility-tag"><i class="fas fa-tv"></i> Smartboard</span>
-                <span class="facility-tag"><i class="fas fa-projector"></i> Proyektor</span>
-                <span class="facility-tag"><i class="fas fa-wifi"></i> WiFi</span>
-                <span class="facility-tag"><i class="fas fa-video"></i> Sistem Recording</span>
-              </div>
-              <div class="mt-auto pt-3 border-t border-gray-100 text-sm text-gray-500"><i class="fas fa-clock mr-2 text-[#006569]"></i> Senin-Jumat: 08.00-21.00 | Sabtu: 09.00-17.00</div>
-            </div>
-          </div>
-        </div>
+      <!-- Kontainer untuk menampung semua kartu ruangan -->
+      <div id="ruangan-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Kartu ruangan akan di-generate oleh JavaScript di sini -->
+          <!-- Contoh Tampilan Loading -->
+          <p id="loading-indicator" class="text-gray-500 col-span-full">Memuat data ruangan...</p>
+      </div>
       <div class="text-center mt-12">
         <button class="bg-[#006569] text-white font-semibold px-8 py-3 rounded-lg hover:bg-[#004f50] transition duration-300 inline-flex items-center"><i class="fas fa-list mr-2"></i>Tampilkan Semua Ruangan</button>
       </div>
@@ -548,6 +403,84 @@
           closeMenu();
         }
       });
+
+          // Fungsi untuk mengambil dan merender data ruangan
+        async function fetchDataRuangan() {
+            const ruanganContainer = document.getElementById('ruangan-container');
+            const loadingIndicator = document.getElementById('loading-indicator');
+
+            try {
+                // Panggil endpoint API yang sudah kita buat
+                const response = await fetch('/data-ruangan');
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                const dataRuangan = result.data;
+
+                // Kosongkan kontainer dari loading indicator atau data lama
+                ruanganContainer.innerHTML = '';
+
+                if (dataRuangan.length === 0) {
+                    ruanganContainer.innerHTML = '<p class="text-gray-500 col-span-full">Tidak ada data ruangan yang tersedia.</p>';
+                    return;
+                }
+
+                // Loop untuk setiap data ruangan dan buat elemen HTML-nya
+                dataRuangan.forEach(ruangan => {
+                    // Buat div utama untuk kartu
+                    const card = document.createElement('div');
+                    card.className = "room-card flex flex-col h-full bg-white rounded-lg shadow-md overflow-hidden";
+
+                    // Membuat HTML untuk fasilitas secara dinamis
+                    const fasilitasHTML = ruangan.fasilitas.map(fasilitas => {
+                        // Anda bisa menambahkan logika untuk ikon yang berbeda di sini
+                        let iconClass = 'fa-check-square'; // Ikon default
+                        if (fasilitas.nama.toLowerCase().includes('pc')) iconClass = 'fa-desktop';
+                        if (fasilitas.nama.toLowerCase().includes('ac')) iconClass = 'fa-snowflake';
+                        if (fasilitas.nama.toLowerCase().includes('proyektor')) iconClass = 'fa-video';
+                        if (fasilitas.nama.toLowerCase().includes('wifi')) iconClass = 'fa-wifi';
+
+                        return `<span class="facility-tag"><i class="fas ${iconClass}"></i> ${fasilitas.jumlah} ${fasilitas.nama}</span>`;
+                    }).join(''); // Gabungkan semua span menjadi satu string HTML
+
+                    // Isi kartu dengan data menggunakan template literal
+                    card.innerHTML = `
+                        <div class="relative overflow-hidden">
+                            <img src="${ruangan.gambar ? '/storage/' + ruangan.gambar : 'https://placehold.co/800x400/e2e8f0/64748b?text=Gambar+Ruangan'}" alt="${ruangan.nama}" class="room-image w-full" />
+                        </div>
+                        <div class="p-6 flex-grow flex flex-col">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h4 class="text-xl font-bold text-gray-800 mb-1">${ruangan.nama}</h4>
+                                    <div class="flex items-center text-sm text-gray-500 mb-2"><i class="fas fa-map-marker-alt mr-2 text-[#006569]"></i> Gedung PUSTIKOM</div>
+                                </div>
+                                <div class="bg-[#d0ebeb] text-[#006569] px-3 py-1 rounded-lg text-sm font-bold flex items-center"><i class="fas fa-user-friends mr-2"></i> ${ruangan.kapasitas}</div>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                ${fasilitasHTML}
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-100 text-sm text-gray-500">
+                                <i class="fas fa-clock mr-2 text-[#006569]"></i>  Senin-Jumat: 08.00-21.00 | Sabtu: 09.00-17.00
+                            </div>
+                        </div>
+                    `;
+
+                    // Tambahkan kartu yang sudah jadi ke dalam kontainer
+                    ruanganContainer.appendChild(card);
+                });
+
+            } catch (error) {
+                // Tampilkan pesan error jika API gagal diakses
+                loadingIndicator.innerText = 'Gagal memuat data. Silakan coba lagi nanti.';
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Jalankan fungsi fetchDataRuangan saat halaman selesai dimuat
+        document.addEventListener('DOMContentLoaded', fetchDataRuangan);
     </script>
   </body>
 </html>
