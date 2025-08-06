@@ -132,7 +132,7 @@
                 @endforeach
             </tbody>
         </table>
-        <div class="px-6 py-4 border-t border-gray-200">
+        {{-- <div class="px-6 py-4 border-t border-gray-200">
             <div class="flex items-center justify-end">
                 <div class="flex items-center space-x-2">
                     <button class="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">
@@ -149,7 +149,7 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 </div>
 

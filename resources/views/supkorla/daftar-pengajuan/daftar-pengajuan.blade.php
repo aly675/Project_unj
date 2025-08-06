@@ -90,6 +90,7 @@
     const ruangans = @json($ruangans);
     const ruanganDipakaiPerTanggal = @json($ruanganDipakaiPerTanggal);
     const modalOverlayVerifikasi = document.getElementById('modalOverlayVerifikasi');
+    console.log(ruangans);
 
     let maxTerpilih = 1;
 
@@ -152,6 +153,13 @@ function openModalVerifikasi(button) {
             (!sedangDipakai ? "cursor-pointer hover:shadow-md hover:border-[#007D6E]" : "opacity-60 cursor-not-allowed bg-gray-100");
 
         const checkbox = document.createElement("input");
+           // --- TAMBAHKAN LOGIKA INI ---
+        // 1. Cari fasilitas dengan nama "PC" di dalam ruangan 'r'
+        const fasilitasPC = r.fasilitas.find(f => f.nama === 'PC');
+
+        // 2. Ambil jumlahnya. Jika tidak ada fasilitas PC, anggap jumlahnya 0.
+        const jumlah_pc = fasilitasPC ? fasilitasPC.pivot.jumlah : 0;
+
         checkbox.type = "checkbox";
         checkbox.name = "ruangan_id[]";
         checkbox.value = r.id;
@@ -164,7 +172,7 @@ function openModalVerifikasi(button) {
                 <div class="flex-1">
                     <h3 class="text-base font-semibold mb-2 ${!sedangDipakai ? "text-gray-800" : "text-gray-500"}">${r.nama}</h3>
                     <ul class="text-sm ${!sedangDipakai ? "text-gray-600" : "text-gray-400"} list-disc list-inside leading-relaxed">
-                        <li>${r.pc} PC</li>
+                        <li>${jumlah_pc} PC</li>
                     </ul>
                 </div>
             </div>

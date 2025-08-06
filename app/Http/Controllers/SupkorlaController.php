@@ -116,7 +116,7 @@ class SupkorlaController extends Controller
     public function daftar_pengajuan_page()
     {
         $pengajuans = Peminjaman::where('status', 'Menunggu Verifikasi')->get();
-        $ruangans = Ruangan::all();
+        $ruangans = Ruangan::with('fasilitas')->get();
         // Ambil semua ruangan yang sedang digunakan di tanggal mana pun
         $verifikasiList = VerifikasiRuangan::with('peminjaman')->get();
         // Mapping: [tanggal_string => [ruangan_id]]
