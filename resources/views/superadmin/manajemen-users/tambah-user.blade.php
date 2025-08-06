@@ -98,35 +98,19 @@
 <script>
         function confirmCancel() {
                     Swal.fire({
-                        title: 'Yakin ingin membatalkan?',
-                        text: "Perubahan yang belum disimpan akan hilang.",
+                        title: 'Batalkan Form?',
+                        text: "Data yang sudah diisi akan hilang.",
                         icon: 'warning',
                         showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
+                        showCancelButton: true,
+                        confirmButtonColor: '#6c757d', // Tombol batal: abu-abu
+                        cancelButtonColor: '#3085d6',  // Tombol kembali: biru muda
                         confirmButtonText: 'Ya, batalkan',
-                        cancelButtonText: 'Kembali'
+                        cancelButtonText: 'Kembali',
+                        reverseButtons: true
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            // Contoh aksi: redirect atau reset form
-                            // window.location.href = '/admin/dashboard-page'; // redirect
-                            // atau reset form tertentu:
-                            // document.getElementById('form-id').reset();
-                            window.location.href = "{{ route('superadmin.manejemen-users-page') }}";
-
-                            // Jika hanya ingin notifikasi saja:
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Dibatalkan',
-                                text: 'Aksi berhasil dibatalkan',
-                                timer: 2000,
-                                showConfirmButton: false
-                            });
-
-                            // Contoh redirect setelah sukses
-                            setTimeout(() => {
-                                window.history.back(); // atau ubah ke route tujuan
-                            }, 1500);
+                            window.location.href = "{{ route('superadmin.manajemen-pengguna-batal') }}";
                         }
                     });
                 }

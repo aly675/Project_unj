@@ -64,6 +64,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 });
 
 Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(function () {
+    Route::get('/batal', [SuperAdminController::class, 'batal_pengguna'])->name('superadmin.manajemen-pengguna-batal');
     Route::get("/", [SuperAdminController::class, "dashboard"])->name("superadmin.dashboard-page");
     Route::get('/superadmin/stats-json', [SuperAdminController::class, 'stats_json'])->name('superadmin.stats-json');
     Route::get('/superadmin/users-json', [SuperAdminController::class, 'latestUsersJson'])->name('superadmin.dashboard-users-json');
