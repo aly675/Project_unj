@@ -468,4 +468,18 @@
 
 
    </script>
+
+@if(session('batal'))
+    <script>
+        Swal.fire({
+            toast: true,
+            position: 'bottom-end',
+            icon: 'info',
+            title: '{{ session('batal') }}',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true
+        });
+        </script>
+    @endif
 @endsection

@@ -185,7 +185,7 @@ class SuperAdminController extends Controller
 
     public function batal_pengguna()
     {
-        return redirect()->route('superadmin.manajemen-pengguna-batal')->with('batal','Form berhasil dibatalkan.');
+        return redirect()->route('superadmin.manejemen-users-page')->with('batal','Form berhasil dibatalkan.');
     }
 
     public function toggleStatus(Request $request)

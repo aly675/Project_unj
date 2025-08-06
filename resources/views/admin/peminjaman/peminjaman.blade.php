@@ -1003,7 +1003,7 @@
         Swal.fire({
             toast: true,
             position: 'bottom-end',
-            icon: 'success',
+            icon: 'info',
             title: '{{ session('batalSuccess') }}',
             showConfirmButton: false,
             timer: 1500,
