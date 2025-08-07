@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
     <style>
       html {
         scroll-behavior: smooth;
@@ -208,10 +209,38 @@
 
     <!-- DAFTAR RUANGAN -->
     <section id="ruangan" class="container max-w-screen-xl mx-auto px-4 md:px-6 pb-16 scroll-mt-24">
-      <div class="text-center mb-12">
+      <div class="text-center mb-3">
         <h2 class="text-3xl font-bold text-gray-800 mb-3">Daftar Ruangan</h2>
         <p class="text-gray-600 max-w-2xl mx-auto">Temukan ruangan yang sesuai kebutuhan kegiatan akademik Anda</p>
       </div>
+
+      <!-- Search dan Tanggal -->
+        <div class="flex flex-col items-center gap-4 md:flex-row md:justify-center mb-12">
+            <!-- Input Search -->
+<!-- Input Search -->
+<div class="relative w-full md:w-64">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       class="absolute left-3 top-[50%] -translate-y-[50%] w-5 h-5 text-gray-400 pointer-events-none"
+       fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+  </svg>
+  <input
+    type="text"
+    placeholder="Cari ruangan..."
+    class="w-full border border-gray-300 rounded-lg px-4 py-[10px] pl-11 text-sm border-gray-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm text-gray-700 appearance-none"
+  >
+</div>
+
+<!-- Input Tanggal -->
+<input
+  type="date"
+  class="w-full md:w-56 border border-gray-300 rounded-lg px-4 py-[10px] text-sm border-gray-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm text-gray-700 appearance-none"
+/>
+
+        </div>
+
+
       <!-- Kontainer untuk menampung semua kartu ruangan -->
       <div id="ruangan-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <!-- Kartu ruangan akan di-generate oleh JavaScript di sini -->
@@ -482,5 +511,6 @@
         // Jalankan fungsi fetchDataRuangan saat halaman selesai dimuat
         document.addEventListener('DOMContentLoaded', fetchDataRuangan);
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
   </body>
 </html>
