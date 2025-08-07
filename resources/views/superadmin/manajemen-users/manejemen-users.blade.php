@@ -467,6 +467,23 @@
         }
 
 
+    document.getElementById('modal-edit-user')?.addEventListener('click', function(e) {
+        if (e.target === document.getElementById('modal-edit-user')) {
+            tutupModalRuangan();
+        }
+    });
+
+    // Close modal dengan ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (document.getElementById('modal-edit-user')?.classList.contains('visible')) {
+                closeModalTambahFasilitas();
+            }
+
+        }
+    });
+
+
    </script>
 
 @if(session('batal'))
