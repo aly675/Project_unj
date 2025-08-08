@@ -174,8 +174,6 @@ class AdminController extends Controller
         ]);
     }
 
-
-
     public function cetak($id)
     {
         $data = Peminjaman::findOrFail($id);

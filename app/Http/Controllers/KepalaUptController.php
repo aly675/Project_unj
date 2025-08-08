@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Response;
 
 class KepalaUptController extends Controller
 {
+
+    /*
+        Halaman Dashboard Kepala UPT
+    **/
+
     public function dashboard()
     {
         return view('kepalaUpt.dashboard');
@@ -73,6 +78,10 @@ class KepalaUptController extends Controller
         return response()->json($data);
     }
 
+
+    /*
+        Halaman Peminjaman Kepala UPT
+    **/
 
     public function pengajuan_surat_page()
     {

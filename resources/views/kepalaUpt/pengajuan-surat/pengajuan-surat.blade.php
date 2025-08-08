@@ -64,26 +64,26 @@
 
 @section('main')
 
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-                    <h1 class="flex text-2xl mr-5 font-semibold text-gray-900">Pengajuan Surat</h1>
-                    <div class="flex gap-4">
-                        <div class="relative">
-                            <input type="text" id="search-input" placeholder="Search" class="pl-8 pr-4 py-2 border rounded-lg text-sm w-64">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 absolute left-2.5 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-sm text-gray-500">Sort by Status:</span>
-                            <select id="sort-select" class="border border-gray-300 rounded px-2 py-1 text-sm">
-                                <option value="diterima">All</option>
-                                <option value="diterima">Diterima</option>
-                                <option value="ditolak">Ditolak</option>
-                                <option value="menunggu-persetujuan">Menunggu Persetujuan</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+        <h1 class="flex text-2xl mr-5 font-semibold text-gray-900">Pengajuan Surat</h1>
+        <div class="flex gap-4">
+            <div class="relative">
+                <input type="text" id="search-input" placeholder="Search" class="pl-8 pr-4 py-2 border rounded-lg text-sm w-64">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 absolute left-2.5 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-sm text-gray-500">Sort by Status:</span>
+                <select id="sort-select" class="border border-gray-300 rounded px-2 py-1 text-sm">
+                    <option value="diterima">All</option>
+                    <option value="diterima">Diterima</option>
+                    <option value="ditolak">Ditolak</option>
+                    <option value="menunggu-persetujuan">Menunggu Persetujuan</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
 <!-- Table -->
 <div class="bg-white rounded-lg shadow overflow-hidden">
@@ -132,7 +132,7 @@
                 @endforeach
             </tbody>
         </table>
-        {{-- <div class="px-6 py-4 border-t border-gray-200">
+        <div class="px-6 py-4 border-t border-gray-200">
             <div class="flex items-center justify-end">
                 <div class="flex items-center space-x-2">
                     <button class="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">
@@ -149,7 +149,7 @@
                     </button>
                 </div>
             </div>
-        </div> --}}
+        </div>
     </div>
 </div>
 
@@ -195,17 +195,33 @@
         document.getElementById("modal_nama_peminjam").innerText = `: ${data.nama_peminjam}`;
         document.getElementById("modal_lama_peminjam").innerText = `: ${data.lama_hari} hari`;
 
+        const actionButtons = document.getElementById('action-buttons');
+
         // Atur teks status dan styling
         statusEl.innerText = data.status;
         statusEl.className = "inline-flex px-2 py-1 text-sm font-medium rounded-full"; // Reset kelas
 
         // Terapkan kelas spesifik status
-        if (data.status === "Disetujui") {
+        if (data.status === "Diterima") {
             statusEl.classList.add("bg-green-100", "text-green-800");
         } else if (data.status === "Ditolak") {
             statusEl.classList.add("bg-red-100", "text-red-800");
         } else {
             statusEl.classList.add("bg-yellow-100", "text-yellow-800");
+        }
+
+        // Cek statusnya
+        if (data.status === 'Menunggu Persetujuan') {
+            // Jika statusnya menunggu, pastikan tombol ada dan terlihat
+            actionButtons.innerHTML = `
+                <button class="tolak-btn bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 px-5 rounded-md">Tolak</button>
+                <button id="terimaBtn" class="bg-teal-700 hover:bg-teal-800 text-white font-medium py-2.5 px-5 rounded-md">Terima</button>
+            `;
+        } else {
+            // Jika statusnya Diterima, Ditolak, atau lainnya, kosongkan kontainer tombol
+            actionButtons.innerHTML = `
+          
+            `;
         }
 
         // --- Tampilan dinamis "Alasan Ditolak" ---

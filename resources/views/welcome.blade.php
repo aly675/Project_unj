@@ -228,14 +228,14 @@
   <input
     type="text"
     placeholder="Cari ruangan..."
-    class="w-full border border-gray-300 rounded-lg px-4 py-[10px] pl-11 text-sm border-gray-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm text-gray-700 appearance-none"
+    class="w-full border rounded-lg px-4 py-[10px] pl-11 border-gray-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm text-gray-700 appearance-none"
   >
 </div>
 
 <!-- Input Tanggal -->
 <input
   type="date"
-  class="w-full md:w-56 border border-gray-300 rounded-lg px-4 py-[10px] text-sm border-gray-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm text-gray-700 appearance-none"
+  class="w-full md:w-56 border rounded-lg px-4 py-[10px] border-gray-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm text-gray-700 appearance-none"
 />
 
         </div>

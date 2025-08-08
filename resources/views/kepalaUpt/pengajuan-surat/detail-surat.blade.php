@@ -59,7 +59,7 @@
         </div>
 
         <!-- Modal Footer -->
-        <div class="px-6 py-5 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-3">
+        <div id="lampiran-buttons" class="px-6 py-5 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-3">
             <a
                 href="#"
                 id="suratBtn"
@@ -71,9 +71,9 @@
                 </svg>
                 Surat Pengajuan
             </a>
-            <div class="flex gap-3">
-               <button class="tolak-btn bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 px-5 rounded-md">Tolak</button>
-                <button id="terimaBtn" class="bg-teal-700 hover:bg-teal-800 text-white font-medium py-2.5 px-5 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">Terima</button>
+            <div class="flex gap-3" id="action-buttons">
+                    <button class="tolak-btn bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 px-5 rounded-md">Tolak</button>
+                    <button id="terimaBtn" class="bg-teal-700 hover:bg-teal-800 text-white font-medium py-2.5 px-5 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">Terima</button>
             </div>
         </div>
     </div>
