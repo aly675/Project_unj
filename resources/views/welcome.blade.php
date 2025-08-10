@@ -10,68 +10,68 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
     <style>
-      html {
-        scroll-behavior: smooth;
-      }
-      body {
-        font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #f0fdf4 0%, #f0fdf4 50%, #ecfdf5 50%, #ecfdf5 100%);
-      }
-      .hero-bg {
-        background: linear-gradient(rgba(0, 101, 105, 0.5), rgba(0, 101, 105, 0.5)), url("{{ asset('assets/images/landing-page/bg-pustikom.jpg') }}");
-        background-size: cover;
-        background-position: center;
-      }
-      .room-card {
-        transition: all 0.3s ease;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
-        background: white;
-        display: flex;
-        flex-direction: column;
-      }
-      .room-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      }
-      .stat-card {
-        transition: all 0.3s ease;
-        border-radius: 16px;
-        background: white;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-      }
-      .stat-card:hover {
-        transform: translateY(-3px);
-      }
-      .section-title {
-        position: relative;
-        display: inline-block;
-        padding-bottom: 10px;
-        margin-bottom: 30px;
-      }
-      .section-title:after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 60px;
-        height: 4px;
-        background: #006569;
-        border-radius: 2px;
-      }
-      .facility-tag {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        background-color: #d0ebeb;
-        color: #006569;
-        font-size: 0.875rem;
-        gap: 0.25rem;
-      }
-      .status-badge {
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #f0fdf4 50%, #ecfdf5 50%, #ecfdf5 100%);
+        }
+        .hero-bg {
+            background: linear-gradient(rgba(0, 101, 105, 0.5), rgba(0, 101, 105, 0.5)), url("{{ asset('assets/images/landing-page/bg-pustikom.jpg') }}");
+            background-size: cover;
+            background-position: center;
+        }
+        .room-card {
+            transition: all 0.3s ease;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+            background: white;
+            display: flex;
+            flex-direction: column;
+        }
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .stat-card {
+            transition: all 0.3s ease;
+            border-radius: 16px;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+        .section-title {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: #006569;
+            border-radius: 2px;
+        }
+        .facility-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            background-color: #d0ebeb;
+            color: #006569;
+            font-size: 0.875rem;
+            gap: 0.25rem;
+        }
+        .status-badge {
         position: absolute;
         top: 15px;
         right: 15px;
@@ -80,21 +80,41 @@
         font-weight: 600;
         font-size: 0.85rem;
         z-index: 10;
-      }
-      .navbar {
-        -webkit-backdrop-filter: blur(10px);
-        backdrop-filter: blur(10px);
-        background: rgba(255, 255, 255, 0.9);
-      }
-      .room-image {
-        height: 220px;
-        object-fit: cover;
-        width: 100%;
-        transition: transform 0.3s ease;
-      }
-      .room-card:hover .room-image {
-        transform: scale(1.03);
-      }
+        }
+        
+        /* .status-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        } */
+        .status-tersedia {
+            background-color: #dcfce7; /* green-100 */
+            color: #166534; /* green-800 */
+        }
+        .status-dipakai {
+            background-color: #fee2e2; /* red-100 */
+            color: #991b1b; /* red-800 */
+        }
+        .navbar {
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.9);
+        }
+        .room-image {
+            height: 220px;
+            object-fit: cover;
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+        .room-card:hover .room-image {
+            transform: scale(1.03);
+        }
     </style>
   </head>
   <body class="text-gray-800 scroll-smooth overflow-x-hidden">
@@ -209,47 +229,34 @@
 
     <!-- DAFTAR RUANGAN -->
     <section id="ruangan" class="container max-w-screen-xl mx-auto px-4 md:px-6 pb-16 scroll-mt-24">
-      <div class="text-center mb-3">
-        <h2 class="text-3xl font-bold text-gray-800 mb-3">Daftar Ruangan</h2>
-        <p class="text-gray-600 max-w-2xl mx-auto">Temukan ruangan yang sesuai kebutuhan kegiatan akademik Anda</p>
-      </div>
-
-      <!-- Search dan Tanggal -->
-        <div class="flex flex-col items-center gap-4 md:flex-row md:justify-center mb-12">
-            <!-- Input Search -->
-<!-- Input Search -->
-<div class="relative w-full md:w-64">
-  <svg xmlns="http://www.w3.org/2000/svg"
-       class="absolute left-3 top-[50%] -translate-y-[50%] w-5 h-5 text-gray-400 pointer-events-none"
-       fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-  </svg>
-  <input
-    type="text"
-    placeholder="Cari ruangan..."
-    class="w-full border rounded-lg px-4 py-[10px] pl-11 border-gray-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm text-gray-700 appearance-none"
-  >
-</div>
-
-<!-- Input Tanggal -->
-<input
-  type="date"
-  class="w-full md:w-56 border rounded-lg px-4 py-[10px] border-gray-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm text-gray-700 appearance-none"
-/>
-
+        <div class="text-center mb-3">
+            <h2 class="text-3xl font-bold text-gray-800 mb-3">Daftar Ruangan</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Temukan ruangan yang sesuai kebutuhan kegiatan akademik Anda</p>
         </div>
 
+        <!-- Search dan Tanggal -->
+        <div class="flex flex-col items-center gap-4 md:flex-row md:justify-center mb-12">
+            <!-- Input Search -->
+            <div class="relative w-full md:w-64">
+                <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-[50%] -translate-y-[50%] w-5 h-5 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <!-- Beri ID pada input search -->
+                <input id="search-input" type="text" placeholder="Cari nama ruangan..." class="w-full border rounded-lg px-4 py-[10px] pl-11 border-gray-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm text-gray-700 appearance-none">
+            </div>
+            <!-- Input Tanggal -->
+            <!-- Beri ID pada input tanggal -->
+            <input id="tanggal-cek" type="date" class="w-full md:w-56 border rounded-lg px-4 py-[10px] border-gray-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm text-gray-700 appearance-none" />
+        </div>
 
-      <!-- Kontainer untuk menampung semua kartu ruangan -->
-      <div id="ruangan-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <!-- Kartu ruangan akan di-generate oleh JavaScript di sini -->
-          <!-- Contoh Tampilan Loading -->
-          <p id="loading-indicator" class="text-gray-500 col-span-full">Memuat data ruangan...</p>
-      </div>
-      <div class="text-center mt-12">
-        <button class="bg-[#006569] text-white font-semibold px-8 py-3 rounded-lg hover:bg-[#004f50] transition duration-300 inline-flex items-center"><i class="fas fa-list mr-2"></i>Tampilkan Semua Ruangan</button>
-      </div>
+        <!-- Kontainer untuk menampung semua kartu ruangan -->
+        <div id="ruangan-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Kartu ruangan akan di-generate oleh JavaScript di sini -->
+            <p id="loading-indicator" class="text-gray-500 col-span-full text-center">Memuat data ruangan...</p>
+        </div>
+        <div class="text-center mt-12">
+            <button class="bg-[#006569] text-white font-semibold px-8 py-3 rounded-lg hover:bg-[#004f50] transition duration-300 inline-flex items-center"><i class="fas fa-list mr-2"></i>Tampilkan Semua Ruangan</button>
+        </div>
     </section>
 
     <!-- FASILITAS -->
@@ -433,14 +440,60 @@
         }
       });
 
-          // Fungsi untuk mengambil dan merender data ruangan
-        async function fetchDataRuangan() {
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ambil elemen input dari DOM
+            const tanggalInput = document.getElementById('tanggal-cek');
+            const searchInput = document.getElementById('search-input');
+
+            // Fungsi untuk mendapatkan tanggal hari ini dalam format YYYY-MM-DD
+            const getTodayDate = () => {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+
+            // Set nilai default input tanggal ke hari ini
+            const today = getTodayDate();
+            tanggalInput.value = today;
+
+            // Panggil data untuk pertama kali saat halaman dimuat
+            fetchDataRuangan(today, '');
+
+            // Event listener untuk tanggal
+            tanggalInput.addEventListener('change', () => {
+                fetchDataRuangan(tanggalInput.value, searchInput.value);
+            });
+
+            // Event listener untuk search (dengan debounce untuk efisiensi)
+            let searchTimeout;
+            searchInput.addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                // Tunggu 300ms setelah user berhenti mengetik baru panggil API
+                searchTimeout = setTimeout(() => {
+                    fetchDataRuangan(tanggalInput.value, searchInput.value);
+                }, 300);
+            });
+        });
+
+          // Fungsi utama untuk mengambil dan merender data ruangan
+        async function fetchDataRuangan(tanggal, searchTerm) {
             const ruanganContainer = document.getElementById('ruangan-container');
-            const loadingIndicator = document.getElementById('loading-indicator');
+            ruanganContainer.innerHTML = `<p id="loading-indicator" class="text-gray-500 col-span-full text-center">Mencari ruangan...</p>`;
 
             try {
-                // Panggil endpoint API yang sudah kita buat
-                const response = await fetch('/data-ruangan');
+                // Bangun URL dengan parameter dinamis untuk tanggal dan search
+                const params = new URLSearchParams({
+                    tanggal: tanggal,
+                    search: searchTerm
+                });
+
+                const dataURL = '/data-ruangan'
+
+                const url = `${dataURL}?${params.toString()}`;
+
+                const response = await fetch(url);
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -449,36 +502,35 @@
                 const result = await response.json();
                 const dataRuangan = result.data;
 
-                // Kosongkan kontainer dari loading indicator atau data lama
-                ruanganContainer.innerHTML = '';
+                ruanganContainer.innerHTML = ''; // Kosongkan kontainer
 
                 if (dataRuangan.length === 0) {
-                    ruanganContainer.innerHTML = '<p class="text-gray-500 col-span-full">Tidak ada data ruangan yang tersedia.</p>';
+                    ruanganContainer.innerHTML = '<p class="text-gray-500 col-span-full text-center">Ruangan tidak ditemukan.</p>';
                     return;
                 }
 
-                // Loop untuk setiap data ruangan dan buat elemen HTML-nya
                 dataRuangan.forEach(ruangan => {
-                    // Buat div utama untuk kartu
                     const card = document.createElement('div');
-                    card.className = "room-card flex flex-col h-full bg-white rounded-lg shadow-md overflow-hidden";
+                    card.className = "room-card"; // Class dari style di <head>
 
-                    // Membuat HTML untuk fasilitas secara dinamis
                     const fasilitasHTML = ruangan.fasilitas.map(fasilitas => {
-                        // Anda bisa menambahkan logika untuk ikon yang berbeda di sini
-                        let iconClass = 'fa-check-square'; // Ikon default
+                        let iconClass = 'fa-check-square';
                         if (fasilitas.nama.toLowerCase().includes('pc')) iconClass = 'fa-desktop';
                         if (fasilitas.nama.toLowerCase().includes('ac')) iconClass = 'fa-snowflake';
                         if (fasilitas.nama.toLowerCase().includes('proyektor')) iconClass = 'fa-video';
                         if (fasilitas.nama.toLowerCase().includes('wifi')) iconClass = 'fa-wifi';
-
                         return `<span class="facility-tag"><i class="fas ${iconClass}"></i> ${fasilitas.jumlah} ${fasilitas.nama}</span>`;
-                    }).join(''); // Gabungkan semua span menjadi satu string HTML
+                    }).join('');
 
-                    // Isi kartu dengan data menggunakan template literal
+                    // Tentukan class untuk status badge berdasarkan data dari API
+                    const statusClass = ruangan.status_ketersediaan === 'Tersedia' ? 'status-tersedia' : 'status-dipakai';
+
                     card.innerHTML = `
-                        <div class="relative overflow-hidden">
-                            <img src="${ruangan.gambar ? '/storage/' + ruangan.gambar : 'https://placehold.co/800x400/e2e8f0/64748b?text=Gambar+Ruangan'}" alt="${ruangan.nama}" class="room-image w-full" />
+                        <div class="relative">
+                            <div class="status-badge ${statusClass}">
+                                ${ruangan.status_ketersediaan}
+                            </div>
+                            <img src="${ruangan.gambar ? '/storage/' + ruangan.gambar : 'https://placehold.co/800x400/e2e8f0/64748b?text=Gambar+Ruangan'}" alt="${ruangan.nama}" class="room-image" />
                         </div>
                         <div class="p-6 flex-grow flex flex-col">
                             <div class="flex justify-between items-start mb-3">
@@ -492,24 +544,21 @@
                                 ${fasilitasHTML}
                             </div>
                             <div class="mt-auto pt-4 border-t border-gray-100 text-sm text-gray-500">
-                                <i class="fas fa-clock mr-2 text-[#006569]"></i>  Senin-Jumat: 08.00-21.00 | Sabtu: 09.00-17.00
+                                <i class="fas fa-clock mr-2 text-[#006569]"></i> Senin-Jumat: 08.00-21.00 | Sabtu: 09.00-17.00
                             </div>
                         </div>
                     `;
-
-                    // Tambahkan kartu yang sudah jadi ke dalam kontainer
                     ruanganContainer.appendChild(card);
                 });
 
             } catch (error) {
-                // Tampilkan pesan error jika API gagal diakses
-                loadingIndicator.innerText = 'Gagal memuat data. Silakan coba lagi nanti.';
+                ruanganContainer.innerHTML = '<p class="text-red-500 col-span-full text-center">Gagal memuat data. Silakan coba lagi nanti.</p>';
                 console.error('Error fetching data:', error);
             }
         }
 
         // Jalankan fungsi fetchDataRuangan saat halaman selesai dimuat
-        document.addEventListener('DOMContentLoaded', fetchDataRuangan);
+        // document.addEventListener('DOMContentLoaded', fetchDataRuangan);
     </script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
   </body>

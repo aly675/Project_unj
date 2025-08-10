@@ -213,15 +213,15 @@
         // Cek statusnya
         if (data.status === 'Menunggu Persetujuan') {
             // Jika statusnya menunggu, pastikan tombol ada dan terlihat
-            actionButtons.innerHTML = `
-                <button class="tolak-btn bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 px-5 rounded-md">Tolak</button>
-                <button id="terimaBtn" class="bg-teal-700 hover:bg-teal-800 text-white font-medium py-2.5 px-5 rounded-md">Terima</button>
-            `;
+            // actionButtons.innerHTML = `
+            //     <button class="tolak-btn bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 px-5 rounded-md">Tolak</button>
+            //     <button id="terimaBtn" class="bg-teal-700 hover:bg-teal-800 text-white font-medium py-2.5 px-5 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">Terima</button>
+            // `;
+            actionButtons.classList.remove('hidden');
+            console.log('hello : '+ data.status);
         } else {
-            // Jika statusnya Diterima, Ditolak, atau lainnya, kosongkan kontainer tombol
-            actionButtons.innerHTML = `
-          
-            `;
+            actionButtons.classList.add('hidden');
+            console.log(data.status);
         }
 
         // --- Tampilan dinamis "Alasan Ditolak" ---
@@ -256,7 +256,7 @@
         }
 
         // Atur tautan untuk surat pengajuan
-        suratBtn.href = `/storage/lampiran-peminjaman/${data.lampiran}`;
+        suratBtn.href = `/storage/${data.lampiran}`;
 
         // Tampilkan overlay modal dan terapkan animasi masuk
         modalOverlay.classList.remove("opacity-0", "invisible");
