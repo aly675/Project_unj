@@ -93,6 +93,7 @@ Route::prefix('kepala-upt')->middleware( ['auth', 'role:kepalaupt'])->group(func
     });
     Route::prefix('kalender')->group( function(){
         Route::get('', [KepalaUptController::class, 'kalender_page'])->name('kepalaupt.kalender');
+        Route::get('data-ketersedian/json', [KepalaUptController::class, 'data_ketersedian_ruangan'])->name('kepalaupt.kalender-event');
     });
 });
 

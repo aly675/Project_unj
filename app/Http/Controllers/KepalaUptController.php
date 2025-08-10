@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ruangan;
 use App\Models\peminjaman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Models\VerifikasiRuangan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
 class KepalaUptController extends Controller
@@ -102,11 +105,6 @@ class KepalaUptController extends Controller
         return view('kepalaUpt.pengajuan-surat.pengajuan-surat', compact("peminjamans"));
     }
 
-    public function kalender_page()
-    {
-        return view('kepalaUpt.kalender.kalender');
-    }
-
     public function terima($id)
     {
         $pengajuan = Peminjaman::findOrFail($id);
@@ -130,4 +128,60 @@ class KepalaUptController extends Controller
         return response()->json(['success' => true, 'message' => 'Pengajuan ditolak.']);
     }
 
+
+/**
+ *
+ * Halamana Kalender
+ *
+ */
+
+    public function kalender_page()
+    {
+        return view('kepalaUpt.kalender.kalender');
+    }
+
+    public function data_ketersedian_ruangan(Request $request)
+    {
+        // 1. Ambil semua peminjaman yang statusnya "Diterima".
+        $peminjamanDiterima = Peminjaman::where('status', 'Diterima')
+                                ->with('verifikasiRuangans.ruangan')
+                                ->get();
+
+        // 2. Siapkan array kosong untuk menampung event kalender.
+        $events = [];
+
+        // 3. Lakukan perulangan untuk setiap peminjaman yang diterima.
+        foreach ($peminjamanDiterima as $peminjaman) {
+            // --- PERBAIKAN DI SINI ---
+            // Secara manual ubah string JSON menjadi array untuk mencegah error.
+            $tanggalData = $peminjaman->tanggal_peminjaman;
+            $daftarTanggal = is_string($tanggalData) ? json_decode($tanggalData, true) : $tanggalData;
+
+            // Pastikan hasilnya adalah array, jika tidak, buat array kosong.
+            if (!is_array($daftarTanggal)) {
+                $daftarTanggal = [];
+            }
+            // --- AKHIR PERBAIKAN ---
+
+            // Lakukan perulangan untuk setiap ruangan yang diverifikasi dalam peminjaman ini.
+            foreach ($peminjaman->verifikasiRuangans as $verifikasi) {
+                if ($verifikasi->ruangan) {
+                    $namaRuangan = $verifikasi->ruangan->nama;
+
+                    // Lakukan perulangan untuk setiap tanggal, lalu buat event-nya.
+                    foreach ($daftarTanggal as $tanggal) {
+                        $events[] = [
+                            'title' => $namaRuangan, // Judul event adalah nama ruangan
+                            'start' => $tanggal,      // Tanggal event
+                            'allDay' => true,         // Anggap event ini seharian penuh
+                            'className' => 'badge-terbatas' // Class CSS untuk styling
+                        ];
+                    }
+                }
+            }
+        }
+
+        // 4. Kembalikan hasilnya sebagai JSON.
+        return response()->json($events);
+    }
 }

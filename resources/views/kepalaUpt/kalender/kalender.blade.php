@@ -5,38 +5,37 @@
 @section('style')
 <style>
     body {
-      background-color: #f9f9f9;
-      margin: 20px;
+        background-color: #f9f9f9;
+        margin: 20px;
     }
 
     #calendar {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 8px rgba(0,0,0,0.1);
     }
 
     .fc .fc-daygrid-event {
-      font-size: 0.9rem;
-      padding: 2px 4px;
+        font-size: 0.85rem;
+        padding: 4px 6px;
+        border-radius: 4px;
+        cursor: default;
     }
 
+    /* Styling untuk event "Tidak Tersedia" */
     .badge-terbatas {
-      background-color: #e60000 !important;
-      color: white !important;
-      border: none;
-      border-radius: 4px;
-      padding: 2px 6px;
-      font-weight: bold;
+        background-color: #ef4444 !important; /* red-500 */
+        color: white !important;
+        border: 1px solid #dc2626 !important; /* red-600 */
     }
 </style>
-
 @endsection
 
 @section('main')
 
     <h1 class="text-2xl font-semibold text-gray-800 mb-6">Kalender Ketersediaan Ruangan</h1>
 
-        <div id="calendar" class="p-10"></div>
+    <div id="calendar" class="p-4 md:p-6 lg:p-10"></div>
 
 @endsection
 
@@ -48,23 +47,30 @@
 
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                locale: 'id',
+                locale: 'id', // Bahasa Indonesia
                 headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,dayGridWeek,dayGridDay'
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,dayGridWeek,dayGridDay'
                 },
-                events: [
-                {
-                    title: 'Ruangan tersedia : 2',
-                    start: '2025-06-10',
-                    className: 'badge-terbatas'
-                }
-                ]
+                // Ganti 'events' statis dengan URL ke API kita
+                events: '{{ route("kepalaupt.kalender-event") }}',
+
+                // Tampilkan loading indicator saat data diambil
+                loading: function(isLoading) {
+                    if (isLoading) {
+                        // Kamu bisa menambahkan efek loading di sini jika mau
+                        calendarEl.style.opacity = '0.5';
+                    } else {
+                        calendarEl.style.opacity = '1';
+                    }
+                },
+
+                // Kustomisasi tampilan event
+                eventDisplay: 'block',
             });
 
             calendar.render();
-            });
-
+        });
     </script>
 @endsection
