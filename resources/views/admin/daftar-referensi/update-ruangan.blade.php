@@ -45,7 +45,7 @@
                 <div class="relative w-64">
                 <select
                     name="fasilitas[]"
-                    class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-700"
+                    class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-600"
                 >
                     @foreach ($listFasilitas as $fasilitas)
                     <option value="{{ $fasilitas->id }}">{{ $fasilitas->nama }}</option>
@@ -63,7 +63,7 @@
                         value="1"
                         min="1"
                         name="jumlah[]"
-                        class="appearance-none w-16 px-3 py-2 border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                        class="appearance-none w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
                     >
                     <div class="absolute right-1 top-1/2 transform -translate-y-1/2 flex flex-col">
                         <button type="button" onclick="incrementQuantity(this)" class="text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
