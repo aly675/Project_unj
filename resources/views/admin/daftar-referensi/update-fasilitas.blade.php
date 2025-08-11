@@ -1,12 +1,3 @@
-<style>
-    .swal-toast-fixed-width {
-        min-width: 320px;   /* Lebar minimum cukup panjang */
-        max-width: 100%;    /* Jangan melebihi layar */
-        white-space: nowrap;
-        overflow: hidden;   /* Hilangkan scroll */
-        }
-
-</style>
 <!-- Modal Container -->
 <div
   id="modalUpdate"
@@ -145,10 +136,10 @@
             Swal.fire({
                 toast: true,
                 position: 'bottom-end',
-                icon: 'success',
-                title: 'Perubahan telah dibatalkan.',
+                icon: 'info',
+                title: 'Perubahan dibatalkan.',
                 showConfirmButton: false,
-                timer: 2000,
+                timer: 1500,
                 timerProgressBar: true,
                 customClass: {
                 popup: 'swal-toast-fixed-width'

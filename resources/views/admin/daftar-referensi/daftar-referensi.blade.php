@@ -61,11 +61,12 @@
 
 </section>
 
-<div id="modalTambahRuangan" class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black/50 transition-all duration-300 ease-out">
-  <div class="relative w-full max-w-3xl bg-white rounded-xl shadow-2xl transform transition-all duration-300 scale-95">
+<div id="modalTambahRuangan" class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black bg-opacity-0 opacity-0 scale-95
+  transition-all duration-300 ease-out">
+  <div class="w-full max-w-3xl mx-auto bg-white rounded-xl overflow-hidden shadow-2xl transform transition-all duration-300 relative scale-95">
 
     <!-- Header -->
-    <div class="bg-teal-800 text-white flex items-center justify-between px-6 py-4 rounded-t-lg">
+    <div class="bg-teal-800 text-white flex items-center justify-between px-6 py-4">
       <h2 class="text-lg font-semibold">Form Edit Ruangan</h2>
       <button onclick="tutupModalRuangan()" class="p-1 rounded hover:bg-white hover:bg-opacity-10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,7 +76,7 @@
     </div>
 
     <!-- Body -->
-    <div class="px-6 pb-6 max-h-[80vh] overflow-y-auto scrollbar-modern">
+    <div class="px-6 py-6 max-h-[80vh] overflow-y-auto scrollbar-modern">
      @include('admin.daftar-referensi.update-ruangan')
     </div>
   </div>
