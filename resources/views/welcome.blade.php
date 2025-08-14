@@ -81,7 +81,7 @@
         font-size: 0.85rem;
         z-index: 10;
         }
-        
+
         /* .status-badge {
             position: absolute;
             top: 1rem;
@@ -335,10 +335,13 @@
     <footer class="bg-[#006569] text-white pt-12">
       <div class="container max-w-screen-xl mx-auto px-4 md:px-6 pb-12">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8">
-          <div>
+          <div class="flex flex-col justify-between h-full">
             <img src="{{asset('assets/images/landing-page/logo-unj.png')}}" alt="Logo UNJ" class="w-auto max-w-[100px] h-25" />
             <h2 class="text-xl font-bold">PUSTIKOM</h2>
             <p class="uppercase text-sm tracking-wider">UNIVERSITAS NEGERI JAKARTA</p>
+            <a href="{{route('login')}}" class="bg-yellow-400 hover:bg-yellow-500 text-[#006569] font-bold py-2 px-4 rounded-lg mt-5 text-center block">
+                Login Admin
+            </a>
           </div>
           <div>
             <h4 class="text-lg font-semibold mb-4">Jam Operasional</h4>
