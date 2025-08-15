@@ -166,6 +166,7 @@
     // Baris ini mengasumsikan Anda melewatkan data 'peminjamans' dari controller Laravel Anda
     // ke view Blade sebagai array JSON.
     const peminjamanData = @json($peminjamans);
+    console.log(peminjamanData);
 
     /**
      * Membuka modal detail dengan data untuk ID pengajuan yang diberikan.
@@ -221,7 +222,6 @@
             console.log('hello : '+ data.status);
         } else {
             actionButtons.classList.add('hidden');
-            console.log(data.status);
         }
 
         // --- Tampilan dinamis "Alasan Ditolak" ---
