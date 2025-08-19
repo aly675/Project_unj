@@ -49,9 +49,60 @@
                 cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Ya, logout',
                 cancelButtonText: 'Batal'
-            }).then((result) => {
+            }).then(async (result) => {
                 if (result.isConfirmed) {
-                    document.getElementById('logout-form').submit();
+                    const form = document.getElementById('logout-form');
+                    const formData = new FormData(form);
+
+                    try {
+                        const response = await fetch(form.action, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'Accept': 'application/json',
+                            },
+                            body: formData,
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            Swal.fire({
+                                toast: true,
+                                position: 'bottom-end',
+                                icon: 'success',
+                                title: data.message,
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            // Hapus token dari localStorage jika ada (untuk SPA/API)
+                            localStorage.removeItem('sanctum_token');
+                            localStorage.removeItem('user_data');
+
+                            setTimeout(() => {
+                                window.location.href = '/login'; // Redirect ke halaman login
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                toast: true,
+                                position: 'bottom-end',
+                                icon: 'error',
+                                title: data.message || 'Gagal logout.',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error logout:', error);
+                        Swal.fire({
+                            toast: true,
+                            position: 'bottom-end',
+                            icon: 'error',
+                            title: 'Terjadi kesalahan saat logout.',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                    }
                 }
             });
         }

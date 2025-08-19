@@ -891,7 +891,7 @@
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch(`/admin/peminjaman/delete/${id}`, {
+                fetch(`/admin/peminjaman/${id}`, {
                     method: 'DELETE',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',

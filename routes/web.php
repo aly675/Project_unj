@@ -17,20 +17,26 @@ Route::get('/profile', function(){
     return view('layouts.profile.profile');
 });
 
+// Fallback route, pastikan ini di akhir. Middleware 'web' dan 'auth' ini untuk rute yang tidak ditemukan
+// jika masih ada sisa rute web biasa. Untuk API, biasanya respons 404 JSON.
 Route::fallback(function () {
-    return view('errors.404'); // pakai view kamu sendiri
-})->middleware(['web', 'auth']); // ini penting!
-
-
-Route::middleware(['guest'])->group(function(){
-
-    Route::get("/login", [AuthController::class, "masuk"])->name("login");
-    Route::get("/register", [AuthController::class, "daftar"])->name("register");
-    Route::post("/login/submit", [AuthController::class, "login"])->name("login.submit");
-    Route::post("/register/submit", [AuthController::class, "register"])->name("register.submit");
+    // Jika permintaan adalah API (misal, ada header Accept: application/json), kembalikan JSON 404
+    if (request()->expectsJson()) {
+        return response()->json(['message' => 'Not Found.'], 404);
+    }
+    return view('errors.404'); // atau tetap tampilkan view 404 jika bukan permintaan API
 });
 
 
+// Rute login dan register (sekarang login akan mengembalikan JSON)
+// Kita tidak lagi mengelompokkan ini di 'guest' karena login sekarang API
+// (dan bisa diakses guest untuk mendapatkan token)
+Route::get("/login", [AuthController::class, "masuk"])->name("login"); // Jika masih butuh view login
+Route::get("/register", [AuthController::class, "daftar"])->name("register"); // Jika masih butuh view register
+Route::post("/api/login", [AuthController::class, "login"])->name("api.login"); // Ini akan jadi API login utama
+Route::post("/api/register", [AuthController::class, "register"])->name("api.register"); // Jika ada API register
+
+// Ubah middleware 'auth' menjadi 'auth:sanctum' untuk rute yang dilindungi token
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get("/", [AdminController::class, "dashboard_page"])->name("admin.dashboard-page");
     Route::get('admin/dashboard-summary-json', [AdminController::class, 'dashboard_summary_json'])->name('admin.dashboard-summary-json');
@@ -42,7 +48,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/json/{id}', [AdminController::class, 'peminjaman_json_detail'])->name('admin.peminjaman-json-detail');
         Route::get("", [AdminController::class, "peminjaman_page"])->name("admin.peminjaman-page");
         Route::get("/tambah-peminjaman", [AdminController::class, "tambah_peminjaman_page"])->name("admin.tambah-peminjaman-page");
-        Route::delete('/delete/{id}', [AdminController::class, 'delete_peminjaman'])->name('admin.delete-pinjaman-ruangan');
+        Route::delete('/{id}', [AdminController::class, 'delete_peminjaman'])->name('admin.delete-pinjaman-ruangan');
         Route::post("/tambah-peminjaman/submit", [AdminController::class, "buatSurat"])->name("admin.tambah-peminjaman");
         Route::get("/detail-peminjaman", [AdminController::class, "detail_peminjaman_page"])->name("admin.detail-peminjaman-page");
         Route::put('/update/{id}', [AdminController::class, 'update_peminjaman'])->name('admin.update-peminjaman');
@@ -65,7 +71,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     });
 });
 
-Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(function () {
+Route::prefix('superadmin')->middleware(['auth:sanctum', 'role:superadmin'])->group(function () {
     Route::get('/batal', [SuperAdminController::class, 'batal_pengguna'])->name('superadmin.manajemen-pengguna-batal');
     Route::get("/", [SuperAdminController::class, "dashboard"])->name("superadmin.dashboard-page");
     Route::get('/superadmin/stats-json', [SuperAdminController::class, 'stats_json'])->name('superadmin.stats-json');
@@ -81,7 +87,7 @@ Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(func
     });
 });
 
-Route::prefix('kepala-upt')->middleware( ['auth', 'role:kepalaupt'])->group(function () {
+Route::prefix('kepala-upt')->middleware( ['auth:sanctum', 'role:kepalaupt'])->group(function () {
     Route::get("/", [KepalaUptController::class, "dashboard"])->name("kepalaupt.dashboard-page");
     Route::get('/dashboard-summary', [KepalaUptController::class, 'getSummary'])->name('kepalaupt.dashboard-summary-json');
     Route::get('/surat-peminjaman', [KepalaUptController::class, 'getSuratList'])->name('kepalaupt.dashboard-surat-peminjaman-json');
@@ -89,7 +95,6 @@ Route::prefix('kepala-upt')->middleware( ['auth', 'role:kepalaupt'])->group(func
         Route::get('', [KepalaUptController::class, 'pengajuan_surat_page'])->name('kepalaupt.pengajuan-surat-page');
         Route::post('/{id}/terima', [KepalaUptController::class, 'terima'])->name('pengajuan.terima');
         Route::post('/{id}/tolak', [KepalaUptController::class, 'tolak'])->name('kepalaupt.tolak-surat-pengajuan');
-
     });
     Route::prefix('kalender')->group( function(){
         Route::get('', [KepalaUptController::class, 'kalender_page'])->name('kepalaupt.kalender');
@@ -97,7 +102,7 @@ Route::prefix('kepala-upt')->middleware( ['auth', 'role:kepalaupt'])->group(func
     });
 });
 
-Route::prefix('supkorla')->middleware(['auth', 'role:supkorla'])->group(function () {
+Route::prefix('supkorla')->middleware(['auth:sanctum', 'role:supkorla'])->group(function () {
     Route::get("/", [SupkorlaController::class, "dashboard"])->name("supkorla.dashboard-page");
     Route::get('dashboard-summary/json', [SupkorlaController::class, 'getSummary'])->name('supkorla.dashboard-summary-json');
     Route::get('dashboard-data-table/json', [SupkorlaController::class, 'getDataSupkorlaDashboard'])->name('supkorla.dashboard-data-table-json');
@@ -112,10 +117,7 @@ Route::prefix('supkorla')->middleware(['auth', 'role:supkorla'])->group(function
     });
 });
 
-Route::get('/token', function() {
-    return csrf_token();
-});
-
+// Ubah rute logout untuk menggunakan fungsi logout API yang baru
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::resource("/ha", SuperAdminController::class);

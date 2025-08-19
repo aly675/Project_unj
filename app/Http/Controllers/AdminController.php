@@ -174,30 +174,53 @@ class AdminController extends Controller
         ]);
     }
 
+
+
     public function cetak($id)
     {
-        $data = Peminjaman::findOrFail($id);
+        $data = peminjaman::findOrFail($id);
 
-        // Panggil method yang tadi dibuat untuk memformat tanggal
-        $tanggalFormatted = $data->formatTanggal();
+        Carbon::setLocale('id');
+        $decoded = json_decode($data->tanggal_peminjaman, true) ?? [];
 
-        $pdf = Pdf::loadView('pdf/cetak-pdf', compact('data', 'tanggalFormatted')); // <-- Tambahkan variabel baru
+        // Sort the dates to ensure correct first and last
+        sort($decoded);
+
+        $tanggalFormatted = '';
+        if (count($decoded) === 1) {
+            $tanggalFormatted = Carbon::parse($decoded[0])->translatedFormat('l, d F Y');
+        } elseif (count($decoded) > 1) {
+            $tanggalAwal = Carbon::parse($decoded[0])->translatedFormat('l, d F Y');
+            $tanggalAkhir = Carbon::parse(end($decoded))->translatedFormat('l, d F Y');
+            $tanggalFormatted = $tanggalAwal . ' - ' . $tanggalAkhir;
+        }
+
+        $pdf = Pdf::loadView('pdf/cetak-pdf', compact('data', 'tanggalFormatted'));
 
         $safeFilename = str_replace(['/', '\\'], '-', $data->nomor_surat) . '.pdf';
 
         return $pdf->stream($safeFilename, compact('data'));
-        // return view('pdf.cetak-pdf');
     }
 
     public function delete_peminjaman($id)
     {
         try {
-            $peminjaman = Peminjaman::findOrFail($id);
+            $peminjaman = Peminjaman::find($id);
+
+            if (!$peminjaman) {
+                return response()->json(['status' => 'error', 'message' => 'Data peminjaman tidak ditemukan.'], 404);
+            }
+
+            // Hapus file lampiran jika ada
+            if ($peminjaman->lampiran && Storage::disk('public')->exists($peminjaman->lampiran)) {
+                Storage::disk('public')->delete($peminjaman->lampiran);
+            }
+
             $peminjaman->delete();
 
             return response()->json(['status' => 'success', 'message' => 'Data berhasil dihapus']);
         } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => 'Gagal menghapus data'], 500);
+            return response()->json(['status' => 'error', 'message' => 'Gagal menghapus data: ' . $e->getMessage()], 500);
         }
     }
 
