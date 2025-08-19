@@ -166,7 +166,7 @@ class AdminController extends Controller
         });
         $p->tanggal_formatted = $formatted;
         $p->lama_hari = count($decoded);
-        $p->lampiran_url = $p->lampiran ? asset('storage/lampiran-peminjaman/' . $p->lampiran) : null;
+        $p->lampiran_url = $p->lampiran ? asset('storage/' . $p->lampiran) : null;
 
         return response()->json([
             'status' => 'success',

@@ -185,7 +185,6 @@
         const query = searchInput.value.trim().toLowerCase();
         const selectedStatus = statusSelect.value;
         const peminjamanJsonUrl = "{{ route('admin.peminjaman-json') }}";
-        console.log(`${peminjamanJsonUrl}?page=${currentPage}&perPage=${perPage}&search=${encodeURIComponent(query)}&status=${encodeURIComponent(selectedStatus)}`);
 
         fetch(`${peminjamanJsonUrl}?page=${currentPage}&perPage=${perPage}&search=${encodeURIComponent(query)}&status=${encodeURIComponent(selectedStatus)}`)
             .then(response => response.json())

@@ -91,36 +91,7 @@
                             </thead>
                             <tbody id="tableBody" class="bg-white divide-y divide-gray-200">
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">0001/UNJ/PUSTIKOM/2025</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10 Hari</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Sudah Diverifikasi</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">0002/UNJ/PUSTIKOM/2025</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10 Hari</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">9</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-3 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">Ditolak</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">0003/UNJ/PUSTIKOM/2025</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10 Hari</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-3 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">Menunggu Verifikasi</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">0004/UNJ/PUSTIKOM/2025</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10 Hari</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">Menunggu Persetujuan</span>
-                                    </td>
+                                    <td rowspan="2" colspan="4" class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">Memuat data ....</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -131,18 +102,7 @@
                         <div class="flex items-center justify-between">
                             <p id="paginationInfo" class="text-sm text-gray-500">Showing data 0 to 0 of 0 entries</p>
                             <div id="pagination" class="flex items-center space-x-2">
-                                <button class="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">
-                                    <i class="fas fa-chevron-left"></i>
-                                </button>
-                                <button class="px-3 py-1 text-sm bg-teal-600 text-white rounded">1</button>
-                                <button class="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">2</button>
-                                <button class="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">3</button>
-                                <button class="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">4</button>
-                                <span class="px-3 py-1 text-sm text-gray-500">...</span>
-                                <button class="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">40</button>
-                                <button class="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">
-                                    <i class="fas fa-chevron-right"></i>
-                                </button>
+
                             </div>
                         </div>
                     </div>
