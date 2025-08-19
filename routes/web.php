@@ -37,7 +37,7 @@ Route::post("/api/login", [AuthController::class, "login"])->name("api.login"); 
 Route::post("/api/register", [AuthController::class, "register"])->name("api.register"); // Jika ada API register
 
 // Ubah middleware 'auth' menjadi 'auth:sanctum' untuk rute yang dilindungi token
-Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
+Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::get("/", [AdminController::class, "dashboard_page"])->name("admin.dashboard-page");
     Route::get('admin/dashboard-summary-json', [AdminController::class, 'dashboard_summary_json'])->name('admin.dashboard-summary-json');
     Route::get('admin/dashboard-peminjaman-json', [AdminController::class, 'dashboard_peminjaman_table_json'])->name('admin.dashboard-peminjaman-json');
