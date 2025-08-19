@@ -48,7 +48,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(functi
         Route::get('/json/{id}', [AdminController::class, 'peminjaman_json_detail'])->name('admin.peminjaman-json-detail');
         Route::get("", [AdminController::class, "peminjaman_page"])->name("admin.peminjaman-page");
         Route::get("/tambah-peminjaman", [AdminController::class, "tambah_peminjaman_page"])->name("admin.tambah-peminjaman-page");
-        Route::delete('/{id}', [AdminController::class, 'delete_peminjaman'])->name('admin.delete-pinjaman-ruangan');
+        Route::delete('/delete/{id}', [AdminController::class, 'delete_peminjaman'])->name('admin.delete-pinjaman-ruangan');
         Route::post("/tambah-peminjaman/submit", [AdminController::class, "buatSurat"])->name("admin.tambah-peminjaman");
         Route::get("/detail-peminjaman", [AdminController::class, "detail_peminjaman_page"])->name("admin.detail-peminjaman-page");
         Route::put('/update/{id}', [AdminController::class, 'update_peminjaman'])->name('admin.update-peminjaman');

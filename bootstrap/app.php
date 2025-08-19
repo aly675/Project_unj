@@ -29,7 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
             '/admin/daftar-referensi/fasilitas/submit',
             '/admin/daftar-referensi/fasilitas/delete/*',
             '/admin/daftar-referensi/fasilitas/update/*',
-            
+
             '/superadmin/manajemen-users/tambah-user/submit',
             '/superadmin/manajemen-users/update-user/submit/*',
             '/superadmin/manajemen-users/users/toggle-status',
