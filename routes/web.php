@@ -36,7 +36,7 @@ Route::get("/register", [AuthController::class, "daftar"])->name("register"); //
 Route::post("/api/login", [AuthController::class, "login"])->name("api.login"); // Ini akan jadi API login utama
 Route::post("/api/register", [AuthController::class, "register"])->name("api.register"); // Jika ada API register
 
-// Ubah middleware 'auth' menjadi 'auth:sanctum' untuk rute yang dilindungi token
+
 Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::get("/", [AdminController::class, "dashboard_page"])->name("admin.dashboard-page");
     Route::get('admin/dashboard-summary-json', [AdminController::class, 'dashboard_summary_json'])->name('admin.dashboard-summary-json');
@@ -77,7 +77,7 @@ Route::prefix('superadmin')->middleware(['auth:sanctum', 'role:superadmin'])->gr
     Route::get('/superadmin/stats-json', [SuperAdminController::class, 'stats_json'])->name('superadmin.stats-json');
     Route::get('/superadmin/users-json', [SuperAdminController::class, 'latestUsersJson'])->name('superadmin.dashboard-users-json');
     Route::prefix('/manajemen-users')->group( function() {
-        Route::get('/superadmin/users-json', [SuperAdminController::class, 'users_json'])->name('superadmin.users-json');
+        Route::get('    ', [SuperAdminController::class, 'users_json'])->name('superadmin.users-json');
         Route::get('', [SuperAdminController::class, 'manejemen_users_page'])->name('superadmin.manejemen-users-page');
         Route::get('/tambah-user', [SuperAdminController::class, 'tambah_user_page'])->name('superadmin.tambah-user-page');
         Route::post("/tambah-user/submit", [SuperAdminController::class,"store"])->name("superadmin.user-submit");

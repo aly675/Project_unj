@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             '/admin/peminjaman/delete/*',
             '/admin/peminjaman/update/*',
             '/admin/daftar-referensi/tambah-peminjaman/submit',
+            '/admin/daftar-referensi/admin/ruangan/*',
             '/admin/ruangan/*',
             '/admin/daftar-referensi/update/ruangan/*',
             '/admin/daftar-referensi/fasilitas/submit',

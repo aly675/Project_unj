@@ -117,14 +117,6 @@ class SuperAdminController extends Controller
         return redirect()->route("superadmin.manejemen-users-page")->with("success", "Data Berhasil Ditambahkan");
     }
 
-
-    public function show($id)
-    {
-    $data = User::findOrFail($id);
-
-    return response()->json($data);
-    }
-
     public function edit($id)
     {
         $user = User::findOrFail($id);
